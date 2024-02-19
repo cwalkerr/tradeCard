@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>tradeCard</title>
+    <link rel="stylesheet" href="/css/custom.css" />
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-md bg-tertiary shadow">
+      <div class="container-fluid">
+        <!-- NAV BRAND -->
+        <a class="navbar-brand text-primary" href="#">
+          <img src="/media/logo.png" alt="logo" height="100px" width="100px" />
+        </a>
+        <!-- BURGER ICON -->
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- NAV LINKS - the collapse indicates that which is shown after burger clicked?-->
+        <div
+          class="collapse navbar-collapse justify-content-end"
+          id="navbarNav"
+        >
+          <ul class="navbar-nav gap-3 lead fw-medium">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Cards</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Expansions</a>
+            </li>
+
+            <!-- DROPDOWN MENU FOR ACCOUNT STUFF -->
+            <li class="nav-item dropdown">
+              <a
+                class="nav-link dropdown-toggle"
+                href="#"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <!-- SVG ACCOUNT PERSON CIRCLE -->
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="26"
+                  height="26"
+                  fill="#4056A1"
+                  class="bi bi-person-circle"
+                  viewBox="0 0 16 16"
+                >
+                  <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"
+                  />
+                </svg>
+              </a>
+              <!-- DROPDOWN MENU -->
+              <ul class="dropdown-menu dropdown-menu-end shadow">
+                <li>
+                  <a
+                    class="dropdown-item d-flex align-items-center gap-2 lead"
+                    href="signup.html"
+                  >
+                    <!-- CREATE ACCOUNT ICON -->
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      fill="currentColor"
+                      class="bi bi-person-plus-fill"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        d="M13.5 5a.5.5 0 0 1 .5.5V7h1.5a.5.5 0 0 1 0 1H14v1.5a.5.5 0 0 1-1 0V8h-1.5a.5.5 0 0 1 0-1H13V5.5a.5.5 0 0 1 .5-.5"
+                      />
+                    </svg>
+                    Create Account</a
+                  >
+                </li>
+                <li>
+                  <a
+                    class="dropdown-item d-flex align-items-center gap-2 lead"
+                    href="login.html"
+                  >
+                    <!-- SIGN IN ICON -->
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="20"
+                      height="20"
+                      fill="currentColor"
+                      class="bi bi-box-arrow-in-right"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M6 3.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-2a.5.5 0 0 0-1 0v2A1.5 1.5 0 0 0 6.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2h-8A1.5 1.5 0 0 0 5 3.5v2a.5.5 0 0 0 1 0z"
+                      />
+                      <path
+                        fill-rule="evenodd"
+                        d="M11.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H1.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"
+                      /></svg
+                    >Sign In</a
+                  >
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- HERO TITLE -->
+    <div class="container-fluid px-0">
+      <!-- IMAGE -->
+      <div
+        class="img-fluid shadow d-flex flex-wrap align-items-center justify-content-center flex-column text-center"
+        style="
+          background-image: url('/media/large-triangles.svg');
+
+          height: 50vh;
+          max-width: 100%;
+          position: relative;
+        "
+      >
+        <h1 class="display-3 text-center text-white p-3">
+          A Place To Manage Your Collection
+        </h1>
+        <div class="d-flex gap-3">
+          <button type="button" class="btn btn-success btn-lg">
+            Create Account
+          </button>
+          <button type="button" class="btn btn-warning btn-lg">Sign In</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN -->
+    <div class="container mb-5">
+      <div class="row mt-5">
+        <div class="col-md-5">
+          <img
+            class="img-fluid rounded-circle shadow p-3"
+            src="/media/pokemoncomputer.jpg"
+            alt="Pokemon on Computer"
+            height="500px"
+            width="500px"
+          />
+        </div>
+        <div
+          class="col-md-7 d-flex flex-wrap align-content-center justify-content-center p-3 text-center"
+        >
+          <h1 class="display-4">Manage Your Collection</h1>
+          <p class="lead">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit,
+            optio nemo! Cumque eum perferendis animi inventore perspiciatis
+            molestias suscipit minus, aliquid, corporis nemo placeat cupiditate
+            tempora corrupti maxime, fugit aut.
+          </p>
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div
+          class="col-md-7 d-flex flex-wrap align-content-center justify-content-center p-3 order-last order-md-first text-center"
+        >
+          <h1 class="display-4">Search For Cards</h1>
+          <p class="lead">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit,
+            optio nemo! Cumque eum perferendis animi inventore perspiciatis
+            molestias suscipit minus, aliquid, corporis nemo placeat cupiditate
+            tempora corrupti maxime, fugit aut.
+          </p>
+        </div>
+        <div class="col-md-5 order-first order-md-last">
+          <img
+            class="img-fluid rounded-circle shadow p-3"
+            src="/media/pokemonsearch.jpg"
+            alt="Pokemon Searching"
+            height="500px"
+            width="500px"
+          />
+        </div>
+      </div>
+
+      <div class="row mt-5">
+        <div class="col-md-5">
+          <img
+            class="img-fluid rounded-circle shadow p-3"
+            src="/media/pokemonfriends.jpg"
+            alt="Pokemon on Computer"
+            height="500px"
+            width="500px"
+          />
+        </div>
+        <div
+          class="col-md-7 d-flex flex-wrap align-content-center justify-content-center p-3 text-center"
+        >
+          <h1 class="display-4">Check Out Other Collections</h1>
+          <p class="lead">
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Impedit,
+            optio nemo! Cumque eum perferendis animi inventore perspiciatis
+            molestias suscipit minus, aliquid, corporis nemo placeat cupiditate
+            tempora corrupti maxime, fugit aut.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!-- footer -->
+    <div class="container-fluid px-0">
+      <div
+        class="img-fluid d-flex flex-wrap align-items-center justify-content-center flex-column text-center"
+        style="
+          background-image: url('/media/large-triangles.svg');
+
+          height: 25vh;
+          max-width: 100%;
+          position: relative;
+        "
+      >
+        <h1 class="display-5 text-white p-3">
+          Create An Account Now To Get Started
+        </h1>
+
+        <button type="button" class="btn btn-warning btn-lg">
+          Get Started
+        </button>
+      </div>
+    </div>
+
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
