@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Log In</title>
+    <link rel="stylesheet" href="/css/custom.css" />
+  </head>
+  <body>
+    <!-- BG IMAGE revisit issue 100vh not working on iphone, works if i take it off but then doesnt display on desktop correctly-->
+    <div
+      class="container-fluid"
+      style="
+        background-image: url(/media/flat-mountains.svg);
+        background-size: cover;
+        height: 100vh;
+        width: 100%;
+      "
+    >
+      <!-- LOGO -->
+      <div class="container d-flex justify-content-center">
+        <a href="/index.html">
+          <img
+            class="mt-5"
+            src="/media/logowhite.png"
+            alt="logo"
+            height="200px"
+            width="200px"
+          />
+        </a>
+      </div>
+
+      <!-- TEXT & LOG IN REDIRECT-->
+      <div class="container mt-3">
+        <p class="display-6 text-center text-white mb-3">Sign In</p>
+        <div class="my-4 text-center text-white">
+          <p class="lead">
+            Not a member yet?
+            <a class="text-warning" href="/signup.html"
+              >Create an account here</a
+            >
+          </p>
+        </div>
+
+        <!-- FORM review accessability-->
+
+        <div class="row mb-3 justify-content-center">
+          <!-- revisit responsive sizes -->
+          <div class="col-sm-9 col-md-7 col-lg-5">
+            <label for="userEmail" class="form-label lead text-white"
+              >Email address</label
+            >
+            <input
+              type="email"
+              class="form-control"
+              id="userEmail"
+              placeholder="name@example.com"
+            />
+          </div>
+        </div>
+
+        <div class="row mb-3 justify-content-center">
+          <div class="col-sm-9 col-md-7 col-lg-5">
+            <label for="userPassword" class="form-label lead text-white"
+              >Password</label
+            >
+            <input
+              type="password"
+              class="form-control"
+              id="userPassword"
+              placeholder="password"
+            />
+          </div>
+        </div>
+
+        <div class="d-flex justify-content-center mt-5">
+          <button type="button" class="btn btn-success btn-lg">Sign In</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
