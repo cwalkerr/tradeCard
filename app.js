@@ -2,22 +2,25 @@ const express = require("express");
 const session = require("express-session");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
+const flash = require("connect-flash");
+
+// Routes
 const loginRoute = require("./routes/login");
 const signupRoute = require("./routes/signup");
-const flash = require("connect-flash");
+const dashboardRoute = require("./routes/dashboard");
+
 const hour = 1000 * 60 * 60; // 1 hour
 
 const app = express();
+app.set("view engine", "ejs");
 
+// Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
 app.use("/node_modules", express.static(__dirname + "/node_modules")); // prob not needed anymore
-
-// Set the view engine to ejs
-app.set("view engine", "ejs");
-
 app.use(express.json());
 app.use(flash());
+app.use(cookieParser());
 
 app.use(
   session({
@@ -33,6 +36,7 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
+app.use("/dashboard", dashboardRoute);
 app.use("/login", loginRoute);
 app.use("/signup", signupRoute);
 
