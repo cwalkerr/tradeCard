@@ -73,6 +73,10 @@
           </p>
         </div>
 
+        <% if (error) { %>
+        <p class="lead text-center text-white mb-3"><%=error%></p>
+        <% } %>
+
         <!-- FORM review accessability-->
 
         <form action="/signup" method="POST">
