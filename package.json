@@ -4,7 +4,9 @@
   "description": "Full Stack Web Development Project - Pokemon TCG Collection Manager Site",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:api": "node api.js",
+    "start:app": "node app.js",
+    "start": "concurrently \"nodemon --exec npm run start:api\" \"nodemon --exec npm run start:app\""
   },
   "author": "",
   "license": "ISC",
@@ -19,6 +21,13 @@
     "ejs": "^3.1.9",
     "express": "^4.19.0",
     "express-session": "^1.18.0",
-    "mysql2": "^3.9.2"
+    "mysql2": "^3.9.2",
+    "pokemontcgsdk": "^2.0.0",
+    "sequelize": "^6.37.2",
+    "validator": "^13.11.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.0"
   }
 }

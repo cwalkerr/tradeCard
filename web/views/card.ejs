@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="/css/custom.css" />
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-md lead bg-tertiary shadow">
+    <div class="container-fluid">
+      <!-- NAV BRAND -->
+      <a class="navbar-brand text-primary" href="/">
+        <img src="../media/logo.png" alt="logo" height="100px" width="100px" />
+      </a>
+      <!-- BURGER ICON -->
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- NAV LINKS - the collapse indicates that which is shown after burger clicked?-->
+      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+        <ul class="navbar-nav gap-3 fw-medium">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/cards">Cards</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Expansions</a>
+          </li>
+
+          <!-- DROPDOWN MENU FOR ACCOUNT STUFF -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <!-- SVG ACCOUNT PERSON CIRCLE -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#406A1" class="bi bi-person-circle" viewBox="0 0 16 16">
+                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-6.468 11.37C3.242 11.226 4.806 10 8 10s4.767 1.226 6.468 2.37A7 7 0 0 0 8 1" />
+              </svg>
+            </a>
+            <!-- DROPDOWN MENU -->
+            <ul class="dropdown-menu dropdown-menu-end shadow">
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 lead" href="/signup">
+                  <!-- CREATE ACCOUNT ICON -->
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                    <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm6-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                    <path fill-rule="evenodd" d="M13.6 6a.6.6 0 0 1 .6.6V7h1.6a.6.6 0 0 1 0 1H14v1.6a.6.6 0 0 1-1 0V8h-1.6a.6.6 0 0 1 0-1H13V6.6a.6.6 0 0 1 .6-.6" />
+                  </svg>
+                  Create Account
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item d-flex align-items-center gap-2 lead" href="/login">
+                  <!-- SIGN IN ICON -->
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6 3.6a.6.6 0 0 1 .6-.6h8a.6.6 0 0 1 .6.6v9a.6.6 0 0 1-.6.6h-8a.6.6 0 0 1-.6-.6v-2a.6.6 0 0 0-1 0v2A1.6 1.6 0 0 0 6.6 14h8a1.6 1.6 0 0 0 1.6-1.6v-9A1.6 1.6 0 0 0 14.6 2h-8A1.6 1.6 0 0 0 6 3.6v2a.6.6 0 0 0 1 0z" />
+                    <path fill-rule="evenodd" d="M11.864 8.364a.6.6 0 0 0 0-.708l-3-3a.6.6 0 1 0-.708.708L10.293 7.6H1.6a.6.6 0 0 0 0 1h8.793l-2.147 2.146a.6.6 0 0 0 .708.708z" />
+                  </svg>Sign In
+                </a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <!-- CARD IMG -->
+      <div class="col-lg-6">
+        <figure class="figure">
+          <img src="<%= card.Images[1].url %>" alt="Card Image" class="figure-img img-fluid mt-4 object-fit-cover rounded-3 shadow-lg" />
+          <figcaption class="figure-caption text-end lead lead fw-semibold border bg-light p-2 align-middle">
+            <em>Illustrated by: <%= card.artist %></em>
+          </figcaption>
+        </figure>
+      </div>
+
+      <!-- CARD NAME -->
+      <div class="col-lg-6 mt-5">
+        <div class="d-flex justify-content-between align-items-center border-bottom border-dark">
+          <div class="d-flex align-items-center">
+            <% for (let i = 0; i < card.EnergyTypes.length; i++) { %>
+            <img src="../media/energy-<%=card.EnergyTypes[i].type%>.png" class="border border-2 border-dark rounded-circle" height="36px" width="36px" />
+            <% } %>
+            <h1 class="display-6 mx-3">
+              <%= card.name %>
+            </h1>
+          </div>
+
+          <% if (card.hp) {  %>
+          <span>
+            <!-- HP ICON -->
+            <h1 class="display-6">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="#FF0000" class="bi bi-heart-fill" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314" />
+              </svg>
+              <%= card.hp %>
+            </h1>
+          </span>
+          <% } %>
+
+        </div>
+        <!-- CARD BADGES ( RARITY, TYPES ETC.) -->
+        <div class="row">
+          <div class="col gy-3 d-flex justify-content-start align-items-end gap-3">
+            <span class="badge bg-dark text-white lead p-2"><%= card.rarity %></span>
+            <% for (let i = 0; i < card.Subtypes.length; i++) { %>
+            <span class="badge bg-dark text-white lead p-2"><%= card.Subtypes[i].type %> <%= card.type %>
+            </span>
+            <% } %>
+            <% if (card.level) { %>
+            <span class="badge bg-dark text-white lead p-2">Lvl. <%= card.level %></span>
+            <% } %>
+            <span class="badge bg-dark text-white lead p-2">Pokedex #<%= card.pokedex_number %></span>
+          </div>
+        </div>
+
+        <!-- FLAVOUR TEXT -->
+        <div class="row mt-4">
+          <div class="col">
+            <blockquote class="blockquote lead fw-semibold fs-4">
+              <p><em><%=card.flavour_text%></em></p>
+            </blockquote>
+          </div>
+        </div>
+
+        <!-- RULES (IF APPLICABLE) -->
+        <div class="row my-4">
+          <div class="col">
+            <% if (card.Rules.length>0) { %>
+            <div class="card shadow">
+              <div class="card-header lead fw-semibold">Rules</div>
+              <ul class="list-group list-group-flush">
+                <% for (let i = 0; i < card.Rules.length; i++) { %>
+                <li class="list-group-item"><%= card.Rules[i].description %></li>
+                <% } %>
+              </ul>
+            </div>
+            <% } %>
+          </div>
+        </div>
+
+        <!-- SET INFORMATION -->
+        <div class="row mt-3">
+          <div class="col">
+            <div class="card shadow" style="width: 18rem">
+              <div class="card-header lead fw-semibold">Set Information</div>
+              <ul class="list-group list-group-flush">
+                <li class="list-group-item">Set : <%=card.Set.name %></li>
+                <li class="list-group-item">
+                  Series : <%= card.Set.Series.name %>
+                </li>
+                <li class="list-group-item">
+                  Release Date : <%= card.Set.release_date%>
+                </li>
+              </ul>
+              <div class="card-header lead fw-normal">Legal in:</div>
+              <ul class="list-group list-group-flush">
+                <% if (card.Set.standard_legality) { %>
+                <li class="list-group-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
+                  </svg>Standard
+                </li>
+                <% } %> <% if (card.Set.expanded_legality) { %>
+                <li class="list-group-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
+                  </svg>Expanded
+                </li>
+                <% } %> <% if (card.Set.unlimited_legality) { %>
+                <li class="list-group-item">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
+                    <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
+                  </svg>Unlimited
+                </li>
+                <% } %>
+              </ul>
+            </div>
+          </div>
+
+          <% if (card.BuffDebuffs.length>0 || card.RetreatCosts.length>0) {  %>
+          <div class="col d-flex align-items-center justify-content-center">
+            <div class="card shadow">
+              <div class="card-body">
+                <% if (card.BuffDebuffs.length>0) { %>
+                <% for (let i = 0; i <card.BuffDebuffs.length; i++) { %>
+                <% if (card.BuffDebuffs[i].type === "Weakness") {  %>
+                <p class="text-danger fw-semibold lead">
+                  <% } else if (card.BuffDebuffs[i].type === "Resistance") {  %>
+                <p class="text-success fw-semibold lead">
+                  <% } %>
+                  <%= card.BuffDebuffs[i].type %> :
+                  <img src="../media/energy-<%=card.BuffDebuffs[i].EnergyType.type%>.png" alt="" />
+                  <%= card.BuffDebuffs[i].variable %>
+                </p>
+                <% } %>
+                <% } %>
+                <% if (card.RetreatCosts.length>0) {  %>
+                <p class="text-primary fw-semibold lead">
+                  Retreat Cost :
+                  <% for (let i = 0; i<card.RetreatCosts.length; i++) {%>
+                  <img src="../media/energy-<%=card.RetreatCosts[i].EnergyType.type%>.png" alt="" />
+                  <% } %>
+                </p>
+                <% } %>
+              </div>
+            </div>
+          </div>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- ATTACKS AND ABILITIES -->
+    <div class="container">
+      <div class="row mb-5">
+        <% if (card.Attacks.length>0) { %>
+        <div class="col-md-6 col-12">
+          <div class="card">
+            <div class="card-header fs-5">
+              Attacks
+            </div>
+            <ul class="list-group list-group-flush">
+              <% for (let i = 0; i < card.Attacks.length; i++) { %>
+              <li class="list-group-item">
+                <p class="lead border-bottom py-1"><%= card.Attacks[i].name %>
+                  <% for (let j = 0; j <card.Attacks[i].AttackCosts.length; j++) { %>
+                  <img src="../media/energy-<%=card.Attacks[i].AttackCosts[j].EnergyType.type%>.png" alt="" class="img-fluid object-fit-cover" height="20px" width="20px" />
+                  <% } %>
+                </p>
+                <% if (card.Attacks[i].damage) {  %>
+                <p class="lead">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-fire" viewBox="0 0 16 16">
+                    <path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16m0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15" />
+                  </svg>
+                  <%= card.Attacks[i].damage %>
+                </p>
+                <% } %>
+                <p><%= card.Attacks[i].description %></p>
+              </li>
+              <% } %>
+              <% } %>
+            </ul>
+          </div>
+        </div>
+        <% if (card.Abilities.length>0) { %>
+        <div class="col-md-6 col-12">
+          <div class="card">
+            <div class="card-header fs-5">
+              Abilities
+            </div>
+            <ul class="list-group list-group-flush">
+              <% for (let i = 0; i < card.Abilities.length; i++) { %>
+              <li class="list-group-item">
+                <p class="lead border-bottom py-1"> (<%= card.Abilities[i].type %>) : <%= card.Abilities[i].name %>
+                </p>
+                <p><%= card.Abilities[i].description %></p>
+              </li>
+              <% } %>
+              <% } %>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
