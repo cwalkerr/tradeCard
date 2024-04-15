@@ -101,6 +101,16 @@
       <div class="col-xxl-2 col-lg-3 col-5">
         <a href="/cards/<%= card.card_id%>">
           <div class="card shadow my-2 position-relative">
+            <!-- REMOVE CARD FROM COLLECTION BUTTON -->
+            <% if (route.startsWith ('/collections/') && userId === collectionOwner) { %>
+            <form action="/collections/<%=collectionId%>/cards/<%=card.card_id%>/?_method=DELETE" method="POST">
+              <button class="btn btn-danger position-absolute top-0 start-100 translate-middle  p-2 border border-light rounded-circle">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                </svg>
+              </button>
+            </form>
+            <% } %>
             <img src="<%= card.image %>" class="card-img-top img-fluid" alt="..." />
             <div class="card-body">
               <h6 class="card-title lead fw-semibold font-monospace">
@@ -110,7 +120,6 @@
           </div>
         </a>
       </div>
-
       <% }) %>
     </div>
   </div>
@@ -138,7 +147,7 @@
     </nav>
     <% } %>
   </div>
-  <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

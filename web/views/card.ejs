@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
+  <title><%=card.name%>></title>
   <link rel="stylesheet" href="/css/custom.css" />
 </head>
 
@@ -72,8 +72,12 @@
 
   <div class="container">
     <div class="row">
-      <!-- CARD IMG -->
       <div class="col-lg-6">
+        <!-- ADD TO COLLECTION BUTTON -->
+        <div class="d-flex justify-content-end">
+          <button class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#addCardModal">Add to Collection</button>
+        </div>
+        <!-- CARD IMG -->
         <figure class="figure">
           <img src="<%= card.Images[1].url %>" alt="Card Image" class="figure-img img-fluid mt-4 object-fit-cover rounded-3 shadow-lg" />
           <figcaption class="figure-caption text-end lead lead fw-semibold border bg-light p-2 align-middle">
@@ -273,7 +277,38 @@
     </div>
   </div>
 
-  <script src="../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- ADD TO COLLECTION MODAL -->
+  <div class="modal fade" id="addCardModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add to Collection</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="/collections/cards" method="POST">
+            <div class="mb-3">
+              <label for="collectionSelect" class="form-label">Select Collection</label>
+              <select class="form-select" name="collection_id">
+                <option selected>Choose...</option>
+                <% if (collections) { %>
+                <% collections.forEach((collection) => { %>
+                <option value="<%= collection.collection_id %>"><%= collection.name %></option>
+                <% }) %>
+                <% } %>
+              </select>
+            </div>
+            <input type="hidden" name="card_id" value="<%= card.card_id %>">
+            <button type="submit" class="btn btn-primary">Add to Collection</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

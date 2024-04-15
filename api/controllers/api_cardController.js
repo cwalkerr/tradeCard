@@ -1,8 +1,8 @@
-const Card = require("../models/cardModel.js")();
-// const Sequelize = require("sequelize");
+const { Card } = require("../models/modelAssosiations.js");
 
 /**
- * API controller to get all cards tiles to display in card grid and in searches
+ * API controller to get cards tiles to display in card grid and in searches
+ * not sure if this is what the api should do, seems now like this kind of formatting should be dealt with by web app - revisit later
  */
 
 exports.getCardTiles = async (req, res) => {
@@ -10,30 +10,37 @@ exports.getCardTiles = async (req, res) => {
   const itemsPerPage = 30;
   const pageOffset = (page - 1) * itemsPerPage;
 
+  let cardIds;
+
+  if (req.query.cardIds) {
+    cardIds = req.query.cardIds.split(",");
+  } else {
+    cardIds = null;
+  }
+
   try {
     const result = await Card.getCardTile({
       limit: itemsPerPage,
       offset: pageOffset,
+      cardIds: cardIds,
     });
-    console.log(result); // debug
 
     const cards = result.data;
     const totalCards = result.count;
 
     const totalPages = Math.ceil(totalCards / itemsPerPage);
-    console.log(totalPages); // debug
 
     return res.status(200).json({
       cards: cards,
       totalPages: totalPages,
       currentPage: page,
+      cardIds: cardIds,
     });
   } catch (err) {
     console.log(err);
-    return res.status(500).send("ERROR");
+    return res.status(500).json({ error: "Error getting cards" });
   }
 };
-
 /**
  * get a single card by id with all joined data
  */
@@ -41,10 +48,8 @@ exports.getCardTiles = async (req, res) => {
 exports.getCardById = async (req, res) => {
   try {
     const card = await Card.getCard(req.params.id);
-    console.log(card); // debug
     return res.status(200).json(card);
   } catch (err) {
-    console.log(err);
-    return res.status(500).send("ERROR");
+    return res.status(500).json({ error: "Error getting card" });
   }
 };

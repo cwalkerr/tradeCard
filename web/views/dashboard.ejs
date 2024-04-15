@@ -1,206 +1,141 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="./css/custom.css" />
-  </head>
-  <body>
-    <div class="container-fluid">
-      <div class="row">
-        <!-- NAVBAR -->
-        <nav class="navbar navbar-expand-md lead bg-tertiary shadow">
-          <div class="container-fluid">
-            <!-- NAV BRAND -->
-            <a class="navbar-brand text-primary" href="#">
-              <img
-                src="./media/logo.png"
-                alt="logo"
-                height="100px"
-                width="100px"
-              />
-            </a>
-            <!-- BURGER ICON -->
-            <button
-              class="navbar-toggler"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarNav"
-              aria-controls="navbarNav"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span class="navbar-toggler-icon"></span>
-            </button>
 
-            <!-- NAV LINKS - the collapse indicates that which is shown after burger clicked?-->
-            <div
-              class="collapse navbar-collapse justify-content-end"
-              id="navbarNav"
-            >
-              <ul class="navbar-nav gap-3 fw-medium">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="#"
-                    >Home</a
-                  >
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Cards</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="#">Expansions</a>
-                </li>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/custom.css" />
+</head>
 
-                <!-- DROPDOWN MENU FOR ACCOUNT STUFF -->
-                <li class="nav-item dropdown">
-                  <a
-                    class="nav-link dropdown-toggle"
-                    href="#"
-                    role="button"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <!-- SVG ACCOUNT PERSON CIRCLE -->
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="26"
-                      height="26"
-                      fill="#406A1"
-                      class="bi bi-person-circle"
-                      viewBox="0 0 16 16"
-                    >
-                      <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                      <path
-                        fill-rule="evenodd"
-                        d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-6.468 11.37C3.242 11.226 4.806 10 8 10s4.767 1.226 6.468 2.37A7 7 0 0 0 8 1"
-                      />
-                    </svg>
-                  </a>
-                  <!-- DROPDOWN MENU -->
-                  <ul class="dropdown-menu dropdown-menu-end shadow">
-                    <li>
-                      <a
-                        class="dropdown-item d-flex align-items-center gap-2 lead"
-                        href="/signup"
-                      >
-                        <!-- CREATE ACCOUNT ICON -->
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          fill="currentColor"
-                          class="bi bi-person-plus-fill"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm6-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"
-                          />
-                          <path
-                            fill-rule="evenodd"
-                            d="M13.6 6a.6.6 0 0 1 .6.6V7h1.6a.6.6 0 0 1 0 1H14v1.6a.6.6 0 0 1-1 0V8h-1.6a.6.6 0 0 1 0-1H13V6.6a.6.6 0 0 1 .6-.6"
-                          />
-                        </svg>
-                        Create Account</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item d-flex align-items-center gap-2 lead"
-                        href="login.html"
-                      >
-                        <!-- SIGN IN ICON -->
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="20"
-                          height="20"
-                          fill="currentColor"
-                          class="bi bi-box-arrow-in-right"
-                          viewBox="0 0 16 16"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M6 3.6a.6.6 0 0 1 .6-.6h8a.6.6 0 0 1 .6.6v9a.6.6 0 0 1-.6.6h-8a.6.6 0 0 1-.6-.6v-2a.6.6 0 0 0-1 0v2A1.6 1.6 0 0 0 6.6 14h8a1.6 1.6 0 0 0 1.6-1.6v-9A1.6 1.6 0 0 0 14.6 2h-8A1.6 1.6 0 0 0 6 3.6v2a.6.6 0 0 0 1 0z"
-                          />
-                          <path
-                            fill-rule="evenodd"
-                            d="M11.864 8.364a.6.6 0 0 0 0-.708l-3-3a.6.6 0 1 0-.708.708L10.293 7.6H1.6a.6.6 0 0 0 0 1h8.793l-2.147 2.146a.6.6 0 0 0 .708.708z"
-                          /></svg
-                        >Sign In</a
-                      >
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </div>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- NAVBAR -->
+      <nav class="navbar navbar-expand-md lead bg-tertiary shadow">
+        <div class="container-fluid">
+          <!-- NAV BRAND -->
+          <a class="navbar-brand text-primary" href="#">
+            <img src="./media/logo.png" alt="logo" height="100px" width="100px" />
+          </a>
+          <!-- BURGER ICON -->
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <!-- NAV LINKS - the collapse indicates that which is shown after burger clicked?-->
+          <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+            <ul class="navbar-nav gap-3 fw-medium">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Cards</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#">Expansions</a>
+              </li>
+
+              <!-- DROPDOWN MENU FOR ACCOUNT STUFF -->
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <!-- SVG ACCOUNT PERSON CIRCLE -->
+                  <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#406A1" class="bi bi-person-circle" viewBox="0 0 16 16">
+                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-6.468 11.37C3.242 11.226 4.806 10 8 10s4.767 1.226 6.468 2.37A7 7 0 0 0 8 1" />
+                  </svg>
+                </a>
+                <!-- DROPDOWN MENU -->
+                <ul class="dropdown-menu dropdown-menu-end shadow">
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2 lead" href="/signup">
+                      <!-- CREATE ACCOUNT ICON -->
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
+                        <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm6-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
+                        <path fill-rule="evenodd" d="M13.6 6a.6.6 0 0 1 .6.6V7h1.6a.6.6 0 0 1 0 1H14v1.6a.6.6 0 0 1-1 0V8h-1.6a.6.6 0 0 1 0-1H13V6.6a.6.6 0 0 1 .6-.6" />
+                      </svg>
+                      Create Account
+                    </a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item d-flex align-items-center gap-2 lead" href="login.html">
+                      <!-- SIGN IN ICON -->
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M6 3.6a.6.6 0 0 1 .6-.6h8a.6.6 0 0 1 .6.6v9a.6.6 0 0 1-.6.6h-8a.6.6 0 0 1-.6-.6v-2a.6.6 0 0 0-1 0v2A1.6 1.6 0 0 0 6.6 14h8a1.6 1.6 0 0 0 1.6-1.6v-9A1.6 1.6 0 0 0 14.6 2h-8A1.6 1.6 0 0 0 6 3.6v2a.6.6 0 0 0 1 0z" />
+                        <path fill-rule="evenodd" d="M11.864 8.364a.6.6 0 0 0 0-.708l-3-3a.6.6 0 1 0-.708.708L10.293 7.6H1.6a.6.6 0 0 0 0 1h8.793l-2.147 2.146a.6.6 0 0 0 .708.708z" />
+                      </svg>Sign In
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
           </div>
-        </nav>
+        </div>
+      </nav>
 
-        <div
-          class="container-fluid d-flex align-items-center justify-content-center flex-wrap gap-4"
-          style="
+      <div class="container-fluid d-flex align-items-center justify-content-center flex-wrap gap-4" style="
             background-image: url(./media/flat-mountains.svg);
             background-size: cover;
             height: 100vh;
             width: 100%;
-          "
-        >
-          <div class="col-xl-2 col-md-5 col-10 mt-3">
-            <div class="card shadow">
-              <div class="card-body">
-                <h4 class="card-title">My Collections</h4>
-                <p class="card-text lead">Total Collections: 0</p>
-                <a href="#" class="btn">View Collections</a>
-              </div>
+          ">
+        <div class="col-xl-2 col-md-5 col-10 mt-3">
+          <div class="card shadow">
+            <div class="card-body">
+              <h4 class="card-title">My Collections</h4>
+              <p class="card-text lead">Total Collections: 0</p>
+              <a href="/collections/user" class="btn">View Collections</a>
             </div>
           </div>
-          <div class="col-xl-2 col-md-5 col-10 mt-3">
-            <div class="card shadow">
-              <div class="card-body">
-                <h4 class="card-title">Total Cards</h4>
-                <p class="card-text lead">Total Cards: 0</p>
-                <a href="#" class="btn">View My Cards</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-2 col-md-5 col-10 mt-3">
-            <div class="card shadow">
-              <div class="card-body">
-                <h4 class="card-title">Completed Expansions</h4>
-                <p class="card-text lead">Completed Expansions: 0</p>
-                <a href="#" class="btn">View Expansion Progress</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-xl-2 col-md-5 col-10 mt-3">
-            <div class="card shadow">
-              <div class="card-body">
-                <h4 class="card-title">Total Market Value</h4>
-                <p class="card-text lead">Market Value: £0</p>
-                <a href="#" class="btn">View Market Value Statistics</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-12">
-            <div class="card shadow">
-              <div class="card-body">
-                <h4 class="card-title">Recent Activity</h4>
-                <ul class="list-group">
-                  <li class="list-group-item">An item</li>
-                  <li class="list-group-item">A second item</li>
-                  <li class="list-group-item">A third item</li>
-                  <li class="list-group-item">A fourth item</li>
-                  <li class="list-group-item">And a fifth one</li>
-                </ul>
-                <a href="#" class="btn">View All Activity</a>
-              </div>
-            </div>
-          </div>
-          <div class="col-12"></div>
         </div>
+        <div class="col-xl-2 col-md-5 col-10 mt-3">
+          <div class="card shadow">
+            <div class="card-body">
+              <h4 class="card-title">Total Cards</h4>
+              <p class="card-text lead">Total Cards: 0</p>
+              <a href="#" class="btn">View My Cards</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-2 col-md-5 col-10 mt-3">
+          <div class="card shadow">
+            <div class="card-body">
+              <h4 class="card-title">Completed Expansions</h4>
+              <p class="card-text lead">Completed Expansions: 0</p>
+              <a href="#" class="btn">View Expansion Progress</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-2 col-md-5 col-10 mt-3">
+          <div class="card shadow">
+            <div class="card-body">
+              <h4 class="card-title">Total Market Value</h4>
+              <p class="card-text lead">Market Value: £0</p>
+              <a href="#" class="btn">View Market Value Statistics</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12">
+          <div class="card shadow">
+            <div class="card-body">
+              <h4 class="card-title">Recent Activity</h4>
+              <ul class="list-group">
+                <li class="list-group-item">An item</li>
+                <li class="list-group-item">A second item</li>
+                <li class="list-group-item">A third item</li>
+                <li class="list-group-item">A fourth item</li>
+                <li class="list-group-item">And a fifth one</li>
+              </ul>
+              <a href="#" class="btn">View All Activity</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-12"></div>
       </div>
     </div>
-    <script src="../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-  </body>
+  </div>
+  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+</body>
+
 </html>

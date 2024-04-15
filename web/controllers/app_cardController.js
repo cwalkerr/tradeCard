@@ -1,20 +1,39 @@
 const axios = require("axios");
-const express = require("express");
 
-const app = express();
-
-// may not need this
-exports.renderCardsPage = (req, res) => {
-  res.render("cards");
-};
-
+// this has become quite messy, might need to modularise later
 exports.cardGrid = async (req, res) => {
   try {
     const page = req.query.page || 1;
+    let response;
+    let collectionOwner;
 
-    const cardTiles = await axios.get(
-      `http://localhost:4000/api/cards?page=${page}`
-    );
+    // check if collection id is in url
+    if (req.params.id) {
+      // make initial api call to get response - looking to get cardIds from collection
+      response = await axios.get(
+        `http://localhost:4000/api/collections/${req.params.id}/cards`
+      );
+
+      // get the userID of the collection owner -
+      //this gets passed to the view to check if the user is the owner for ability to edit collection cards
+      const getOwner = await axios.get(
+        `http://localhost:4000/api/collections?collection_id=${req.params.id}`
+      );
+      collectionOwner = getOwner.data[0].user_id;
+    }
+
+    // if cardIds exist, create url for cardIds in collection - otherwise get all cards
+    if (response && response.data.cardIds) {
+      cardIds = response.data.cardIds;
+      url = `http://localhost:4000/api/collections/${
+        req.params.id
+      }/cards?page=${page}&cardIds=${cardIds.join(",")}`;
+    } else {
+      url = `http://localhost:4000/api/cards?page=${page}`;
+    }
+
+    // get card tiles from api
+    const cardTiles = await axios.get(url);
     if (cardTiles.status === 200) {
       // get data from api response
       const cards = cardTiles.data.cards;
@@ -41,6 +60,13 @@ exports.cardGrid = async (req, res) => {
         currentPage: currentPage,
         startPage: startPage,
         endPage: endPage,
+        success: req.flash("success"),
+        error: req.flash("error"),
+        // these are used for collection card views
+        route: req.originalUrl,
+        collectionId: req.params.id,
+        userId: req.session.userID,
+        collectionOwner: collectionOwner,
       });
     }
   } catch (err) {
@@ -57,8 +83,8 @@ exports.cardDetails = async (req, res) => {
     );
     if (cardDetails.status === 200) {
       const card = cardDetails.data;
-      console.log(card); // debug
-      res.render("card", { card: card });
+      const userCollections = req.userCollections;
+      res.render("card", { card: card, collections: userCollections });
     }
   } catch (err) {
     console.log(err);

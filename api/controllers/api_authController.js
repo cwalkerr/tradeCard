@@ -1,5 +1,4 @@
-const express = require("express");
-const User = require("../models/userModel.js")();
+const User = require("../models/userModel.js");
 const Sequelize = require("sequelize");
 
 /**
@@ -7,7 +6,6 @@ const Sequelize = require("sequelize");
  */
 exports.signup = async (req, res) => {
   const { email, username, password, passwordCheck } = req.body;
-  console.log(req.body); // debug
 
   // pre-validation checks
   if (!email || !username || !password) {
@@ -45,13 +43,12 @@ exports.signup = async (req, res) => {
       .status(200)
       .json({ success: "You are now registered and can log in" });
   } catch (err) {
-    console.log(err); //  debug
     if (err instanceof Sequelize.ValidationError) {
       const errorMessage = err.errors.map((e) => e.message).join(", ");
       return res.status(400).json({ error: errorMessage });
     } else {
       return res
-        .status(400)
+        .status(500)
         .json({ error: err.message || "An error occurred" });
     }
   }
@@ -62,6 +59,9 @@ exports.signup = async (req, res) => {
  */
 exports.login = async (req, res) => {
   const { email, password } = req.body;
+
+  // debug
+  console.log(User);
 
   // pre-validation checks
   if (!email || !password) {
@@ -84,12 +84,13 @@ exports.login = async (req, res) => {
     // check if password matches
 
     if (await user.checkPassword(password)) {
-      return res.status(200).json({ success: "Login successful" });
+      return res
+        .status(200)
+        .json({ success: "Login successful", user_id: user.user_id });
     } else {
       return res.status(400).json({ error: "Incorrect password" });
     }
   } catch (err) {
-    console.log(err); // debug
-    return res.status(400).json({ error: "An error occurred" });
+    return res.status(500).json({ error: "An error occurred" });
   }
 };
