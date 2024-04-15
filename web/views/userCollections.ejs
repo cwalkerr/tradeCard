@@ -9,101 +9,7 @@
 </head>
 
 <body>
-
-  <!-- MODAL FOR CREATING COLLECTION -->
-  <div class="modal fade" id="createCollectionModal" tabindex="-1">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Create Collection</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <% if (error) { %>
-          <p class="lead text-center"><%= error %></p>
-          <% } %>
-          <form action="/collections" method="POST">
-            <div class="mb-3">
-              <label for="collectionName" class="form-label">Name</label>
-              <input type="text" class="form-control" id="collectionName" name="collectionName" required>
-            </div>
-            <div class="mb-3">
-              <label for="collectionDescription" class="form-label">Description</label>
-              <textarea class="form-control" id="collectionDescription" name="collectionDescription" rows="3"></textarea>
-            </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Save Collection</button>
-        </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-
-
-  <nav class="navbar navbar-expand-md lead bg-tertiary shadow">
-    <div class="container-fluid">
-      <!-- NAV BRAND -->
-      <a class="navbar-brand text-primary" href="/">
-        <img src="../media/logo.png" alt="logo" height="100px" width="100px" />
-      </a>
-      <!-- BURGER ICON -->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <!-- NAV LINKS - the collapse indicates that which is shown after burger clicked?-->
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <ul class="navbar-nav gap-3 fw-medium">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/cards">Cards</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Expansions</a>
-          </li>
-
-          <!-- DROPDOWN MENU FOR ACCOUNT STUFF -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <!-- SVG ACCOUNT PERSON CIRCLE -->
-              <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#406A1" class="bi bi-person-circle" viewBox="0 0 16 16">
-                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-6.468 11.37C3.242 11.226 4.806 10 8 10s4.767 1.226 6.468 2.37A7 7 0 0 0 8 1" />
-              </svg>
-            </a>
-            <!-- DROPDOWN MENU -->
-            <ul class="dropdown-menu dropdown-menu-end shadow">
-              <li>
-                <a class="dropdown-item d-flex align-items-center gap-2 lead" href="/signup">
-                  <!-- CREATE ACCOUNT ICON -->
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-person-plus-fill" viewBox="0 0 16 16">
-                    <path d="M1 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm6-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
-                    <path fill-rule="evenodd" d="M13.6 6a.6.6 0 0 1 .6.6V7h1.6a.6.6 0 0 1 0 1H14v1.6a.6.6 0 0 1-1 0V8h-1.6a.6.6 0 0 1 0-1H13V6.6a.6.6 0 0 1 .6-.6" />
-                  </svg>
-                  Create Account
-                </a>
-              </li>
-              <li>
-                <a class="dropdown-item d-flex align-items-center gap-2 lead" href="/login">
-                  <!-- SIGN IN ICON -->
-                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-box-arrow-in-right" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M6 3.6a.6.6 0 0 1 .6-.6h8a.6.6 0 0 1 .6.6v9a.6.6 0 0 1-.6.6h-8a.6.6 0 0 1-.6-.6v-2a.6.6 0 0 0-1 0v2A1.6 1.6 0 0 0 6.6 14h8a1.6 1.6 0 0 0 1.6-1.6v-9A1.6 1.6 0 0 0 14.6 2h-8A1.6 1.6 0 0 0 6 3.6v2a.6.6 0 0 0 1 0z" />
-                    <path fill-rule="evenodd" d="M11.864 8.364a.6.6 0 0 0 0-.708l-3-3a.6.6 0 1 0-.708.708L10.293 7.6H1.6a.6.6 0 0 0 0 1h8.793l-2.147 2.146a.6.6 0 0 0 .708.708z" />
-                  </svg>Sign In
-                </a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
+  <%- include('components/navbar.ejs') %>
   <div class="container">
     <div class="row">
       <div class="col">
@@ -143,6 +49,7 @@
         <a href="/collections/<%=collection.collection_id%>/cards">
           <div class="card">
             <div class="card-body">
+
               <div class="card-title lead fw-semibold">
                 <%= collection.name %>
               </div>
@@ -156,22 +63,53 @@
       </div>
     </div>
     <% }) %>
-  </div>
-  </div>
-  <% } else { %>
-  <div class="col">
-    <h1 class="lead">No collections found</h1>
-  </div>
-  <% } %>
-  </div>
-  </div>
-  <div class="row justify-content-center">
-    <div class="col">
-      <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#createCollectionModal">
-        Create Collection
-      </button>
+
+    <% } else { %>
+    <div class="row">
+      <div class="col">
+        <h1 class="lead">No collections found</h1>
+      </div>
+    </div>
+    <% } %>
+
+    <div class="row justify-content-center">
+      <div class="col">
+        <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#createCollectionModal">
+          Create Collection
+        </button>
+      </div>
     </div>
   </div>
+
+  <!-- MODAL FOR CREATING COLLECTION -->
+  <div class="modal fade" id="createCollectionModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create Collection</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <% if (error) { %>
+          <p class="lead text-center"><%= error %></p>
+          <% } %>
+          <form action="/collections" method="POST">
+            <div class="mb-3">
+              <label for="collectionName" class="form-label">Name</label>
+              <input type="text" class="form-control" id="collectionName" name="collectionName" required>
+            </div>
+            <div class="mb-3">
+              <label for="collectionDescription" class="form-label">Description</label>
+              <textarea class="form-control" id="collectionDescription" name="collectionDescription" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Save Collection</button>
+        </div>
+        </form>
+      </div>
+    </div>
   </div>
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
