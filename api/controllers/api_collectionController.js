@@ -2,7 +2,6 @@ const {
   Collection,
   CollectionCard,
 } = require("../models/modelAssosiations.js");
-const app_cardController = require("../../web/controllers/app_cardController.js");
 
 /**
  *  creates a new collection for the session user
