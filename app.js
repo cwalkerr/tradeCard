@@ -4,24 +4,36 @@ const cookieParser = require("cookie-parser");
 require("dotenv").config();
 const flash = require("connect-flash");
 const path = require("path");
+const methodOverride = require("method-override");
 
-// Routes
+// Route imports
 const userRoutes = require("./web/routes/app_userRoutes");
 const cardRoutes = require("./web/routes/app_cardRoutes");
+const collectionRoutes = require("./web/routes/app_collectionRoutes");
 
-const hour = 1000 * 60 * 60; // 1 hour
+// Constant for hour
+const hour = 1000 * 60 * 60;
 
+// initialize express app
 const app = express();
+
+// View engine
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "web/views"));
+
 // Middleware
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "web", "public")));
-app.use("/node_modules", express.static(__dirname + "/node_modules")); // prob not needed anymore
+app.use(
+  "/bootstrap",
+  express.static(path.join(__dirname, "/node_modules/bootstrap/dist"))
+); // fixes MIME type error
 app.use(express.json());
 app.use(flash());
 app.use(cookieParser());
+app.use(methodOverride("_method"));
 
+// Session middleware
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
@@ -36,9 +48,9 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "web/public", "index.html"));
 });
 
-// User routes for login and signup
 app.use("/", userRoutes);
 app.use("/", cardRoutes);
+app.use("/", collectionRoutes);
 
 // Listen
 app.listen(process.env.SERVER_PORT || 3000, () =>
