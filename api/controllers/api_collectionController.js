@@ -78,6 +78,13 @@ exports.deleteCollection = async (req, res) => {
         .json({ error: "You are not authorised to delete this collection" });
     }
 
+    // delete all cards in the collection first
+    await CollectionCard.destroy({
+      where: {
+        collection_id: collectionID,
+      },
+    });
+
     // if so, continue with delete
     await Collection.destroy({
       where: {
