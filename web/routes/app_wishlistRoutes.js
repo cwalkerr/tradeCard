@@ -12,12 +12,14 @@ router.get(
   cardController.cardGrid
 );
 
+// add a card to wishlist
 router.post(
   "/wishlist/cards",
   verifyLoggedIn("You must be logged in to add a card to your wishlist"),
   wishlistController.addCardToWishlist
 );
 
+// remove a card from wishlist
 router.delete(
   "/wishlist/:wishlist_id/cards/:card_id",
   verifyLoggedIn("You must be logged in to remove a card from your wishlist"),

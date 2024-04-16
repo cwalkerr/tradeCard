@@ -1,23 +1,5 @@
 const { Wishlist, WishlistCard } = require("../models/modelAssosiations.js");
 
-/*
- * User can only have one wishlist
- * just use this when the user is created
- */
-exports.createWishlist = async (req, res) => {
-  const { user_id } = req.body;
-
-  try {
-    await Wishlist.create({
-      user_id: user_id,
-    });
-
-    return res.status(201).json({ success: "Wishlist created" });
-  } catch (err) {
-    return res.status(500).json({ error: "Error creating wishlist" });
-  }
-};
-
 exports.getWishlist = async (req, res) => {
   const user_id = req.query.user_id;
 
