@@ -1,4 +1,5 @@
 const User = require("../models/userModel.js");
+const Wishlist = require("../models/wishlistModel.js");
 const Sequelize = require("sequelize");
 
 /**
@@ -31,12 +32,16 @@ exports.signup = async (req, res) => {
   }
 
   // create user
-
   try {
     user = await User.create({
       email: email,
       username: username,
       password: password,
+    });
+
+    // when user is created, create their wishlist
+    await Wishlist.create({
+      user_id: user.user_id,
     });
 
     return res
@@ -59,9 +64,6 @@ exports.signup = async (req, res) => {
  */
 exports.login = async (req, res) => {
   const { email, password } = req.body;
-
-  // debug
-  console.log(User);
 
   // pre-validation checks
   if (!email || !password) {
