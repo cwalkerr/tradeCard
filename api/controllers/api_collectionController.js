@@ -106,7 +106,7 @@ exports.deleteCollection = async (req, res) => {
  */
 exports.getCardsInCollection = async (req, res, next) => {
   // get collection from req param
-  const collection = await Collection.findByPk(req.params.id);
+  const collection = await Collection.findByPk(req.params.collection_id);
 
   // find array of card id's that belong in this collection...
   try {
@@ -120,7 +120,7 @@ exports.getCardsInCollection = async (req, res, next) => {
 
     // parse array of ids into a CS string to use in query param
     req.query.cardIds = collectionCardIDs.join(",");
-    req.collectionUserId = collection.user_id;
+    req.collectionUserId = collection.user_id; // redundant?
 
     next();
   } catch (err) {

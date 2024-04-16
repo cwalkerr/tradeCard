@@ -31,7 +31,7 @@ exports.userCollectionsGrid = async (req, res) => {
   }
 };
 
-// NOTE : not yet implemented
+// NOTE : not yet implemented - theis can be incorporated into the userCollectionsGrid function
 exports.collectionsGrid = async (req, res) => {
   try {
     const collectionTiles = await axios.get(
@@ -115,7 +115,7 @@ exports.addCardToCollection = async (req, res) => {
       }
     );
 
-    if (addCard.status === 200) {
+    if (addCard.status === 201) {
       req.flash("success", addCard.data.success || "Card added to collection");
     }
 

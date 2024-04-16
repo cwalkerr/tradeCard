@@ -10,7 +10,7 @@ const methodOverride = require("method-override");
 const userRoutes = require("./web/routes/app_userRoutes");
 const cardRoutes = require("./web/routes/app_cardRoutes");
 const collectionRoutes = require("./web/routes/app_collectionRoutes");
-
+const wishlistRoutes = require("./web/routes/app_wishlistRoutes");
 // Constant for hour
 const hour = 1000 * 60 * 60;
 
@@ -51,6 +51,7 @@ app.get("/", (req, res) => {
 app.use("/", userRoutes);
 app.use("/", cardRoutes);
 app.use("/", collectionRoutes);
+app.use("/", wishlistRoutes);
 
 // Listen
 app.listen(process.env.SERVER_PORT || 3000, () =>

@@ -4,29 +4,52 @@ const axios = require("axios");
 exports.cardGrid = async (req, res) => {
   try {
     const page = req.query.page || 1;
-    let response;
+    let collectionResponse;
+    let wishlistResponse;
     let collectionOwner;
+    let wishlistOwner;
 
-    // check if collection id is in url
-    if (req.params.id) {
+    /**
+     * CHECK IF THIS IS FOR A COLLECTION
+     */
+    if (req.params.collection_id) {
+      // im using req.params here but req.wishlistId in the next if statement - make this consistent
       // make initial api call to get response - looking to get cardIds from collection
-      response = await axios.get(
-        `http://localhost:4000/api/collections/${req.params.id}/cards`
+      collectionResponse = await axios.get(
+        `http://localhost:4000/api/collections/${req.params.collection_id}/cards`
       );
 
       // get the userID of the collection owner -
       //this gets passed to the view to check if the user is the owner for ability to edit collection cards
       const getOwner = await axios.get(
-        `http://localhost:4000/api/collections?collection_id=${req.params.id}`
+        `http://localhost:4000/api/collections?collection_id=${req.params.collection_id}`
       );
       collectionOwner = getOwner.data[0].user_id;
     }
 
-    // if cardIds exist, create url for cardIds in collection - otherwise get all cards
-    if (response && response.data.cardIds) {
-      cardIds = response.data.cardIds;
+    /**
+     * CHECK IF THIS IS FOR A WISHLIST
+     */
+    if (req.wishlistId) {
+      wishlistResponse = await axios.get(
+        `http://localhost:4000/api/wishlist/${req.wishlistId}/cards`
+      );
+      if (req.wishlistOwner === req.session.userID) {
+        // this is cleaner than the collectionOwner check - revise this
+        wishlistOwner = req.session.userID;
+      }
+    }
+
+    // if cardIds exist, create url for cardIds in collection or wishlist otherwise get all cards
+    if (collectionResponse && collectionResponse.data.cardIds) {
+      cardIds = collectionResponse.data.cardIds;
       url = `http://localhost:4000/api/collections/${
-        req.params.id
+        req.params.collection_id
+      }/cards?page=${page}&cardIds=${cardIds.join(",")}`;
+    } else if (wishlistResponse && wishlistResponse.data.cardIds) {
+      cardIds = wishlistResponse.data.cardIds;
+      url = `http://localhost:4000/api/wishlist/${
+        req.wishlistId
       }/cards?page=${page}&cardIds=${cardIds.join(",")}`;
     } else {
       url = `http://localhost:4000/api/cards?page=${page}`;
@@ -62,11 +85,12 @@ exports.cardGrid = async (req, res) => {
         endPage: endPage,
         success: req.flash("success"),
         error: req.flash("error"),
-        // these are used for collection card views
         route: req.originalUrl,
-        collectionId: req.params.id,
+        collectionId: req.params.collection_id,
+        wishlistId: req.wishlistId,
         userId: req.session.userID,
         collectionOwner: collectionOwner,
+        wishlistOwner: wishlistOwner,
       });
     }
   } catch (err) {
@@ -84,7 +108,14 @@ exports.cardDetails = async (req, res) => {
     if (cardDetails.status === 200) {
       const card = cardDetails.data;
       const userCollections = req.userCollections;
-      res.render("card", { card: card, collections: userCollections });
+      const wishlistId = req.wishlistId;
+      res.render("card", {
+        card: card,
+        wishlistId: wishlistId,
+        collections: userCollections,
+        success: req.flash("success"),
+        error: req.flash("error"),
+      });
     }
   } catch (err) {
     console.log(err);

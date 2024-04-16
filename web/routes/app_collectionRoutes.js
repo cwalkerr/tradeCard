@@ -1,9 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const api_collectionController = require("../../api/controllers/api_collectionController.js");
 const collectionController = require("../controllers/app_collectionController.js");
 const cardController = require("../controllers/app_cardController.js");
-const api_cardController = require("../../api/controllers/api_cardController.js");
 const verifyLoggedIn = require("../../middleware/middleware.js");
 
 //router.get("/collections", collectionController.collectionsGrid);
@@ -21,16 +19,24 @@ router.post(
   verifyLoggedIn("You must be logged in to create a collection"),
   collectionController.createCollection
 );
-// BUG TO FIX : cant delete collection if it has cards in it assuming its because of foreign key constraint
-// will need to delete the cards first
+
 router.delete(
   "/collections/:id",
   verifyLoggedIn("You must be logged in to delete collections"),
   collectionController.deleteCollection
 );
 
-router.get("/collections/:id/cards", cardController.cardGrid);
+// displays the cards in a collection
+router.get("/collections/:collection_id/cards", cardController.cardGrid);
 
+// adds a card to a collection
+router.post(
+  "/collections/cards/",
+  verifyLoggedIn("You must be logged in to add a card to a collection"),
+  collectionController.addCardToCollection
+);
+
+// removes a card from a collection
 router.delete(
   "/collections/:collection_id/cards/:card_id",
   verifyLoggedIn("You must be logged in to remove a card from a collection"),
