@@ -3,6 +3,8 @@ const { Card } = require("../models/modelAssosiations.js");
 /**
  * API controller to get cards tiles to display in card grid and in searches
  * not sure if this is what the api should do, seems now like this kind of formatting should be dealt with by web app - revisit later
+ * there also isnt functionality for the api to return all card data paginated, only the tiles - this should perhaps be added
+ * it wont be needed in my web app, but it would be useful for others using the api
  */
 
 exports.getCardTiles = async (req, res) => {

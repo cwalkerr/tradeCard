@@ -4,6 +4,20 @@
 const { Card } = require("./cardModel.js");
 const User = require("./userModel.js");
 const { Collection, CollectionCard } = require("./collectionModel.js");
+const { Wishlist, WishlistCard } = require("./wishlistModel.js");
+
+// associations between Wishlist, User and Card
+User.hasOne(Wishlist, { foreignKey: "user_id" });
+Wishlist.belongsTo(User, { foreignKey: "user_id" });
+
+Wishlist.belongsToMany(Card, {
+  through: WishlistCard,
+  foreignKey: "wishlist_id",
+});
+Card.belongsToMany(Wishlist, {
+  through: WishlistCard,
+  foreignKey: "card_id",
+});
 
 // associations between Card, User and Collection
 User.hasMany(Collection, { foreignKey: "user_id" });
@@ -23,4 +37,6 @@ module.exports = {
   Collection,
   CollectionCard,
   Card,
+  Wishlist,
+  WishlistCard,
 };
