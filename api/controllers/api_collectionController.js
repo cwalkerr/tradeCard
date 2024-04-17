@@ -1,6 +1,7 @@
 const {
   Collection,
   CollectionCard,
+  User,
 } = require("../models/modelAssosiations.js");
 
 /**
@@ -28,6 +29,7 @@ exports.createCollection = async (req, res) => {
 /**
  * gets all collections
  * if user_id is specified, gets only logged in users collections
+ * if collection_id is specified, gets only that collection
  * else gets all collections
  * @param {*} req
  * @param {*} res
@@ -35,10 +37,17 @@ exports.createCollection = async (req, res) => {
  */
 exports.getCollections = async (req, res) => {
   const user_id = req.query.user_id;
+  const collection_id = req.query.collection_id;
 
   try {
     let collections;
-    if (user_id) {
+    if (collection_id) {
+      collections = await Collection.findAll({
+        where: {
+          collection_id: collection_id,
+        },
+      });
+    } else if (user_id) {
       collections = await Collection.findAll({
         where: {
           user_id: user_id,
@@ -46,7 +55,16 @@ exports.getCollections = async (req, res) => {
       });
     } else {
       collections = await Collection.findAll();
+
+      collections = await Promise.all(
+        collections.map(async (collection) => {
+          const user = await User.findByPk(collection.user_id);
+          collection.dataValues.username = user.username; // may be easier to include this in the model like i did with the card attributes
+          return collection;
+        })
+      );
     }
+
     return res.status(200).json(collections);
   } catch (err) {
     return res.status(500).json({ error: "Error getting collections" });

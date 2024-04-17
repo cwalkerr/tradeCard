@@ -1,5 +1,5 @@
 const User = require("../models/userModel.js");
-const Wishlist = require("../models/wishlistModel.js");
+const { Wishlist } = require("../models/wishlistModel.js");
 const Sequelize = require("sequelize");
 
 /**

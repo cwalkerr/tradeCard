@@ -1,5 +1,8 @@
 const axios = require("axios");
 
+/*
+ * what to do with this?
+ */
 exports.getUserCollections = async (req, res, next) => {
   try {
     const collectionTiles = await axios.get(
@@ -18,39 +21,46 @@ exports.getUserCollections = async (req, res, next) => {
   }
 };
 
-exports.userCollectionsGrid = async (req, res) => {
-  try {
-    res.render("userCollections", {
-      success: req.flash("success"),
-      error: req.flash("error"),
-      collections: req.userCollections,
-    });
-  } catch (err) {
-    req.flash("error", err.response.data.error || "An error occurred");
-    return res.redirect("/dashboard");
-  }
-};
-
-// NOTE : not yet implemented - theis can be incorporated into the userCollectionsGrid function
+// this is just temporary - will need to be updated - not very dry
 exports.collectionsGrid = async (req, res) => {
-  try {
-    const collectionTiles = await axios.get(
-      "http://localhost:4000/api/collections"
-    );
-
-    if (collectionTiles.status === 200) {
-      const collections = collectionTiles.data;
-
-      //need a dif page for all collections....
-      res.render("userCollections", {
+  if (req.userCollections) {
+    try {
+      res.render("collections", {
         success: req.flash("success"),
         error: req.flash("error"),
-        collections: collections,
+        collections: req.userCollections,
+        userId: req.session.userID,
+        route: req.originalUrl,
       });
+    } catch (err) {
+      req.flash("error", err.response.data.error || "An error occurred");
+      return res.redirect("/dashboard");
     }
-  } catch (err) {
-    req.flash("error", err.response.data.error || "An error occurred");
-    return res.redirect("/dashboard");
+  } else {
+    try {
+      const collectionTiles = await axios.get(
+        "http://localhost:4000/api/collections"
+      );
+
+      if (collectionTiles.status === 200) {
+        const collections = collectionTiles.data;
+
+        res.render("collections", {
+          success: req.flash("success"),
+          error: req.flash("error"),
+          collections: collections,
+          route: req.originalUrl,
+          userId: req.session.userID,
+        });
+      }
+    } catch (err) {
+      req.flash("error", err.response.data.error || "An error occurred");
+      if (req.session.userID) {
+        return res.redirect("/dashboard");
+      } else {
+        return res.redirect("/"); // this isnt great - will do for now
+      }
+    }
   }
 };
 

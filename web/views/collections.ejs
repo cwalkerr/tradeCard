@@ -12,9 +12,11 @@
   <%- include('components/navbar.ejs') %>
   <div class="container">
     <div class="row">
+      <% if (userId && route.includes('/user')) {  %>
       <div class="col">
         <h1 class="lead">My Collections</h1>
       </div>
+      <% } %>
       <div class="col">
         <!-- this is causing login success msg to display - fix -->
         <% if (success) { %>
@@ -22,6 +24,7 @@
         <% } %>
       </div>
     </div>
+
     <% if (collections) { %>
     <% collections.forEach((collection) => { %>
     <!-- MODAL FOR DELETION WARNING -->
@@ -54,12 +57,19 @@
                 <%= collection.name %>
               </div>
               <div class="card-text">
+                <% if (!route.includes('/user')) { %>
+                User: <%= collection.username %>
+                <br>
+                <% } %>
                 <%= collection.description %>
               </div>
+
         </a>
+        <% if (userId && route.includes('/user')) {%>
         <button type="button" class="btn btn-danger d-flex justify-content-end" data-bs-toggle="modal" data-bs-target="#deleteCollectionModal<%= collection.collection_id %>">
           Delete Collection
         </button>
+        <% } %>
       </div>
     </div>
     <% }) %>
@@ -72,6 +82,8 @@
     </div>
     <% } %>
 
+    <!-- BUTTON TO CREATE NEW COLLECTION -->
+    <% if (userId && route.includes('/user')) {%>
     <div class="row justify-content-center">
       <div class="col">
         <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#createCollectionModal">
@@ -79,7 +91,9 @@
         </button>
       </div>
     </div>
+    <% } %>
   </div>
+
 
   <!-- MODAL FOR CREATING COLLECTION -->
   <div class="modal fade" id="createCollectionModal" tabindex="-1">
