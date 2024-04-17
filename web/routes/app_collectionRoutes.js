@@ -4,13 +4,15 @@ const collectionController = require("../controllers/app_collectionController.js
 const cardController = require("../controllers/app_cardController.js");
 const verifyLoggedIn = require("../../middleware/middleware.js");
 
-//router.get("/collections", collectionController.collectionsGrid);
+// gets all collections
+router.get("/collections", collectionController.collectionsGrid);
 
+// gets all collections for the logged in user
 router.get(
   "/collections/user",
   verifyLoggedIn("You must be logged in view your collections"),
   collectionController.getUserCollections,
-  collectionController.userCollectionsGrid
+  collectionController.collectionsGrid
 );
 // both create and delete probably dont need to include verification, the user must be logged in to see the page
 // keeping it in for now for consistency
