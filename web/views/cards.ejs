@@ -10,7 +10,7 @@
 
 <body>
   <style>
-    .card-body {
+    .pokemonCardBody {
       position: absolute;
       bottom: 0;
       left: 0;
@@ -21,15 +21,15 @@
       transition: opacity 0.5s ease;
     }
 
-    .card:hover .card-body {
+    .pokemonCard:hover .pokemonCardBody {
       opacity: 1;
     }
 
-    .card {
+    .pokemonCard {
       transition: transform 0.3s ease;
     }
 
-    .card:hover {
+    .pokemonCard:hover {
       transform: scale(1.1);
     }
 
@@ -48,8 +48,8 @@
     <% if (route.startsWith ('/collections')) { %>
     <div class="row mx-5">
       <div class="col-4">
-        <h2><%= collectionData.name %></h2>
-        <h4>By : <%= collectionData.username %></h4>
+        <h2 class="mt-3"><%= collectionData.name %></h2>
+        <h4>By : <%= collectionData.User.username %></h4>
         <p class="lead"><%= collectionData.description %></p>
 
         <div class="row my-3">
@@ -82,13 +82,45 @@
           </div>
         </div>
         <% } %>
+        <!-- COMMENTS -->
+        <div class="row my-3 border-top">
+          <div class="col">
+            <h4 class="my-3 lead fw-semibold">Comments</h4>
+            <% comments.forEach((comment) => { %>
+            <div class="card my-2">
+              <div class="card-body">
+                <h5 class="card-title"> <%= comment.User.username %> </h5>
+                <% const dateTime = new Date(comment.created_at).toLocaleString({hour: '2-digit', minute: '2-digit'}).replace(/(:\d{2}| [AP]M)$/, ""); %>
+                <p class="card-text"><em><%= dateTime %></em>: <%= comment.comment %></p>
+                <% if (userId === comment.user_id) { %>
+                <form action="/collections/<%=collectionData.collection_id%>/comments/<%=comment.comment_id%>/?_method=DELETE" method="POST">
+                  <button type="submit" class="btn btn-close position-absolute p-3 top-0 end-0">
+                  </button>
+                </form>
+                <% } %>
+              </div>
+            </div>
+            <% }) %>
+            <% if (userId && userId !== collectionData.user_id) { %>
+            <div class="my-3">
+              <form action="/collections/<%=collectionData.collection_id%>/comments" method="POST">
+                <div class="form-group">
+                  <label for="comment" class=" form-label">Leave a comment</label>
+                  <textarea type="text" id="comment" class="form-control" name="comment" rows="3" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Submit</button>
+              </form>
+            </div>
+            <% } %>
+          </div>
+        </div>
       </div>
       <div class="col-8">
         <div class="row justify-content-center gap-2 mt-5">
           <% cards.forEach((card) => { %>
           <div class="col-xxl-2 col-lg-3 col-5">
             <a href="/cards/<%= card.card_id%>">
-              <div class="card shadow my-2 position-relative">
+              <div class="card shadow my-2 position-relative pokemonCard">
                 <!-- REMOVE CARD FROM COLLECTION BUTTON -->
                 <% if (route.startsWith ('/collections/') && userId === collectionData.user_id) { %>
                 <form action="/collections/<%=collectionData.collection_id%>/cards/<%=card.card_id%>/?_method=DELETE" method="POST">
@@ -100,7 +132,7 @@
                 </form>
                 <% } %>
                 <img src="<%= card.image %>" class="card-img-top img-fluid" alt="..." />
-                <div class="card-body">
+                <div class="card-body pokemonCardBody">
                   <h6 class="card-title lead fw-semibold font-monospace">
                     <%= card.name %>
                   </h6>
@@ -122,7 +154,7 @@
       <% cards.forEach((card) => { %>
       <div class="col-xxl-2 col-lg-3 col-5">
         <a href="/cards/<%= card.card_id%>">
-          <div class="card shadow my-2 position-relative">
+          <div class="card shadow my-2 position-relative pokemonCard">
             <!-- REMOVE CARD FROM WISHLIST BUTTON -->
             <% if (route.startsWith ('/wishlist') && userId === wishlistOwner) { %>
             <form action="/wishlist/<%=wishlistId%>/cards/<%=card.card_id%>/?_method=DELETE" method="POST">
@@ -134,7 +166,7 @@
             </form>
             <% } %>
             <img src="<%= card.image %>" class="card-img-top img-fluid" alt="..." />
-            <div class="card-body">
+            <div class="card-body pokemonCardBody">
               <h6 class="card-title lead fw-semibold font-monospace">
                 <%= card.name %>
               </h6>
@@ -150,9 +182,9 @@
       <% cards.forEach((card) => { %>
       <div class="col-xxl-2 col-lg-3 col-5">
         <a href="/cards/<%= card.card_id%>">
-          <div class="card shadow my-2 position-relative">
+          <div class="card shadow my-2 position-relative pokemonCard">
             <img src="<%= card.image %>" class="card-img-top img-fluid" alt="..." />
-            <div class="card-body">
+            <div class="card-body pokemonCardBody">
               <h6 class="card-title lead fw-semibold font-monospace">
                 <%= card.name %>
               </h6>

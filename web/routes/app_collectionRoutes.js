@@ -14,8 +14,7 @@ router.get(
   collectionController.getUserCollections,
   collectionController.collectionsGrid
 );
-// both create and delete probably dont need to include verification, the user must be logged in to see the page
-// keeping it in for now for consistency
+
 router.post(
   "/collections",
   verifyLoggedIn("You must be logged in to create a collection"),
@@ -45,10 +44,24 @@ router.delete(
   collectionController.removeCardFromCollection
 );
 
+// removes a rating from a collection
 router.delete(
   "/collections/:collection_id/ratings/:user_id",
   verifyLoggedIn("You must be logged in to remove a rating"),
   collectionController.removeRatingFromCollection
+);
+
+// comments routes
+router.post(
+  "/collections/:collection_id/comments",
+  verifyLoggedIn("You must be logged in to comment on a collection"),
+  collectionController.addComment
+);
+
+router.delete(
+  "/collections/:collection_id/comments/:comment_id",
+  verifyLoggedIn("You must be logged in to delete a comment"),
+  collectionController.deleteComment
 );
 
 module.exports = router;

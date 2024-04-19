@@ -6,7 +6,6 @@ exports.getRatingDetails = async (req, res) => {
   try {
     const ratings = await Rating.getRatingDetails(collection_id);
     req.ratings = ratings;
-    console.log("ratings: ", ratings);
     return res.status(200).json(ratings);
   } catch (err) {
     return res.status(500).json({ error: "Error getting rating details" });

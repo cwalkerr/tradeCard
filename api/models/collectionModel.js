@@ -84,6 +84,45 @@ const Rating = sequelize.define(
   }
 );
 
+const Comment = sequelize.define(
+  "Comment",
+  {
+    comment_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    comment: {
+      type: DataTypes.TEXT,
+      allowNull: false,
+    },
+    collection_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+  },
+  {
+    tableName: "comment",
+    createdAt: "created_at",
+    updatedAt: false,
+    freezeTableName: true,
+  }
+);
+
+// comment - collection relationship
+Comment.belongsTo(Collection, {
+  foreignKey: "collection_id",
+});
+Collection.hasMany(Comment, {
+  foreignKey: "collection_id",
+});
+
+// rating - collection relationship
 Rating.belongsTo(Collection, {
   foreignKey: "collection_id",
 });
@@ -163,4 +202,5 @@ module.exports = {
   Collection,
   CollectionCard,
   Rating,
+  Comment,
 };

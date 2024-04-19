@@ -7,8 +7,9 @@ exports.cardGrid = async (req, res) => {
     let collectionResponse;
     let wishlistResponse;
     let collectionData;
-    let ratings;
     let getCount;
+    let ratings;
+    let comments;
 
     /**
      * CHECK IF THIS IS FOR A COLLECTION
@@ -40,12 +41,15 @@ exports.cardGrid = async (req, res) => {
         const ratingCount = ratings.ratings.find(
           (rating) => rating.rating == ratingValue
         );
-        if (ratingCount == undefined) {
-          return 0;
-        } else {
-          return ratingCount.count;
-        }
+        return ratingCount ? ratingCount.count : 0;
       };
+
+      // get the comments for the collection
+      const commentDetails = await axios.get(
+        `http://localhost:4000/api/collections/${req.params.collection_id}/comments`
+      );
+      comments = commentDetails.data;
+      dateTime = new Date(comments.createdAt).toLocaleString();
     }
     /**
      * CHECK IF THIS IS FOR A WISHLIST
@@ -112,6 +116,8 @@ exports.cardGrid = async (req, res) => {
         collectionData: collectionData,
         ratingData: ratings,
         getCount: getCount,
+        comments: comments,
+        dateTime: dateTime,
       });
     }
   } catch (err) {

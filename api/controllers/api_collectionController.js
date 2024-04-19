@@ -46,24 +46,35 @@ exports.getCollections = async (req, res) => {
         where: {
           collection_id: collection_id,
         },
+        include: [
+          {
+            model: User,
+            attributes: ["username"],
+          },
+        ],
       });
     } else if (user_id) {
       collections = await Collection.findAll({
         where: {
           user_id: user_id,
         },
+        include: [
+          {
+            model: User,
+            attributes: ["username"],
+          },
+        ],
       });
     } else {
-      collections = await Collection.findAll();
+      collections = await Collection.findAll({
+        include: [
+          {
+            model: User,
+            attributes: ["username"],
+          },
+        ],
+      });
     }
-    collections = await Promise.all(
-      collections.map(async (collection) => {
-        const user = await User.findByPk(collection.user_id);
-        collection.dataValues.username = user.username; // may be cleaner to include this in the model like i did with the card attributes
-        return collection;
-      })
-    );
-
     return res.status(200).json(collections);
   } catch (err) {
     return res.status(500).json({ error: "Error getting collections" });
