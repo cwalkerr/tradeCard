@@ -179,3 +179,51 @@ exports.removeRatingFromCollection = async (req, res) => {
     res.redirect(`/collections/${collection_id}/cards`);
   }
 };
+
+exports.addComment = async (req, res) => {
+  const { collection_id } = req.params;
+  const { comment } = req.body;
+  const user_id = req.session.userID;
+
+  // debug
+  console.log(collection_id);
+  console.log(comment);
+  console.log(user_id);
+
+  try {
+    const addComment = await axios.post(
+      `http://localhost:4000/api/collections/${collection_id}/comments`,
+      {
+        comment: comment,
+        user_id: user_id,
+      }
+    );
+
+    console.log(addComment);
+
+    if (addComment.status === 201) {
+      res.redirect(`/collections/${collection_id}/cards`);
+    }
+  } catch (err) {
+    req.flash("error", err.response.data.error || "An error occurred");
+    res.redirect(`/collections/${collection_id}/cards`);
+  }
+};
+
+exports.deleteComment = async (req, res) => {
+  const { comment_id, collection_id } = req.params;
+
+  try {
+    const deleteComment = await axios.delete(
+      `http://localhost:4000/api/collections/${collection_id}/comments/${comment_id}`
+    );
+
+    if (deleteComment.status === 200) {
+      req.flash("success", deleteComment.data.success || "Comment deleted");
+    }
+    res.redirect(`/collections/${collection_id}/cards`);
+  } catch (err) {
+    req.flash("error", err.response.data.error || "An error occurred");
+    res.redirect(`/collections/${collection_id}/cards`);
+  }
+};
