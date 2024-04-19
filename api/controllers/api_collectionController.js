@@ -55,15 +55,14 @@ exports.getCollections = async (req, res) => {
       });
     } else {
       collections = await Collection.findAll();
-
-      collections = await Promise.all(
-        collections.map(async (collection) => {
-          const user = await User.findByPk(collection.user_id);
-          collection.dataValues.username = user.username; // may be easier to include this in the model like i did with the card attributes
-          return collection;
-        })
-      );
     }
+    collections = await Promise.all(
+      collections.map(async (collection) => {
+        const user = await User.findByPk(collection.user_id);
+        collection.dataValues.username = user.username; // may be cleaner to include this in the model like i did with the card attributes
+        return collection;
+      })
+    );
 
     return res.status(200).json(collections);
   } catch (err) {

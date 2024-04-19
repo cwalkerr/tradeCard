@@ -156,3 +156,26 @@ exports.removeCardFromCollection = async (req, res) => {
     res.redirect(`/collections/${collection_id}/cards`);
   }
 };
+
+exports.removeRatingFromCollection = async (req, res) => {
+  const { collection_id, user_id } = req.params;
+
+  try {
+    // i think adding user_id in params might be security risk? - review when dealing with security better
+    const removeRating = await axios.delete(
+      `http://localhost:4000/api/collections/${collection_id}/ratings/${user_id}`
+    );
+
+    if (removeRating.status === 200) {
+      req.flash(
+        "success",
+        removeRating.data.success || "Rating removed from collection"
+      );
+    }
+    res.redirect(`/collections/${collection_id}/cards`);
+  } catch (err) {
+    console.log(err);
+    req.flash("error", err.response.data.error || "An error occurred");
+    res.redirect(`/collections/${collection_id}/cards`);
+  }
+};

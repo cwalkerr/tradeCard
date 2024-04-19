@@ -45,4 +45,10 @@ router.delete(
   collectionController.removeCardFromCollection
 );
 
+router.delete(
+  "/collections/:collection_id/ratings/:user_id",
+  verifyLoggedIn("You must be logged in to remove a rating"),
+  collectionController.removeRatingFromCollection
+);
+
 module.exports = router;

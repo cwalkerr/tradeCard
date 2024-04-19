@@ -32,13 +32,84 @@
     .card:hover {
       transform: scale(1.1);
     }
+
+    .star {
+      font-size: 2rem;
+      cursor: pointer;
+
+    }
+
+    .star.gold {
+      color: gold;
+    }
   </style>
   <%- include('components/navbar.ejs') %>
-  <div class="container">
-    <% if (route.startsWith ('/collections/')) { %>
-    <div class="row justify-content-center gap-2 mt-5">
-      <div class="col">
-        <h4>Collection</h4>
+  <div class="<%= route.startsWith('/collections') ? 'container-fluid' : 'container' %>">
+    <% if (route.startsWith ('/collections')) { %>
+    <div class="row mx-5">
+      <div class="col-4">
+        <h2><%= collectionData.name %></h2>
+        <h4>By : <%= collectionData.username %></h4>
+        <p class="lead"><%= collectionData.description %></p>
+
+        <div class="row my-3">
+          <div class="col border-top border-bottom">
+            <h4 id="averageRating" class="my-3 lead fw-semibold">Community Rating : (&#9733; <%= ratingData.average %>/5)</h4>
+            <h4><span style="color: gold" class="p-2">&#9733; &#9733; &#9733; &#9733; &#9733; </span><span id="count5">(<%=getCount(5);%>)</span></h4>
+            <h4><span style="color: gold" class="p-2">&#9733; &#9733; &#9733; &#9733; </span><span id="count4">(<%=getCount(4);%>)</span></h4>
+            <h4><span style="color: gold" class="p-2">&#9733; &#9733; &#9733; </span><span id="count3">(<%=getCount(3);%>)</span></h4>
+            <h4><span style="color: gold" class="p-2">&#9733; &#9733; </span><span id="count2">(<%=getCount(2);%>)</span></h4>
+            <h4><span style="color: gold" class="p-2">&#9733; </span><span id="count1">(<%=getCount(1);%>)</span></h4>
+          </div>
+        </div>
+        <% if (userId && userId !== collectionData.user_id) { %>
+        <div class="row my-3">
+          <div class="col">
+            <h4 class="my-3 lead fw-semibold">Rate this collection</h4>
+            <div class="rating">
+              <span class="star" onmouseover="hover(1)" onmouseout="remove()" onclick="handleRatingUpdate(1)">&#9733;</span>
+              <span class="star" onmouseover="hover(2)" onmouseout="remove()" onclick="handleRatingUpdate(2)">&#9733;</span>
+              <span class="star" onmouseover="hover(3)" onmouseout="remove()" onclick="handleRatingUpdate(3)">&#9733;</span>
+              <span class="star" onmouseover="hover(4)" onmouseout="remove()" onclick="handleRatingUpdate(4)">&#9733;</span>
+              <span class="star" onmouseover="hover(5)" onmouseout="remove()" onclick="handleRatingUpdate(5)">&#9733;</span>
+              <p id="output"></p>
+              <form action="/collections/<%=collectionData.collection_id%>/ratings/<%=userId%>/?_method=DELETE" method="POST">
+                <button type="submit" class="btn btn-danger p-2">
+                  Remove Rating
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <% } %>
+      </div>
+      <div class="col-8">
+        <div class="row justify-content-center gap-2 mt-5">
+          <% cards.forEach((card) => { %>
+          <div class="col-xxl-2 col-lg-3 col-5">
+            <a href="/cards/<%= card.card_id%>">
+              <div class="card shadow my-2 position-relative">
+                <!-- REMOVE CARD FROM COLLECTION BUTTON -->
+                <% if (route.startsWith ('/collections/') && userId === collectionData.user_id) { %>
+                <form action="/collections/<%=collectionData.collection_id%>/cards/<%=card.card_id%>/?_method=DELETE" method="POST">
+                  <button class="btn btn-danger position-absolute top-0 start-100 translate-middle  p-2 border border-light rounded-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                      <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
+                    </svg>
+                  </button>
+                </form>
+                <% } %>
+                <img src="<%= card.image %>" class="card-img-top img-fluid" alt="..." />
+                <div class="card-body">
+                  <h6 class="card-title lead fw-semibold font-monospace">
+                    <%= card.name %>
+                  </h6>
+                </div>
+              </div>
+            </a>
+          </div>
+          <% }) %>
+        </div>
       </div>
     </div>
     <% } else if (route.startsWith('/wishlist')) {  %>
@@ -47,23 +118,11 @@
         <h4>Wishlist</h4>
       </div>
     </div>
-    <% } %>
     <div class="row justify-content-center gap-2 mt-5">
-      <% cards.forEach(function(card) { %>
+      <% cards.forEach((card) => { %>
       <div class="col-xxl-2 col-lg-3 col-5">
         <a href="/cards/<%= card.card_id%>">
           <div class="card shadow my-2 position-relative">
-            <!-- REMOVE CARD FROM COLLECTION BUTTON -->
-            <% if (route.startsWith ('/collections/') && userId === collectionOwner) { %>
-            <form action="/collections/<%=collectionId%>/cards/<%=card.card_id%>/?_method=DELETE" method="POST">
-              <button class="btn btn-danger position-absolute top-0 start-100 translate-middle  p-2 border border-light rounded-circle">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                  <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                </svg>
-              </button>
-            </form>
-            <% } %>
-
             <!-- REMOVE CARD FROM WISHLIST BUTTON -->
             <% if (route.startsWith ('/wishlist') && userId === wishlistOwner) { %>
             <form action="/wishlist/<%=wishlistId%>/cards/<%=card.card_id%>/?_method=DELETE" method="POST">
@@ -74,7 +133,24 @@
               </button>
             </form>
             <% } %>
-
+            <img src="<%= card.image %>" class="card-img-top img-fluid" alt="..." />
+            <div class="card-body">
+              <h6 class="card-title lead fw-semibold font-monospace">
+                <%= card.name %>
+              </h6>
+            </div>
+          </div>
+        </a>
+      </div>
+      <% }) %>
+    </div>
+    <% } else {  %>
+    <!-- Cards grid -->
+    <div class="row justify-content-center gap-2 mt-5">
+      <% cards.forEach((card) => { %>
+      <div class="col-xxl-2 col-lg-3 col-5">
+        <a href="/cards/<%= card.card_id%>">
+          <div class="card shadow my-2 position-relative">
             <img src="<%= card.image %>" class="card-img-top img-fluid" alt="..." />
             <div class="card-body">
               <h6 class="card-title lead fw-semibold font-monospace">
@@ -87,7 +163,7 @@
       <% }) %>
     </div>
   </div>
-
+  <% } %>
   <div class="container">
     <% if (totalPages > 1) { %>
     <nav aria-label="Page navigation">
@@ -111,7 +187,18 @@
     </nav>
     <% } %>
   </div>
+  <!-- SCRIPTS -->
+
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <% if ( collectionData && userId ) { %>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const userId = "<%= userId %>";
+    const collectionId = "<%= collectionData.collection_id %>";
+  </script>
+  <script src="/scripts/rating.js"></script>
+  <% } %>
 </body>
 
 </html>

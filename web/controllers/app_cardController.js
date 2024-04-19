@@ -1,13 +1,14 @@
 const axios = require("axios");
 
-// this has become quite messy, might need to modularise later
+// this has become quite messy, need to modularise later
 exports.cardGrid = async (req, res) => {
   try {
     const page = req.query.page || 1;
     let collectionResponse;
     let wishlistResponse;
-    let collectionOwner;
-    let wishlistOwner;
+    let collectionData;
+    let ratings;
+    let getCount;
 
     /**
      * CHECK IF THIS IS FOR A COLLECTION
@@ -21,12 +22,31 @@ exports.cardGrid = async (req, res) => {
 
       // get the userID of the collection owner -
       //this gets passed to the view to check if the user is the owner for ability to edit collection cards
+      // shouldnt use query params here, should use params - revise this
       const getOwner = await axios.get(
         `http://localhost:4000/api/collections?collection_id=${req.params.collection_id}`
       );
-      collectionOwner = getOwner.data[0].user_id;
-    }
+      collectionData = getOwner.data[0];
+      console.log(getOwner.data[0]);
 
+      // get the rating details for the collection
+      const ratingDetails = await axios.get(
+        `http://localhost:4000/api/collections/${req.params.collection_id}/ratings`
+      );
+      ratings = ratingDetails.data;
+
+      // function to get the count of a rating value - function gets called in the ejs view with the rating value
+      getCount = (ratingValue) => {
+        const ratingCount = ratings.ratings.find(
+          (rating) => rating.rating == ratingValue
+        );
+        if (ratingCount == undefined) {
+          return 0;
+        } else {
+          return ratingCount.count;
+        }
+      };
+    }
     /**
      * CHECK IF THIS IS FOR A WISHLIST
      */
@@ -77,6 +97,7 @@ exports.cardGrid = async (req, res) => {
         startPage = Math.max(1, endPage - 8);
       }
 
+      console.log(collectionData);
       res.render("cards", {
         cards: cards,
         totalPages: totalPages,
@@ -86,11 +107,11 @@ exports.cardGrid = async (req, res) => {
         success: req.flash("success"),
         error: req.flash("error"),
         route: req.originalUrl,
-        collectionId: req.params.collection_id,
         wishlistId: req.wishlistId,
         userId: req.session.userID,
-        collectionOwner: collectionOwner,
-        wishlistOwner: wishlistOwner,
+        collectionData: collectionData,
+        ratingData: ratings,
+        getCount: getCount,
       });
     }
   } catch (err) {

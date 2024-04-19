@@ -45,7 +45,7 @@ app.use(
 
 // Routes
 app.get("/", (req, res) => {
-  res.sendFile(path.join(__dirname, "web/public", "index.html"));
+  res.sendFile("index.html");
 });
 
 app.use("/", userRoutes);
