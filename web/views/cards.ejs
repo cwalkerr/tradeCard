@@ -117,6 +117,9 @@
       </div>
       <div class="col-8">
         <div class="row justify-content-center gap-2 mt-5">
+          <% if (cards === null) { %>
+          <h4>This collection hasn't got any cards yet</h4>
+          <% } else { %>
           <% cards.forEach((card) => { %>
           <div class="col-xxl-2 col-lg-3 col-5">
             <a href="/cards/<%= card.card_id%>">
@@ -131,7 +134,7 @@
                   </button>
                 </form>
                 <% } %>
-                <img src="<%= card.image %>" class="card-img-top img-fluid" alt="..." />
+                <img src="<%= card.Images[0].url %>" class="card-img-top img-fluid" alt="..." />
                 <div class="card-body pokemonCardBody">
                   <h6 class="card-title lead fw-semibold font-monospace">
                     <%= card.name %>
@@ -141,6 +144,7 @@
             </a>
           </div>
           <% }) %>
+          <% } %>
         </div>
       </div>
     </div>
@@ -151,13 +155,17 @@
       </div>
     </div>
     <div class="row justify-content-center gap-2 mt-5">
+      <% if (cards === null) { %>
+      <h4>This wishlist hasn't got any cards yet</h4>
+      <a href="/cards">Find some cards to add here!</a>
+      <% } else { %>
       <% cards.forEach((card) => { %>
       <div class="col-xxl-2 col-lg-3 col-5">
         <a href="/cards/<%= card.card_id%>">
           <div class="card shadow my-2 position-relative pokemonCard">
             <!-- REMOVE CARD FROM WISHLIST BUTTON -->
-            <% if (route.startsWith ('/wishlist') && userId === wishlistOwner) { %>
-            <form action="/wishlist/<%=wishlistId%>/cards/<%=card.card_id%>/?_method=DELETE" method="POST">
+            <% if (route.startsWith ('/wishlist') && userId === wishlistData.user_id) { %>
+            <form action="/wishlist/<%=wishlistData.wishlist_id%>/card/<%=card.card_id%>/?_method=DELETE" method="POST">
               <button class="btn btn-danger position-absolute top-0 start-100 translate-middle  p-2 border border-light rounded-circle">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                   <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
@@ -165,7 +173,7 @@
               </button>
             </form>
             <% } %>
-            <img src="<%= card.image %>" class="card-img-top img-fluid" alt="..." />
+            <img src="<%= card.Images[0].url %>" class="card-img-top img-fluid" alt="..." />
             <div class="card-body pokemonCardBody">
               <h6 class="card-title lead fw-semibold font-monospace">
                 <%= card.name %>
@@ -175,6 +183,7 @@
         </a>
       </div>
       <% }) %>
+      <% } %>
     </div>
     <% } else {  %>
     <!-- Cards grid -->
@@ -183,7 +192,7 @@
       <div class="col-xxl-2 col-lg-3 col-5">
         <a href="/cards/<%= card.card_id%>">
           <div class="card shadow my-2 position-relative pokemonCard">
-            <img src="<%= card.image %>" class="card-img-top img-fluid" alt="..." />
+            <img src="<%= card.Images[0].url %>" class="card-img-top img-fluid" alt="..." />
             <div class="card-body pokemonCardBody">
               <h6 class="card-title lead fw-semibold font-monospace">
                 <%= card.name %>

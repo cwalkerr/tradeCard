@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title><%=card.name%>></title>
+  <title><%=card.name%></title>
   <link rel="stylesheet" href="/css/custom.css" />
 </head>
 
@@ -13,23 +13,28 @@
   <div class="container">
     <div class="row">
       <div class="col">
+
         <% if (success) { %>
         <p class="lead text-center mb-3"><%= success %></p>
         <% } %> <% if (error) { %>
         <p class="lead text-center mb-3"><%= error %></p>
         <% } %>
+
         <!-- ADD TO COLLECTION BUTTON -->
+        <% if (userId) { %>
         <div class="d-flex justify-content-end">
           <button class="btn btn-primary my-3" data-bs-toggle="modal" data-bs-target="#addCardModal">Add to Collection</button>
         </div>
+
         <!-- ADD TO WISHLIST BUTTON -->
+        <% if (wishlistData) {  %>
         <div class="d-flex justify-content-end">
-          <form action="/wishlist/cards" method="POST">
-            <input type="hidden" name="card_id" value="<%= card.card_id %>">
-            <input type="hidden" name="wishlist_id" value="<%= wishlistId %>">
+          <form action="/wishlist/<%=wishlistData.wishlist_id%>/card/<%=card.card_id%>" method="POST">
             <button type="submit" class="btn btn-primary my-3"> Add to Wishlist</button>
           </form>
         </div>
+        <% } %>
+        <% } %>
       </div>
     </div>
     <div class="row">
@@ -243,20 +248,16 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <form action="/collections/cards" method="POST">
+          <form action="/collections/cards/<%= card.card_id %>" method="POST">
             <div class="mb-3">
               <label for="collectionSelect" class="form-label">Select Collection</label>
               <select class="form-select" name="collection_id">
                 <option selected>Choose...</option>
-                <% if (collections) { %>
-                <% collections.forEach((collection) => { %>
+                <% collectionData.forEach((collection) => { %>
                 <option value="<%= collection.collection_id %>"><%= collection.name %></option>
                 <% }) %>
-                <% } %>
               </select>
             </div>
-            <!-- this card id can just be passed from the url?? -->
-            <input type="hidden" name="card_id" value="<%= card.card_id %>">
             <button type="submit" class="btn btn-primary">Add to Collection</button>
           </form>
         </div>

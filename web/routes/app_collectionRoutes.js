@@ -2,66 +2,111 @@ const express = require("express");
 const router = express.Router();
 const collectionController = require("../controllers/app_collectionController.js");
 const cardController = require("../controllers/app_cardController.js");
-const verifyLoggedIn = require("../../middleware/middleware.js");
+const ratingController = require("../controllers/app_ratingController.js");
+const commentController = require("../controllers/app_commentController.js");
+const {
+  verifyLoggedIn,
+  catchError,
+} = require("../../middleware/middleware.js");
 
-// gets all collections
-router.get("/collections", collectionController.collectionsGrid);
-
-// gets all collections for the logged in user
+/**
+ * GET ALL COLLECTIONS
+ */
 router.get(
-  "/collections/user",
-  verifyLoggedIn("You must be logged in view your collections"),
-  collectionController.getUserCollections,
-  collectionController.collectionsGrid
-);
-
-router.post(
   "/collections",
-  verifyLoggedIn("You must be logged in to create a collection"),
-  collectionController.createCollection
+  collectionController.getCollections,
+  collectionController.renderCollections,
+  catchError("/")
 );
 
+/**
+ * GET AND CREATE USER COLLECTIONS
+ */
+router
+  .route("/collections/user")
+  .all(verifyLoggedIn("You must be logged in view or create collections"))
+  .get(
+    collectionController.getCollections,
+    collectionController.renderCollections,
+    catchError("/")
+  )
+  .post(collectionController.createCollection, catchError("/collections/user"));
+
+/**
+ * DELETE COLLECTION
+ */
 router.delete(
   "/collections/:id",
   verifyLoggedIn("You must be logged in to delete collections"),
-  collectionController.deleteCollection
+  collectionController.deleteCollection,
+  catchError("/collections/user")
 );
 
-// displays the cards in a collection
-router.get("/collections/:collection_id/cards", cardController.cardGrid);
+/**
+ * GETS ALL INFO FOR A COLLECTION AND RENDERS IT
+ * stil not keen on the way this is done and endpoint but it wii have to do for now
+ */
+router.get(
+  "/collections/:collection_id/cards",
+  collectionController.getCollections,
+  collectionController.getCardsInCollection,
+  ratingController.getCollectionRatings,
+  commentController.getCollectionComments,
+  cardController.cardGrid,
+  catchError("/")
+);
 
-// adds a card to a collection
+/**
+ * ADDS A CARD TO A COLLECTION
+ */
 router.post(
-  "/collections/cards/",
+  "/collections/cards/:card_id", // dont try and change this, collection_id had to be passed in the body
   verifyLoggedIn("You must be logged in to add a card to a collection"),
-  collectionController.addCardToCollection
+  collectionController.addCardToCollection,
+  catchError(`back`)
 );
 
-// removes a card from a collection
+/**
+ * REMOVE A CARD FROM A COLLECTION
+ */
 router.delete(
   "/collections/:collection_id/cards/:card_id",
   verifyLoggedIn("You must be logged in to remove a card from a collection"),
-  collectionController.removeCardFromCollection
+  collectionController.removeCardFromCollection,
+  catchError(`back`)
 );
 
-// removes a rating from a collection
+/**
+ * REMOVE A RATING FROM A COLLECTION
+ * should probably use rating_id instead of user_id
+ * adding and updating a rating is done in front end js script
+ */
 router.delete(
   "/collections/:collection_id/ratings/:user_id",
   verifyLoggedIn("You must be logged in to remove a rating"),
-  collectionController.removeRatingFromCollection
+  ratingController.removeRatingFromCollection,
+  catchError(`back`)
 );
 
-// comments routes
+// maybe add a new route file for these, but they are assosiated to collections
+/**
+ * ADDS A COMMENT TO A COLLECTION
+ */
 router.post(
   "/collections/:collection_id/comments",
   verifyLoggedIn("You must be logged in to comment on a collection"),
-  collectionController.addComment
+  commentController.addCommentToCollection,
+  catchError(`/collections/:collection_id/cards`)
 );
 
+/**
+ * DELETES A COMMENT FROM A COLLECTION
+ */
 router.delete(
   "/collections/:collection_id/comments/:comment_id",
   verifyLoggedIn("You must be logged in to delete a comment"),
-  collectionController.deleteComment
+  commentController.deleteCommentFromCollection,
+  catchError(`back`)
 );
 
 module.exports = router;

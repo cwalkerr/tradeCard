@@ -2,28 +2,27 @@ const express = require("express");
 const router = express.Router();
 const wishlistController = require("../controllers/app_wishlistController.js");
 const cardController = require("../controllers/app_cardController.js");
-const verifyLoggedIn = require("../../middleware/middleware.js");
+const {
+  verifyLoggedIn,
+  catchError,
+} = require("../../middleware/middleware.js");
 
 // view cards in wishlist
-router.get(
-  "/wishlist",
-  verifyLoggedIn("You must be logged in to view your wishlist"),
-  wishlistController.getUserWishlist,
-  cardController.cardGrid
-);
+router
+  .route("/wishlist")
+  .all(verifyLoggedIn("You must be logged in to view your wishlist"))
+  .get(
+    wishlistController.getUserWishlist,
+    wishlistController.getCardsInWishlist,
+    cardController.cardGrid,
+    catchError("/dashboard")
+  );
 
-// add a card to wishlist
-router.post(
-  "/wishlist/cards",
-  verifyLoggedIn("You must be logged in to add a card to your wishlist"),
-  wishlistController.addCardToWishlist
-);
-
-// remove a card from wishlist
-router.delete(
-  "/wishlist/:wishlist_id/cards/:card_id",
-  verifyLoggedIn("You must be logged in to remove a card from your wishlist"),
-  wishlistController.removeCardFromWishlist
-);
+// add or remove cards from wishlist dont think this error handling works as i want anywhere
+router
+  .route("/wishlist/:wishlist_id/card/:card_id")
+  .all(verifyLoggedIn("You must be logged in to manage your wishlist"))
+  .post(wishlistController.addCardToWishlist, catchError("back"))
+  .delete(wishlistController.removeCardFromWishlist, catchError("back"));
 
 module.exports = router;

@@ -130,30 +130,6 @@ Collection.hasMany(Rating, {
   foreignKey: "collection_id",
 });
 
-// find all cards in a collection return only the card_id's to be used in card model queries
-// this is a fairly basic query, so probably doesn't need to be in the model
-CollectionCard.getCardsInCollection = async function (collection_id) {
-  const cardsInCollection = await this.findAll({
-    where: {
-      collection_id: collection_id,
-    },
-  });
-
-  if (!cardsInCollection) {
-    return null;
-  } else {
-    return cardsInCollection.map((card) => card.dataValues.card_id);
-  }
-};
-
-// same as above, probably not necessary in model but used in controller so will revise later
-CollectionCard.addCardToCollection = async function (collection_id, card_id) {
-  await this.create({
-    collection_id: collection_id,
-    card_id: card_id,
-  });
-};
-
 /*
  * this gets a list of each rating, i.e. 1,2,3,4,5 and the count of each rating
  * it also gets the average rating (1 dp) across all ratings for a collection
@@ -180,21 +156,6 @@ Rating.getRatingDetails = async function (collection_id) {
       ratings: count,
       average: parseFloat(average[0].dataValues.average).toFixed(1),
     };
-  }
-};
-
-Rating.getUserRating = async function (collection_id, user_id) {
-  const rating = await this.findOne({
-    where: {
-      collection_id: collection_id,
-      user_id: user_id,
-    },
-  });
-
-  if (!rating) {
-    return null;
-  } else {
-    return rating.rating;
   }
 };
 

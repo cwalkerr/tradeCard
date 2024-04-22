@@ -1,7 +1,7 @@
 const { Comment, User } = require("../models/modelAssosiations.js");
 
 exports.getAllComments = async (req, res) => {
-  collection_id = req.params.id;
+  const collection_id = req.params.id;
 
   try {
     const comments = await Comment.findAll({

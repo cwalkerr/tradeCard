@@ -43,9 +43,13 @@ app.use(
   })
 );
 
-// Routes
+// Routes, if user is logged in, make home page dashboard - doesn't work
 app.get("/", (req, res) => {
-  res.sendFile("index.html");
+  if (req.session.userID) {
+    return res.redirect("/dashboard");
+  } else {
+    res.sendFile("index.html");
+  }
 });
 
 app.use("/", userRoutes);

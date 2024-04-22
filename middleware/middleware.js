@@ -3,7 +3,7 @@
  * @param {*} message
  * @returns
  */
-const verifyLoggedIn = (message) => {
+exports.verifyLoggedIn = (message) => {
   return (req, res, next) => {
     if (!req.session.userID) {
       req.flash("error", message);
@@ -13,4 +13,19 @@ const verifyLoggedIn = (message) => {
   };
 };
 
-module.exports = verifyLoggedIn;
+/**
+ * general catch all error handler
+ * @param {*} url the url to redirect to
+ * @returns
+ */
+exports.catchError = (url) => {
+  return (err, req, res) => {
+    req.flash(
+      "error",
+      err.response.data.error ||
+        err.message ||
+        "An unexpected error occurred. Please try again later"
+    );
+    return res.redirect(url);
+  };
+};

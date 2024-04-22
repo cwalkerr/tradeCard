@@ -1,6 +1,6 @@
 // bit of a mess but this file contains all the models for the attributes of a card
 
-const { DataTypes, Op } = require("sequelize");
+const { DataTypes } = require("sequelize");
 const sequelize = require("../../config/db.js");
 
 /**
@@ -667,16 +667,26 @@ Subtype.belongsToMany(Card, {
 });
 
 /**
- * Function to get all card info by its id
- * @param {} cardid
- * @returns card object in json format
+ * this query gets card details with all joined data that is useful
+ * i.e. it excludes id's etc where possible
+ * it accepts a where clause and paginates the data
+ * it can be used to query all cards paginated or by criteria specified in the where clause
+ * it can be used as a independant api endpoint, and is used in the view card details page
+ * @param {*} whereClause
+ * @param {*} page
+ * @returns
  */
+Card.getCardDetails = async function (whereClause = {}, page) {
+  page = Number(page) || 1;
+  const itemsPerPage = 30;
+  const offset = (page - 1) * itemsPerPage;
 
-Card.getCard = async function (cardId) {
-  const card = await this.findOne({
-    where: {
-      card_id: cardId,
-    },
+  const result = await this.findAndCountAll({
+    where: whereClause,
+    distinct: true,
+    limit: itemsPerPage,
+    offset: offset,
+    attributes: { exclude: ["sets_id"] },
     include: [
       {
         model: Set,
@@ -697,7 +707,7 @@ Card.getCard = async function (cardId) {
       {
         model: RetreatCost,
         attributes: {
-          exclude: ["energy_type_id", "card_id"],
+          exclude: ["card_id", "retreat_cost_id"],
         },
         include: [
           {
@@ -713,11 +723,12 @@ Card.getCard = async function (cardId) {
       {
         model: Attack,
         attributes: ["name", "description", "damage", "cost_converted"],
+        through: { attributes: [] },
         include: [
           {
             model: AttackCost,
             attributes: {
-              exclude: ["attack_id", "energy_type_id"],
+              exclude: ["attack_id", "attack_cost_id"],
             },
             include: [
               {
@@ -732,22 +743,32 @@ Card.getCard = async function (cardId) {
       {
         model: BuffDebuff,
         attributes: ["type", "variable"],
+        through: { attributes: [] },
         include: [{ model: EnergyType, attributes: ["type"] }],
       },
       {
         model: EnergyType,
+        through: { attributes: [] },
         attributes: ["type"],
       },
       {
         model: Rules,
         attributes: ["description"],
       },
-      { model: Subtype, attributes: ["type"] },
+      { model: Subtype, attributes: ["type"], through: { attributes: [] } },
     ],
   });
 
-  if (card) {
-    return card.get({ plain: true });
+  const totalPages = Math.ceil(result.count / itemsPerPage);
+
+  if (result.count > 0) {
+    return {
+      cards: result.rows,
+      count: result.count,
+      totalPages: totalPages,
+      currentPage: page,
+      itemsPerPage: itemsPerPage,
+    };
   } else {
     return null;
   }
@@ -759,18 +780,15 @@ Card.getCard = async function (cardId) {
  * @param {*} cardId
  * @returns card and image url in json format
  */
-Card.getCardTile = async function ({ limit, offset, cardIds }) {
-  let whereClause = {};
+Card.getCardGrid = async function (whereClause = {}, page) {
+  page = Number(page) || 1;
+  const itemsPerPage = 30;
+  const offset = (page - 1) * itemsPerPage;
 
-  // if no card ids specified, whereClause will be an empty object and ignored in the below query
-  if (cardIds) {
-    whereClause.card_id = cardIds;
-  }
-
-  const { count, rows } = await this.findAndCountAll({
+  const result = await this.findAndCountAll({
     where: whereClause,
     attributes: ["card_id", "name"],
-    limit: limit,
+    limit: itemsPerPage,
     offset: offset,
     include: [
       {
@@ -781,17 +799,16 @@ Card.getCardTile = async function ({ limit, offset, cardIds }) {
     ],
   });
 
-  if (rows) {
-    data = rows.map((rows) => {
-      const imageUrl = rows.Images[0].url;
-      const { card_id, name } = rows.dataValues;
-      return {
-        card_id,
-        name,
-        image: imageUrl,
-      };
-    });
-    return { data, count };
+  const totalPages = Math.ceil(result.count / itemsPerPage);
+
+  if (result.count > 0) {
+    return {
+      cards: result.rows,
+      count: result.count,
+      totalPages: totalPages,
+      currentPage: page,
+      itemsPerPage: itemsPerPage,
+    };
   } else {
     return null;
   }

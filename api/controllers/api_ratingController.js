@@ -1,7 +1,7 @@
 const { Rating } = require("../models/modelAssosiations.js");
 
 exports.getRatingDetails = async (req, res) => {
-  collection_id = req.params.id;
+  const collection_id = req.params.id;
 
   try {
     const ratings = await Rating.getRatingDetails(collection_id);
@@ -77,8 +77,14 @@ exports.getUserRating = async (req, res) => {
   const user_id = req.params.user_id;
 
   try {
-    const rating = await Rating.getUserRating(collection_id, user_id);
-    return res.status(200).json(rating);
+    const rating = await Rating.findOne({
+      where: {
+        collection_id: collection_id,
+        user_id: user_id,
+      },
+      attributes: ["rating"],
+    });
+    return res.status(200).json(rating.rating); // just returns the number
   } catch (err) {
     return res.status(500).json({ error: "Error getting user rating" });
   }

@@ -1,151 +1,116 @@
 const axios = require("axios");
+const API_CARD_URL = "http://localhost:4000/api/cards";
+const SUCCESS_STATUS_CODE = 200;
 
-// this has become quite messy, need to modularise later
-exports.cardGrid = async (req, res) => {
-  try {
-    const page = req.query.page || 1;
-    let collectionResponse;
-    let wishlistResponse;
-    let collectionData;
-    let getCount;
-    let ratings;
-    let comments;
+/**
+ * Populate and render the card grid view with cards based on the request
+ * If the request is for a collection or wishlist, the cards are passed into this function else fetch from api
+ * handles pagination for the front end
+ * also, passes the view collection details (name, description username), ratings and comments / or wishlist details
+ * still rather heavy, but its improved - improve further by splitting out the pagination logic at least
+ * -look into if i can pass the view data from multiple functions...
+ */
+exports.cardGrid = async (req, res, next) => {
+  const page = req.query.page || 1;
+  let cards;
+  let totalPages;
+  let currentPage;
 
-    /**
-     * CHECK IF THIS IS FOR A COLLECTION
-     */
-    if (req.params.collection_id) {
-      // im using req.params here but req.wishlistId in the next if statement - make this consistent
-      // make initial api call to get response - looking to get cardIds from collection
-      collectionResponse = await axios.get(
-        `http://localhost:4000/api/collections/${req.params.collection_id}/cards`
-      );
-
-      // get the userID of the collection owner -
-      //this gets passed to the view to check if the user is the owner for ability to edit collection cards
-      // shouldnt use query params here, should use params - revise this
-      const getOwner = await axios.get(
-        `http://localhost:4000/api/collections?collection_id=${req.params.collection_id}`
-      );
-      collectionData = getOwner.data[0];
-      console.log(getOwner.data[0]);
-
-      // get the rating details for the collection
-      const ratingDetails = await axios.get(
-        `http://localhost:4000/api/collections/${req.params.collection_id}/ratings`
-      );
-      ratings = ratingDetails.data;
-
-      // function to get the count of a rating value - function gets called in the ejs view with the rating value
-      getCount = (ratingValue) => {
-        const ratingCount = ratings.ratings.find(
-          (rating) => rating.rating == ratingValue
-        );
-        return ratingCount ? ratingCount.count : 0;
-      };
-
-      // get the comments for the collection
-      const commentDetails = await axios.get(
-        `http://localhost:4000/api/collections/${req.params.collection_id}/comments`
-      );
-      comments = commentDetails.data;
-      dateTime = new Date(comments.createdAt).toLocaleString();
-    }
-    /**
-     * CHECK IF THIS IS FOR A WISHLIST
-     */
-    if (req.wishlistId) {
-      wishlistResponse = await axios.get(
-        `http://localhost:4000/api/wishlist/${req.wishlistId}/cards`
-      );
-      if (req.wishlistOwner === req.session.userID) {
-        // this is cleaner than the collectionOwner check - revise this
-        wishlistOwner = req.session.userID;
+  // assign view data based on the request, collection, wishlist or all cards
+  if (typeof req.cardsInCollection !== "undefined") {
+    // null is a valid value - api returns null if no cards in collection - maybe a better way to handle this seems a bit hacky
+    cards = req.cardsInCollection ? req.cardsInCollection.cards : null;
+    totalPages = req.cardsInCollection
+      ? req.cardsInCollection.totalPages
+      : null;
+    currentPage = req.cardsInCollection
+      ? req.cardsInCollection.currentPage
+      : null;
+  } else if (typeof req.cardsInWishlist !== "undefined") {
+    cards = req.cardsInWishlist ? req.cardsInWishlist.cards : null;
+    totalPages = req.cardsInWishlist ? req.cardsInWishlist.totalPages : null;
+    currentPage = req.cardsInWishlist ? req.cardsInWishlist.currentPage : null;
+  } else {
+    try {
+      const allCards = await axios.get(`${API_CARD_URL}/grid?page=${page}`);
+      if (allCards.status === SUCCESS_STATUS_CODE) {
+        cards = allCards.data.cards;
+        totalPages = allCards.data.totalPages;
+        currentPage = allCards.data.currentPage;
       }
+    } catch (err) {
+      next(
+        new Error(
+          err.response.data.error || err.message || "Error getting cards"
+        )
+      );
+      return;
     }
-
-    // if cardIds exist, create url for cardIds in collection or wishlist otherwise get all cards
-    if (collectionResponse && collectionResponse.data.cardIds) {
-      cardIds = collectionResponse.data.cardIds;
-      url = `http://localhost:4000/api/collections/${
-        req.params.collection_id
-      }/cards?page=${page}&cardIds=${cardIds.join(",")}`;
-    } else if (wishlistResponse && wishlistResponse.data.cardIds) {
-      cardIds = wishlistResponse.data.cardIds;
-      url = `http://localhost:4000/api/wishlist/${
-        req.wishlistId
-      }/cards?page=${page}&cardIds=${cardIds.join(",")}`;
-    } else {
-      url = `http://localhost:4000/api/cards?page=${page}`;
-    }
-
-    // get card tiles from api
-    const cardTiles = await axios.get(url);
-    if (cardTiles.status === 200) {
-      // get data from api response
-      const cards = cardTiles.data.cards;
-      const totalPages = cardTiles.data.totalPages;
-      const currentPage = cardTiles.data.currentPage;
-
-      // start and end page numbers for pagination - 4 pages either side of current page
-      let startPage = Math.max(1, currentPage - 4);
-      let endPage = Math.min(totalPages, currentPage + 4);
-
-      // if at start of pagination, shift end page number
-      if (startPage === 1) {
-        endPage = Math.min(totalPages, startPage + 8);
-      }
-
-      // if at end of pagination, shift start page number
-      if (endPage === totalPages) {
-        startPage = Math.max(1, endPage - 8);
-      }
-
-      console.log(collectionData);
-      res.render("cards", {
-        cards: cards,
-        totalPages: totalPages,
-        currentPage: currentPage,
-        startPage: startPage,
-        endPage: endPage,
-        success: req.flash("success"),
-        error: req.flash("error"),
-        route: req.originalUrl,
-        wishlistId: req.wishlistId,
-        userId: req.session.userID,
-        collectionData: collectionData,
-        ratingData: ratings,
-        getCount: getCount,
-        comments: comments,
-        dateTime: dateTime,
-      });
-    }
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("ERROR");
   }
+  /**
+   * PAGINATION
+   */
+  // Start and end page numbers for pagination - 4 pages either side of current page
+  let startPage = Math.max(1, currentPage - 4);
+  let endPage = Math.min(totalPages, currentPage + 4);
+
+  // If at start of pagination, shift end page number
+  if (startPage === 1) {
+    endPage = Math.min(totalPages, startPage + 8);
+  }
+
+  // If at end of pagination, shift start page number
+  if (endPage === totalPages) {
+    startPage = Math.max(1, endPage - 8);
+  }
+  // Render the cards view - still could clean this up a bit more
+  res.render("cards", {
+    cards: cards,
+    totalPages: totalPages,
+    currentPage: currentPage,
+    startPage: startPage,
+    endPage: endPage,
+    success: req.flash("success"),
+    error: req.flash("error"),
+    route: req.originalUrl,
+    userId: req.session.userID,
+    collectionData: req.collections,
+    wishlistData: req.wishlist,
+    ratingData: req.collectionRatings,
+    getCount: (ratingValue) => {
+      const ratingCount = req.collectionRatings.ratings.find(
+        (rating) => rating.rating == ratingValue
+      );
+      return ratingCount ? ratingCount.count : 0;
+    },
+    comments: req.collectionComments,
+  });
 };
 
-exports.cardDetails = async (req, res) => {
+/**
+ * Populate and render individual card details view
+ * passes wishlist and collection data to allow for adding to wishlist or collection
+ */
+exports.cardDetails = async (req, res, next) => {
+  const cardId = req.params.id;
   try {
-    const cardId = req.params.id;
-    const cardDetails = await axios.get(
-      `http://localhost:4000/api/cards/${cardId}`
-    );
-    if (cardDetails.status === 200) {
-      const card = cardDetails.data;
-      const userCollections = req.userCollections;
-      const wishlistId = req.wishlistId;
+    const cardDetails = await axios.get(`${API_CARD_URL}/${cardId}`);
+
+    if (cardDetails.status === SUCCESS_STATUS_CODE) {
+      const card = cardDetails.data.cards[0];
       res.render("card", {
         card: card,
-        wishlistId: wishlistId,
-        collections: userCollections,
+        wishlistData: req.wishlist,
+        collectionData: req.collections,
+        userId: req.session.userID,
         success: req.flash("success"),
         error: req.flash("error"),
       });
     }
   } catch (err) {
-    console.log(err);
-    res.status(500).send("ERROR");
+    next(
+      new Error(err.response.data.error || err.message || "Error getting card")
+    );
+    return;
   }
 };

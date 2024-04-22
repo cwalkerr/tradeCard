@@ -1,57 +1,72 @@
 const { Card } = require("../models/modelAssosiations.js");
 
 /**
- * API controller to get cards tiles to display in card grid and in searches
- * not sure if this is what the api should do, seems now like this kind of formatting should be dealt with by web app - revisit later
- * there also isnt functionality for the api to return all card data paginated, only the tiles - this should perhaps be added
- * it wont be needed in my web app, but it would be useful for others using the api
+ * gets cards with full details by page
+ * optional where clause can be passed as query params
+ * using this to fetch >20 cards in web app is not recommended, rather slow - use getCardGrid instead
+ * it can be used by api users to get full details of cards..
+ * note: might be a good idea to allow cardsPerPage as a query param - if an api user wants to wait to get all cards in one go
+ * @param {*} req
+ * @param {*} res
+ * @returns json array of cards with full relevant (excluded id's where possible) details
  */
-
-exports.getCardTiles = async (req, res) => {
-  const page = Number(req.query.page) || 1;
-  const itemsPerPage = 30;
-  const pageOffset = (page - 1) * itemsPerPage;
-
-  let cardIds;
-
-  if (req.query.cardIds) {
-    cardIds = req.query.cardIds.split(",");
-  } else {
-    cardIds = null;
-  }
-
+exports.getCards = async (req, res) => {
+  const { page, ...whereClause } = req.query;
   try {
-    const result = await Card.getCardTile({
-      limit: itemsPerPage,
-      offset: pageOffset,
-      cardIds: cardIds,
-    });
+    const cards = await Card.getCardDetails(whereClause, Number(page) || 1);
+    console.log(cards.count);
 
-    const cards = result.data;
-    const totalCards = result.count;
+    if (!cards) {
+      return res.status(404).json({ error: "No cards found" });
+    }
 
-    const totalPages = Math.ceil(totalCards / itemsPerPage);
-
-    return res.status(200).json({
-      cards: cards,
-      totalPages: totalPages,
-      currentPage: page,
-      cardIds: cardIds,
-    });
+    return res.status(200).json(cards);
   } catch (err) {
-    console.log(err);
     return res.status(500).json({ error: "Error getting cards" });
   }
 };
-/**
- * get a single card by id with all joined data
- */
 
+/**
+ * gets a single card with full details by id
+ * this is used in the web app for card details page
+ * @param {*} req
+ * @param {*} res
+ * @returns json object of a single card with full relevant details
+ */
 exports.getCardById = async (req, res) => {
   try {
-    const card = await Card.getCard(req.params.id);
+    const card = await Card.getCardDetails({ card_id: req.params.id });
+
+    if (!card) {
+      return res.status(404).json({ error: "No card found" });
+    }
+
     return res.status(200).json(card);
   } catch (err) {
     return res.status(500).json({ error: "Error getting card" });
+  }
+};
+
+/**
+ * gets cards with limited details (id, image and name) by page
+ * optional where clause can be passed as query params
+ * this is used in the web app for card grid page - much faster than getCards
+ * @param {*} req
+ * @param {*} res
+ * @returns json array of cards with limited details
+ */
+exports.getCardGrid = async (req, res) => {
+  const { page, ...whereClause } = req.query;
+
+  try {
+    const cards = await Card.getCardGrid(whereClause, Number(page) || 1);
+
+    if (!cards) {
+      return res.status(404).json({ error: "No cards found" });
+    }
+
+    return res.status(200).json(cards);
+  } catch (err) {
+    return res.status(500).json({ error: "Error getting cards" });
   }
 };
