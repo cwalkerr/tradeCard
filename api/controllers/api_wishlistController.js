@@ -1,4 +1,8 @@
-const { Wishlist, WishlistCard } = require("../models/modelAssosiations.js");
+const {
+  Wishlist,
+  WishlistCard,
+  Card,
+} = require("../models/modelAssosiations.js");
 
 exports.getWishlist = async (req, res) => {
   const user_id = req.query.user_id;
@@ -15,27 +19,32 @@ exports.getWishlist = async (req, res) => {
   }
 };
 
-exports.getCardsInWishlist = async (req, res, next) => {
-  const wishlist = await Wishlist.findByPk(req.params.wishlist_id);
+exports.getCardsInWishlist = async (req, res) => {
+  const page = Number(req.query.page) || 1;
 
   try {
-    const wishlistCards = await WishlistCard.getCardsInWishlist(
-      wishlist.wishlist_id
-    );
-    if (!wishlistCards) {
+    const wishListCards = await WishlistCard.findAll({
+      where: {
+        wishlist_id: req.params.id,
+      },
+      attributes: ["card_id"],
+    });
+
+    if (!wishListCards) {
       return res.status(404).json({ error: "No cards in wishlist" });
     }
+    const cardIds = wishListCards.map((card) => card.card_id);
+    const cards = await Card.getCardDetails({ card_id: cardIds }, page);
 
-    req.query.cardIds = wishlistCards.join(",");
-    next();
+    return res.status(200).json(cards);
   } catch (err) {
-    return res.status(500).json({ error: "Error getting cards in wishlist" });
+    console.log(err);
+    return res.status(500).json({ error: "Error getting cards" });
   }
 };
 
 exports.addCardToWishlist = async (req, res) => {
-  const { card_id } = req.body;
-  const wishlist_id = req.params.wishlist_id;
+  const { wishlist_id, card_id } = req.params;
 
   try {
     await WishlistCard.create({
@@ -50,7 +59,7 @@ exports.addCardToWishlist = async (req, res) => {
 };
 
 exports.removeCardFromWishlist = async (req, res) => {
-  const { card_id, wishlist_id } = req.params;
+  const { wishlist_id, card_id } = req.params;
 
   try {
     await WishlistCard.destroy({

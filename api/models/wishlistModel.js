@@ -47,17 +47,4 @@ const WishlistCard = sequelize.define(
   }
 );
 
-WishlistCard.getCardsInWishlist = async function (wishlist_id) {
-  const wishlistCards = await this.findAll({
-    where: {
-      wishlist_id: wishlist_id,
-    },
-  });
-  if (!wishlistCards) {
-    return null;
-  } else {
-    return wishlistCards.map((card) => card.dataValues.card_id);
-  }
-};
-
 module.exports = { Wishlist, WishlistCard };

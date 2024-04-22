@@ -107,14 +107,14 @@
           <% if (error) { %>
           <p class="lead text-center"><%= error %></p>
           <% } %>
-          <form action="/collections" method="POST">
+          <form action="/collections/user" method="POST">
             <div class="mb-3">
-              <label for="collectionName" class="form-label">Name</label>
-              <input type="text" class="form-control" id="collectionName" name="collectionName" required>
+              <label for="name" class="form-label">Name</label>
+              <input type="text" class="form-control" id="name" name="name" required>
             </div>
             <div class="mb-3">
-              <label for="collectionDescription" class="form-label">Description</label>
-              <textarea class="form-control" id="collectionDescription" name="collectionDescription" rows="3"></textarea>
+              <label for="description" class="form-label">Description</label>
+              <textarea class="form-control" id="description" name="description" rows="3"></textarea>
             </div>
         </div>
         <div class="modal-footer">
