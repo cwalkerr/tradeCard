@@ -1,0 +1,614 @@
+<style>
+  .offcanvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    overflow-y: auto !important;
+  }
+</style>
+
+<div class="container my-4">
+  <div class="mb-3 d-flex">
+    <label for="search" class="form-label">Search Cards</label>
+    <input type="search" class="form-control" id="search" placeholder="search">
+    <button class="btn btn-primary d-flex align-items-center mx-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterPage" aria-controls="filterPage">
+      Filter
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-list mx-1" viewBox="0 0 16 16">
+        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+      </svg>
+    </button>
+  </div>
+</div>
+<!-- FILTER OFFCANVAS -->
+<div class="offcanvas offcanvas-start" tabindex="-1" id="filterPage" aria-labelledby="filterPage">
+  <div class="container">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title border-bottom" id="filterPageTitle">Filter</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div class="my-4">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#cardType">
+          Card Type
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        </button>
+        <form action="/cards" method="GET">
+          <div class="collapse" id="cardType">
+            <div class="card card-body border-0 border-bottom border-dark-subtle flex-row justify-content-around">
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" value="Pokemon" id="pokemonCheck" name="cardType">
+                <label class="form-check-label font-monospace fw-semibold" for="pokemonCheck">
+                  Pokemon
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" value="Trainer" id="trainerCheck" name="cardType">
+                <label class="form-check-label font-monospace fw-semibold" for="trainerCheck">
+                  Trainer
+                </label>
+              </div>
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" type="checkbox" value="Energy" id="energyCheck" name="cardType">
+                <label class="form-check-label font-monospace fw-semibold" for="energyCheck">
+                  Energy
+                </label>
+              </div>
+            </div>
+          </div>
+      </div>
+      <div class="my-4">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#subtypes">
+          Subtype
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        </button>
+        <div class="collapse" id="subtypes">
+          <div class="card card-body border-0 border-bottom border-dark-subtle">
+            <div class="row row-gap-3">
+              <% for (let i = 0; i < subtypes.length; i++) { %>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="<%=subtypes[i]%>" id="subtypeCheck<%=i%>" name="subtype">
+                  <label class="form-check-label font-monospace fw-semibold" for="subtypeCheck<%=i%>">
+                    <%= subtypes[i] %>
+                  </label>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="my-4">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#energyTypes">
+          Energy Type
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        </button>
+        <div class="collapse" id="energyTypes">
+          <div class="card card-body border-0 border-bottom border-dark-subtle">
+            <div class="row row-gap-3">
+              <% for (let i = 0; i < energyTypes.length; i++) { %>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="<%=energyTypes[i]%>" id="energyTypeCheck<%=i%>" name="energyType">
+                  <label class="form-check-label font-monospace fw-semibold" for="energyTypeCheck<%=i%>">
+                    <img src="../media/energy-<%=energyTypes[i]%>.png" alt="">
+                    <%= energyTypes[i] %>
+                  </label>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="my-4">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#rarities">
+          Rarity
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        </button>
+        <div class="collapse" id="rarities">
+          <div class="card card-body border-0 border-bottom border-dark-subtle">
+            <div class="row row-gap-3">
+              <% for (let i = 0; i < rarities.length; i++) { %>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="<%=rarities[i]%>" id="rarityCheck<%=i%>" name="rarity">
+                  <label class="form-check-label font-monospace fw-semibold" for="rarityCheck<%=i%>">
+                    <%= rarities[i] %>
+                  </label>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="my-4">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#hp">
+          Health Points
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        </button>
+        <div class="collapse" id="hp">
+          <div class="card card-body border-0 border-bottom border-dark-subtle">
+            <div class="row row-gap-3">
+              <div class="col-2 d-flex align-items-center justify-content-end">
+                <span class="minValue">Minimum : 0</span>
+              </div>
+              <div class="col-8">
+                <label for="minHp" class="form-label">Min HP</label>
+                <input type="range" class="form-range" min="0" max="340" value="0" id="minHp" name="health">
+                <label for="maxHp" class="form-label">Max HP</label>
+                <input type="range" class="form-range" min="0" max="340" value="340" id="maxHp" name="health">
+              </div>
+              <div class="col-2  d-flex align-items-center justify-content-start">
+                <span class="maxValue">Maximum: 340</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="my-4">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#artists">
+          Artist
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        </button>
+        <div class="collapse" id="artists">
+          <div class="card card-body border-0 border-bottom border-dark-subtle">
+            <div class="row row-gap-3">
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="5ban Graphics" id="5banGraphicsCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="5banGraphicsCheck">
+                    5ban Graphics
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Ken Sugimori" id="kenSugimoriCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="kenSugimoriCheck">
+                    Ken Sugimori
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Mitsuhiro Arita" id="mitsuhiroAritaCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="mitsuhiroAritaCheck">
+                    Mitsuhiro Arita
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Kagemaru Himeno" id="kagemaruHimenoCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="kagemaruHimenoCheck">
+                    Kagemaru Himeno
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Kouki Saitou" id="koukiSaitouCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="koukiSaitouCheck">
+                    Kouki Saitou
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Masakazu Fukuda" id="masakazuFukudaCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="masakazuFukudaCheck">
+                    Masakazu Fukuda
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Ryo Ueda" id="ryoUedaCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="ryoUedaCheck">
+                    Ryo Ueda
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Atsuko Nishida" id="atsukoNishidaCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="atsukoNishidaCheck">
+                    Atsuko Nishida
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Midori Harada" id="midoriHaradaCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="midoriHaradaCheck">
+                    Midori Harada
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Shin Nagasawa" id="shinNagasawaCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="shinNagasawaCheck">
+                    Shin Nagasawa
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Naoki Saito" id="naokiSaitoCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="naokiSaitoCheck">
+                    Naoki Saito
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Toyste Beach" id="toysteBeachCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="toysteBeachCheck">
+                    Toyste Beach
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Naoyo Kimura" id="naoyoKimuraCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="naoyoKimuraCheck">
+                    Naoyo Kimura
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Tomokazu Komiya" id="tomokazuKomiyaCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="tomokazuKomiyaCheck">
+                    Tomokazu Komiya
+                  </label>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="Akira Komayama" id="akiraKomayamaCheck" name="artist">
+                  <label class="form-check-label font-monospace fw-semibold" for="akiraKomayamaCheck">
+                    Akira Komayama
+                  </label>
+                </div>
+              </div>
+              <div class="row justify-content-center my-4">
+                <div class="col-md-6">
+                  <input type="text" class="form-control" placeholder="Other Artist">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="my-4">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#seriess">
+          Series
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        </button>
+        <div class="collapse" id="seriess">
+          <div class="card card-body border-0 border-bottom border-dark-subtle">
+            <% for(let seriesIndex = 0; seriesIndex < seriesSets.length; seriesIndex++) { %>
+
+            <div class="d-flex justify-content-center align-items-center">
+              <div>
+                <input class="form-check-input mx-3" type="checkbox" name="series" id="CheckSeries<%=[seriesIndex]%>" value="<%= seriesSets[seriesIndex].series %>" aria-label="...">
+              </div>
+              <button class="btn btn-light border-0 border-bottom border-dark-subtle w-50 my-2 d-flex justify-content-between align-items-center fw-bold font-monospace" type="button" data-bs-toggle="collapse" data-bs-target="#seriesCollapse<%=seriesIndex%>">
+                <%= seriesSets[seriesIndex].series %>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                  <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                </svg>
+              </button>
+
+            </div>
+            <div class="collapse" id="seriesCollapse<%=seriesIndex%>">
+              <div class="card card-body">
+                <div class="row row-gap-3">
+                  <% for(let setIndex = 0; setIndex < seriesSets[seriesIndex].sets.length; setIndex++) { %>
+                  <div class="col-md-4">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" value="<%=seriesSets[seriesIndex].sets[setIndex]%>" id="Series<%=seriesIndex%>Set<%=setIndex%>" name="set">
+                      <label class="form-check-label font-monospace fw-semibold" for="Series<%=seriesIndex%>Set<%=setIndex%>">
+                        <%= seriesSets[seriesIndex].sets[setIndex] %>
+                      </label>
+                    </div>
+                  </div>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+      </div>
+      <div class="my-4">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#retreatCosts">
+          Retreat Cost
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        </button>
+        <div class="collapse" id="retreatCosts">
+          <div class="card card-body border-0 border-bottom border-dark-subtle">
+            <div class="row row-gap-3">
+              <div class="col-2 d-flex align-items-center justify-content-end">
+                <span class="minValueRC">Minimum : 0</span>
+              </div>
+              <div class="col-8">
+                <label for="minRetreatCost" class="form-label">Min Retreat Cost</label>
+                <input type="range" class="form-range" min="0" max="5" value="0" id="minRetreatCost" name="retreatCost">
+                <label for="maxRetreatCost" class="form-label">Max Retreat Cost</label>
+                <input type="range" class="form-range" min="0" max="5" value="5" id="maxRetreatCost" name="retreatCost">
+              </div>
+              <div class="col-2  d-flex align-items-center justify-content-start">
+                <span class="maxValueRC">Maximum: 5</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="my-4">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#attacks">
+          Attacks
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        </button>
+        <div class="collapse" id="attacks">
+          <div class="card card-body border-0 border-bottom border-dark-subtle">
+            <div class="row row-gap-3">
+              <div class="col">
+                <p class="fs-5 fw-semibold font-monospace">Attack Cost</p>
+              </div>
+            </div>
+            <div class="row row-gap-3">
+              <div class="col-2 d-flex align-items-center justify-content-end">
+                <span class="minValueAttack">Minimum : 0</span>
+              </div>
+              <div class="col-8">
+                <label for="minAttackCost" class="form-label">Min Attack Cost</label>
+                <input type="range" class="form-range" min="0" max="5" value="0" id="minAttackCost" name="attackCost">
+                <label for="maxAttackCost" class="form-label">Max Attack Cost</label>
+                <input type="range" class="form-range" min="0" max="5" value="5" id="maxAttackCost" name="attackCost">
+              </div>
+              <div class="col-2  d-flex align-items-center justify-content-start">
+                <span class="maxValueAttack">Maximum: 5</span>
+              </div>
+            </div>
+            <div class="row mt-4 border-top border-dark-subtle">
+              <div class="col mt-4">
+                <p class="fs-5 fw-semibold font-monospace">Attack Name</p>
+              </div>
+            </div>
+            <div class="row justify-content-center mb-4">
+              <div class="col-md-6">
+                <input type="text" class="form-control" placeholder="Attack Name">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="my-4">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#abilities">
+          Abilities
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        </button>
+        <div class="collapse" id="abilities">
+          <div class="card card-body border-0 border-bottom border-dark-subtle flex-row justify-content-around">
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" value="Pokémon Power" id="pokemonPowerCheck" name="abilityType">
+              <label class="form-check-label font-monospace fw-semibold" for="pokemonPowerCheck">
+                Pokémon Power
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" value="Poké-Body" id="pokeBodyCheck" name="abilityType">
+              <label class="form-check-label font-monospace fw-semibold" for="pokeBodyCheck">
+                Poké-Body
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" value="Poké-Power" id="pokePowerCheck" name="abilityType">
+              <label class="form-check-label font-monospace fw-semibold" for="pokePowerCheck">
+                Poké-Power
+              </label>
+            </div>
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="checkbox" value="Ability" id="abilityCheck" name="abilityType">
+              <label class="form-check-label font-monospace fw-semibold" for="abilityCheck">
+                Ability
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="my-4">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#weakness">
+          Weaknesses
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        </button>
+        <div class="collapse" id="weakness">
+          <div class="card card-body border-0 border-bottom border-dark-subtle">
+            <div class="row row-gap-3">
+              <% for (let i = 0; i < energyTypes.length; i++) { %>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="<%=energyTypes[i]%>" id="energyTypeCheck<%=i%>" name="weaknessEnergyType">
+                  <label class="form-check-label font-monospace fw-semibold" for="energyTypeCheck<%=i%>">
+                    <img src="../media/energy-<%=energyTypes[i]%>.png" alt="">
+                    <%= energyTypes[i] %>
+                  </label>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="my-4">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#resistance">
+          Resistances
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+          </svg>
+        </button>
+        <div class="collapse" id="resistance">
+          <div class="card card-body border-0 border-bottom border-dark-subtle">
+            <div class="row row-gap-3">
+              <% for (let i = 0; i < energyTypes.length; i++) { %>
+              <div class="col-md-4">
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="<%=energyTypes[i]%>" id="energyTypeCheck<%=i%>" name="resistanceEnergyType">
+                  <label class="form-check-label font-monospace fw-semibold" for="energyTypeCheck<%=i%>">
+                    <img src="../media/energy-<%=energyTypes[i]%>.png" alt="">
+                    <%= energyTypes[i] %>
+                  </label>
+                </div>
+              </div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn-submit" type="submit">View Selection</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // HP
+  const minHp = document.getElementById('minHp');
+  const maxHp = document.getElementById('maxHp');
+  const minValue = document.querySelector('.minValue');
+  const maxValue = document.querySelector('.maxValue');
+
+  minHp.addEventListener('input', () => {
+    minValue.textContent = `Minimum: ${minHp.value}`;
+  });
+
+  maxHp.addEventListener('input', () => {
+    maxValue.textContent = `Maximum: ${maxHp.value}`;
+  });
+
+  minHp.addEventListener('change', () => {
+    if (parseInt(minHp.value) > parseInt(maxHp.value)) {
+      maxHp.value = minHp.value;
+      maxValue.textContent = `Maximum: ${maxHp.value}`;
+    }
+  });
+
+  maxHp.addEventListener('change', () => {
+    if (parseInt(maxHp.value) < parseInt(minHp.value)) {
+      minHp.value = maxHp.value;
+      minValue.textContent = `Minimum: ${minHp.value}`;
+    }
+  });
+
+  // Retreat Cost
+  const minRetreatCost = document.getElementById('minRetreatCost');
+  const maxRetreatCost = document.getElementById('maxRetreatCost');
+  const minValueRC = document.querySelector('.minValueRC');
+  const maxValueRC = document.querySelector('.maxValueRC');
+
+  minRetreatCost.addEventListener('input', () => {
+    minValueRC.textContent = `Minimum: ${minRetreatCost.value}`;
+  });
+
+  maxRetreatCost.addEventListener('input', () => {
+    maxValueRC.textContent = `Maximum: ${maxRetreatCost.value}`;
+  });
+
+  minRetreatCost.addEventListener('change', () => {
+    if (parseInt(minRetreatCost.value) > parseInt(maxRetreatCost.value)) {
+      maxRetreatCost.value = minRetreatCost.value;
+      maxValueRC.textContent = `Maximum: ${maxRetreatCost.value}`;
+    }
+  });
+
+  maxRetreatCost.addEventListener('change', () => {
+    if (parseInt(maxRetreatCost.value) < parseInt(minRetreatCost.value)) {
+      minRetreatCost.value = maxRetreatCost.value;
+      minValueRC.textContent = `Minimum: ${minRetreatCost.value}`;
+    }
+  });
+
+  // Attack Cost
+  const minAttackCost = document.getElementById('minAttackCost');
+  const maxAttackCost = document.getElementById('maxAttackCost');
+  const minValueAttack = document.querySelector('.minValueAttack');
+  const maxValueAttack = document.querySelector('.maxValueAttack');
+
+  minAttackCost.addEventListener('input', () => {
+    minValueAttack.textContent = `Minimum: ${minAttackCost.value}`;
+  });
+
+  maxAttackCost.addEventListener('input', () => {
+    maxValueAttack.textContent = `Maximum: ${maxAttackCost.value}`;
+  });
+
+  minAttackCost.addEventListener('change', () => {
+    if (parseInt(minAttackCost.value) > parseInt(maxAttackCost.value)) {
+      maxAttackCost.value = minAttackCost.value;
+      maxValueAttack.textContent = `Maximum: ${maxAttackCost.value}`;
+    }
+  });
+
+  maxAttackCost.addEventListener('change', () => {
+    if (parseInt(maxAttackCost.value) < parseInt(minAttackCost.value)) {
+      minAttackCost.value = maxAttackCost.value;
+      minValueAttack.textContent = `Minimum: ${minAttackCost.value}`;
+    }
+  });
+
+  // Base Damage
+  const minDamage = document.getElementById('minDamage');
+  const maxDamage = document.getElementById('maxDamage');
+  const minValueDamage = document.querySelector('.minValueDamage');
+  const maxValueDamage = document.querySelector('.maxValueDamage');
+
+  minDamage.addEventListener('input', () => {
+    minValueDamage.textContent = `Minimum: ${minDamage.value}`;
+  });
+
+  maxDamage.addEventListener('input', () => {
+    maxValueDamage.textContent = `Maximum: ${maxDamage.value}`;
+  });
+
+  minDamage.addEventListener('change', () => {
+    if (parseInt(minDamage.value) > parseInt(maxDamage.value)) {
+      maxDamage.value = minDamage.value;
+      maxValueDamage.textContent = `Maximum: ${maxDamage.value}`;
+    }
+  });
+
+  maxDamage.addEventListener('change', () => {
+    if (parseInt(maxDamage.value) < parseInt(minDamage.value)) {
+      minDamage.value = maxDamage.value;
+      minValueDamage.textContent = `Minimum: ${minDamage.value}`;
+    }
+  });
+</script>

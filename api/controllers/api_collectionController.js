@@ -155,9 +155,8 @@ exports.getCardsInCollection = async (req, res) => {
       return res.status(404).json({ error: "No cards found" });
     }
     const cardIds = collectionCards.map((card) => card.card_id); // get card ids from collection cards pass to getCardDetails
+    console.log("cardIds", cardIds);
     const cards = await Card.getCardDetails({ card_id: cardIds }, page);
-    // using getCardDetails could cause somewhat slower load times if there are >20 cards in a collection (>2.5s just for the api call)
-    // however, i want api users to be able to get card details in a collection.. think this through
     return res.status(200).json(cards);
   } catch (err) {
     console.log(err);

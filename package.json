@@ -6,8 +6,7 @@
   "scripts": {
     "start:api": "node api.js",
     "start:app": "node app.js",
-    "start": "concurrently \"nodemon --exec npm run start:api\" \"nodemon --exec npm run start:app\""
-  },
+    "start": "concurrently \"nodemon --exec \\\"node --trace-warnings\\\" api.js\" \"nodemon --exec \\\"node --trace-warnings\\\" app.js\""  },
   "author": "",
   "license": "ISC",
   "dependencies": {

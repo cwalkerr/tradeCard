@@ -1,4 +1,5 @@
 const { Card } = require("../models/modelAssosiations.js");
+const { formatFilters } = require("../../utility/formatFilters.js");
 
 /**
  * gets cards with full details by page
@@ -11,10 +12,57 @@ const { Card } = require("../models/modelAssosiations.js");
  * @returns json array of cards with full relevant (excluded id's where possible) details
  */
 exports.getCards = async (req, res) => {
-  const { page, ...whereClause } = req.query;
+  const { page, ...queryParams } = req.query;
   try {
-    const cards = await Card.getCardDetails(whereClause, Number(page) || 1);
-    console.log(cards.count);
+    const cards = await Card.getCardDetails(queryParams, Number(page) || 1);
+
+    if (!cards) {
+      return res.status(404).json({ error: "No cards found" });
+    }
+
+    return res.status(200).json(cards);
+  } catch (err) {
+    return res.status(500).json({ error: "Error getting cards" });
+  }
+};
+
+exports.getFilteredCardIds = async (req, res, next) => {
+  const { ...queryParams } = req.query;
+  const filters = formatFilters(queryParams);
+  if (Object.keys(filters).length === 0) {
+    next();
+  } else {
+    try {
+      const cards = await Card.filterResultIds(filters);
+
+      if (cards.length === 0 || !cards) {
+        return res.status(404).json({ error: "No cards found" });
+      }
+      req.cardIds = cards.cards;
+      next();
+    } catch (err) {
+      return res.status(500).json({ error: "Error getting cards" });
+    }
+  }
+};
+
+/**
+ * gets cards with limited details (id, image and name) by page
+ * optional where clause can be passed as query params
+ * this is used in the web app for card grid page - much faster than getCards
+ * @param {*} req
+ * @param {*} res
+ * @returns json array of cards with limited details
+ */
+exports.getCardGrid = async (req, res) => {
+  let cardIds = [];
+  const { page } = req.query;
+
+  if (req.cardIds && req.cardIds.length > 0) {
+    cardIds = req.cardIds;
+  }
+  try {
+    const cards = await Card.getCardGrid(cardIds, page);
 
     if (!cards) {
       return res.status(404).json({ error: "No cards found" });
@@ -44,29 +92,5 @@ exports.getCardById = async (req, res) => {
     return res.status(200).json(card);
   } catch (err) {
     return res.status(500).json({ error: "Error getting card" });
-  }
-};
-
-/**
- * gets cards with limited details (id, image and name) by page
- * optional where clause can be passed as query params
- * this is used in the web app for card grid page - much faster than getCards
- * @param {*} req
- * @param {*} res
- * @returns json array of cards with limited details
- */
-exports.getCardGrid = async (req, res) => {
-  const { page, ...whereClause } = req.query;
-
-  try {
-    const cards = await Card.getCardGrid(whereClause, Number(page) || 1);
-
-    if (!cards) {
-      return res.status(404).json({ error: "No cards found" });
-    }
-
-    return res.status(200).json(cards);
-  } catch (err) {
-    return res.status(500).json({ error: "Error getting cards" });
   }
 };

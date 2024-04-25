@@ -4,6 +4,7 @@ const collectionController = require("../controllers/app_collectionController.js
 const cardController = require("../controllers/app_cardController.js");
 const ratingController = require("../controllers/app_ratingController.js");
 const commentController = require("../controllers/app_commentController.js");
+const filterController = require("../controllers/app_filterController.js");
 const {
   verifyLoggedIn,
   catchError,
@@ -44,7 +45,7 @@ router.delete(
 
 /**
  * GETS ALL INFO FOR A COLLECTION AND RENDERS IT
- * stil not keen on the way this is done and endpoint but it wii have to do for now
+ *
  */
 router.get(
   "/collections/:collection_id/cards",
@@ -52,6 +53,7 @@ router.get(
   collectionController.getCardsInCollection,
   ratingController.getCollectionRatings,
   commentController.getCollectionComments,
+  filterController.getFilterOptions,
   cardController.cardGrid,
   catchError("/")
 );
@@ -60,7 +62,7 @@ router.get(
  * ADDS A CARD TO A COLLECTION
  */
 router.post(
-  "/collections/cards/:card_id", // dont try and change this, collection_id had to be passed in the body
+  "/collections/cards/:card_id",
   verifyLoggedIn("You must be logged in to add a card to a collection"),
   collectionController.addCardToCollection,
   catchError(`back`)

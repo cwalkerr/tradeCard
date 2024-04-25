@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const wishlistController = require("../controllers/app_wishlistController.js");
 const cardController = require("../controllers/app_cardController.js");
+const filterController = require("../controllers/app_filterController.js");
 const {
   verifyLoggedIn,
   catchError,
@@ -14,6 +15,7 @@ router
   .get(
     wishlistController.getUserWishlist,
     wishlistController.getCardsInWishlist,
+    filterController.getFilterOptions,
     cardController.cardGrid,
     catchError("/dashboard")
   );
