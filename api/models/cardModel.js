@@ -1,6 +1,4 @@
-// bit of a mess but this file contains all the models for the attributes of a card
-
-const { DataTypes } = require("sequelize");
+const { DataTypes, Op } = require("sequelize");
 const sequelize = require("../../config/db.js");
 
 /**
@@ -41,6 +39,9 @@ const Card = sequelize.define(
       type: DataTypes.TEXT,
     },
     pokedex_number: {
+      type: DataTypes.INTEGER,
+    },
+    retreat_cost: {
       type: DataTypes.INTEGER,
     },
     sets_id: {
@@ -474,37 +475,10 @@ const Image = sequelize.define(
 );
 
 /**
- * RETREAT COST MODEL
- */
-const RetreatCost = sequelize.define(
-  "RetreatCost",
-  {
-    retreat_cost_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-    },
-    card_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    energy_type_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-  },
-  {
-    tableName: "retreat_cost",
-    timestamps: false,
-    freezeTableName: true,
-  }
-);
-
-/**
  * SET MODEL
  */
-const Set = sequelize.define(
-  "Set",
+const Sets = sequelize.define(
+  "Sets",
   {
     sets_id: {
       type: DataTypes.INTEGER,
@@ -583,12 +557,12 @@ const Series = sequelize.define(
  */
 
 // assosiations between Set & series
-Series.hasMany(Set, { foreignKey: "series_id" });
-Set.belongsTo(Series, { foreignKey: "series_id" });
+Series.hasMany(Sets, { foreignKey: "series_id" });
+Sets.belongsTo(Series, { foreignKey: "series_id" });
 
 // set has many cards / card belongs to one set
-Set.hasMany(Card, { foreignKey: "sets_id" });
-Card.belongsTo(Set, { foreignKey: "sets_id" });
+Sets.hasMany(Card, { foreignKey: "sets_id" });
+Card.belongsTo(Sets, { foreignKey: "sets_id" });
 
 // card has many images / image belongs to one card
 Card.hasMany(Image, { foreignKey: "card_id" });
@@ -597,11 +571,6 @@ Image.belongsTo(Card, { foreignKey: "card_id" });
 // evolution belongs to one card / card has one evolution
 Card.hasOne(Evolution, { foreignKey: "card_id" });
 Evolution.belongsTo(Card, { foreignKey: "card_id" });
-
-// retreat cost belongs to card & energy type / card has many retreat costs
-Card.hasMany(RetreatCost, { foreignKey: "card_id" });
-RetreatCost.belongsTo(Card, { foreignKey: "card_id" });
-RetreatCost.belongsTo(EnergyType, { foreignKey: "energy_type_id" });
 
 // card has many abilities / ability belongs to many cards
 Card.belongsToMany(Ability, { through: CardAbility, foreignKey: "card_id" });
@@ -669,8 +638,6 @@ Subtype.belongsToMany(Card, {
 /**
  * this query gets card details with all joined data that is useful
  * i.e. it excludes id's etc where possible
- * it accepts a where clause and paginates the data
- * it can be used to query all cards paginated or by criteria specified in the where clause
  * it can be used as a independant api endpoint, and is used in the view card details page
  * @param {*} whereClause
  * @param {*} page
@@ -689,7 +656,7 @@ Card.getCardDetails = async function (whereClause = {}, page) {
     attributes: { exclude: ["sets_id"] },
     include: [
       {
-        model: Set,
+        model: Sets,
         attributes: [
           "name",
           "release_date",
@@ -699,26 +666,16 @@ Card.getCardDetails = async function (whereClause = {}, page) {
         ],
         include: [{ model: Series, attributes: ["name"] }],
       },
+
       { model: Image, attributes: ["url"] },
       {
         model: Evolution,
         attributes: ["evolves_to_name", "evolves_from_name"],
       },
       {
-        model: RetreatCost,
-        attributes: {
-          exclude: ["card_id", "retreat_cost_id"],
-        },
-        include: [
-          {
-            model: EnergyType,
-            attributes: ["type"],
-          },
-        ],
-      },
-      {
         model: Ability,
         attributes: ["name", "description", "type"],
+        through: { attributes: [] },
       },
       {
         model: Attack,
@@ -739,7 +696,6 @@ Card.getCardDetails = async function (whereClause = {}, page) {
           },
         ],
       },
-
       {
         model: BuffDebuff,
         attributes: ["type", "variable"],
@@ -753,6 +709,7 @@ Card.getCardDetails = async function (whereClause = {}, page) {
       },
       {
         model: Rules,
+        through: { attributes: [] },
         attributes: ["description"],
       },
       { model: Subtype, attributes: ["type"], through: { attributes: [] } },
@@ -780,10 +737,15 @@ Card.getCardDetails = async function (whereClause = {}, page) {
  * @param {*} cardId
  * @returns card and image url in json format
  */
-Card.getCardGrid = async function (whereClause = {}, page) {
+Card.getCardGrid = async function (cardIds = [], page) {
   page = Number(page) || 1;
   const itemsPerPage = 30;
   const offset = (page - 1) * itemsPerPage;
+
+  let whereClause = {};
+  if (cardIds.length > 0) {
+    whereClause.card_id = { [Op.in]: cardIds };
+  }
 
   const result = await this.findAndCountAll({
     where: whereClause,
@@ -814,6 +776,140 @@ Card.getCardGrid = async function (whereClause = {}, page) {
   }
 };
 
+Card.filterResultIds = async function (whereClause = {}) {
+  let cardWhereClause = {};
+  let include = [];
+  const cardTableKeys = ["rarity", "artist", "type", "hp", "retreat_cost"];
+
+  // generate the where clause for the card model
+  for (let key in whereClause) {
+    if (cardTableKeys.includes(key)) {
+      cardWhereClause[key] = whereClause[key];
+    }
+  }
+
+  // deal with what to include in the query
+  if (whereClause.Subtype) {
+    include.push({
+      model: Subtype,
+      where: whereClause.Subtype,
+      required: true,
+      through: {
+        model: CardSubtype,
+        required: true,
+      },
+    });
+  }
+
+  if (whereClause.Sets || whereClause.Series) {
+    let includeSets = {
+      model: Sets,
+      where: whereClause.Sets,
+      required: true,
+    };
+
+    if (whereClause.Series) {
+      includeSets.include = [
+        {
+          model: Series,
+          where: whereClause.Series,
+          required: true,
+        },
+      ];
+    }
+    include.push(includeSets);
+  }
+
+  if (whereClause.EnergyType) {
+    include.push({
+      model: EnergyType,
+      where: whereClause.EnergyType,
+      required: true,
+      through: {
+        model: CardEnergyType,
+        required: true,
+      },
+    });
+  }
+
+  if (whereClause.Ability) {
+    include.push({
+      model: Ability,
+      where: whereClause.Ability,
+      required: true,
+      through: {
+        model: CardAbility,
+        required: true,
+      },
+    });
+  }
+
+  if (whereClause.Resistance) {
+    include.push({
+      model: BuffDebuff,
+      where: whereClause.Resistance,
+      required: true,
+      through: {
+        model: CardBuffDebuff,
+        required: true,
+      },
+      include: [
+        {
+          model: EnergyType,
+          required: true,
+          where: whereClause.ResistanceEnergyType,
+        },
+      ],
+    });
+  }
+
+  if (whereClause.Weakness) {
+    include.push({
+      model: BuffDebuff,
+      where: whereClause.Weakness,
+      required: true,
+      through: {
+        model: CardBuffDebuff,
+        required: true,
+      },
+      include: [
+        {
+          model: EnergyType,
+          required: true,
+          where: whereClause.WeaknessEnergyType,
+        },
+      ],
+    });
+  }
+
+  if (whereClause.Attack) {
+    include.push({
+      model: Attack,
+      where: whereClause.Attack,
+      required: true,
+      through: {
+        model: CardAttack,
+        required: true,
+      },
+    });
+  }
+
+  try {
+    const { count, rows } = await this.findAndCountAll({
+      attributes: ["card_id"],
+      where: cardWhereClause,
+      include: include,
+    });
+
+    return {
+      cards: rows.map((card) => card.card_id),
+      count: count,
+    };
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   Card,
   Ability,
@@ -831,7 +927,6 @@ module.exports = {
   CardSubtype,
   Evolution,
   Image,
-  RetreatCost,
-  Set,
+  Sets,
   Series,
 };

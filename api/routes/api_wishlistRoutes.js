@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const wishlistController = require("../controllers/api_wishlistController.js");
 
-router.get("/wishlist", wishlistController.getWishlist); // what is this for?
+router.get("/wishlist", wishlistController.getWishlist);
 
 router.get("/wishlist/:id", wishlistController.getCardsInWishlist);
 

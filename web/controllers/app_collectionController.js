@@ -140,9 +140,10 @@ exports.deleteCollection = async (req, res, next) => {
  */
 exports.getCardsInCollection = async (req, res, next) => {
   const collection_id = req.params.collection_id;
+  const page = req.query.page || 1;
   try {
     const cardsInCollection = await axios.get(
-      `${API_URL_COLLECTIONS}/${collection_id}/cards`
+      `${API_URL_COLLECTIONS}/${collection_id}/cards?page=${page}`
     );
 
     if (cardsInCollection.status === SUCCESS_STATUS_CODE) {

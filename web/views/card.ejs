@@ -152,7 +152,7 @@
             </div>
           </div>
 
-          <% if (card.BuffDebuffs.length>0 || card.RetreatCosts.length>0) {  %>
+          <% if (card.BuffDebuffs.length>0 || card.retreat_cost>0) {  %>
           <div class="col d-flex align-items-center justify-content-center">
             <div class="card shadow">
               <div class="card-body">
@@ -169,11 +169,11 @@
                 </p>
                 <% } %>
                 <% } %>
-                <% if (card.RetreatCosts.length>0) {  %>
+                <% if (card.retreat_cost>0) {  %>
                 <p class="text-primary fw-semibold lead">
                   Retreat Cost :
-                  <% for (let i = 0; i<card.RetreatCosts.length; i++) {%>
-                  <img src="../media/energy-<%=card.RetreatCosts[i].EnergyType.type%>.png" alt="" />
+                  <% for (let i = 0; i<card.retreat_cost; i++) {%>
+                  <img src="../media/energy-Colorless.png" alt="" />
                   <% } %>
                 </p>
                 <% } %>
