@@ -32,31 +32,3 @@ exports.getFilterOptions = async (req, res, next) => {
     return;
   }
 };
-
-exports.ProcessFilterOptions = async (req, res, next) => {
-  const { page, ...checkedBoxes } = req.query;
-
-  const query = new URLSearchParams(checkedBoxes).toString();
-
-  try {
-    const cards = await axios.get(
-      `${API_URL}/cards/grid?${query}&page=${page}&${new URLSearchParams(
-        checkedBoxes
-      ).toString()}`
-    );
-    if (cards.status === SUCCESS_STATUS_CODE) {
-      req.filteredCards = cards.data;
-      console.log(
-        "req.filteredCards in ProcessFilterOptions",
-        req.filteredCards
-      );
-      next();
-    }
-  } catch (err) {
-    console.log("Error getting filtered cards: ", err);
-    next(
-      new Error(err.response.data.error || err.message || "Error getting cards")
-    );
-    return;
-  }
-};

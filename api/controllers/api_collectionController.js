@@ -149,13 +149,12 @@ exports.getCardsInCollection = async (req, res) => {
         collection_id: req.params.id,
       },
       attributes: ["card_id"],
+      raw: true,
     });
-
-    if (!collectionCards) {
-      return res.status(404).json({ error: "No cards found" });
+    if (collectionCards.length === 0) {
+      return res.json(null);
     }
-    const cardIds = collectionCards.map((card) => card.card_id); // get card ids from collection cards pass to getCardDetails
-    console.log("cardIds", cardIds);
+    const cardIds = collectionCards.map((card) => card.card_id);
     const cards = await Card.getCardDetails({ card_id: cardIds }, page);
     return res.status(200).json(cards);
   } catch (err) {

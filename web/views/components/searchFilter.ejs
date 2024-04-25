@@ -9,8 +9,11 @@
 
 <div class="container my-4">
   <div class="mb-3 d-flex">
-    <label for="search" class="form-label">Search Cards</label>
-    <input type="search" class="form-control" id="search" placeholder="search">
+    <form action="/cards">
+      <label for="search" class="form-label">Search Cards</label>
+      <input type="search" class="form-control" id="search" name="pokemonName" placeholder="Search by Name">
+      <button class="btn btn-success" type="submit">Search</button>
+    </form>
     <button class="btn btn-primary d-flex align-items-center mx-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterPage" aria-controls="filterPage">
       Filter
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-list mx-1" viewBox="0 0 16 16">
@@ -289,7 +292,7 @@
               </div>
               <div class="row justify-content-center my-4">
                 <div class="col-md-6">
-                  <input type="text" class="form-control" placeholder="Other Artist">
+                  <input type="text" class="form-control" name="artistName" placeholder="Other Artist">
                 </div>
               </div>
             </div>
@@ -400,7 +403,7 @@
             </div>
             <div class="row justify-content-center mb-4">
               <div class="col-md-6">
-                <input type="text" class="form-control" placeholder="Attack Name">
+                <input type="text" class="form-control" name="attackName" placeholder="Attack Name">
               </div>
             </div>
           </div>
