@@ -1,4 +1,5 @@
 const axios = require("axios");
+const e = require("connect-flash");
 const API_CARD_URL = "http://localhost:4000/api/cards";
 const SUCCESS_STATUS_CODE = 200;
 
@@ -20,7 +21,6 @@ const calculatePagination = (currentPage, totalPages) => {
 
 exports.cardGrid = async (req, res, next) => {
   const { page, ...checkedBoxes } = req.query;
-
   let cards = null;
   let totalPages;
   let currentPage;
@@ -43,9 +43,13 @@ exports.cardGrid = async (req, res, next) => {
     try {
       const allCards = await axios.get(`${API_CARD_URL}/grid?${query}`);
       if (allCards.status === SUCCESS_STATUS_CODE) {
-        cards = allCards.data.cards.length > 0 ? allCards.data.cards : null;
-        totalPages = allCards.data.totalPages;
-        currentPage = allCards.data.currentPage;
+        if (allCards.data === null) {
+          cards = null;
+        } else {
+          cards = allCards.data.cards;
+          totalPages = allCards.data.totalPages;
+          currentPage = allCards.data.currentPage;
+        }
       }
     } catch (err) {
       next(

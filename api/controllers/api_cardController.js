@@ -16,8 +16,8 @@ exports.getCards = async (req, res) => {
   try {
     const cards = await Card.getCardDetails(queryParams, Number(page) || 1);
 
-    if (!cards) {
-      return res.status(404).json({ error: "No cards found" });
+    if (cards.cards.length === 0) {
+      return res.json(null);
     }
 
     return res.status(200).json(cards);
@@ -35,8 +35,8 @@ exports.getFilteredCardIds = async (req, res, next) => {
     try {
       const cards = await Card.filterResultIds(filters);
 
-      if (cards.length === 0 || !cards) {
-        return res.status(404).json({ error: "No cards found" });
+      if (cards.cards.length === 0) {
+        return res.json(null);
       }
       req.cardIds = cards.cards;
       next();
@@ -64,8 +64,8 @@ exports.getCardGrid = async (req, res) => {
   try {
     const cards = await Card.getCardGrid(cardIds, page);
 
-    if (!cards) {
-      return res.status(404).json({ error: "No cards found" });
+    if (cards.cards.length === 0) {
+      return res.json(null);
     }
 
     return res.status(200).json(cards);
@@ -85,8 +85,8 @@ exports.getCardById = async (req, res) => {
   try {
     const card = await Card.getCardDetails({ card_id: req.params.id });
 
-    if (!card) {
-      return res.status(404).json({ error: "No card found" });
+    if (card.cards.length === 0) {
+      return res.json(null);
     }
 
     return res.status(200).json(card);

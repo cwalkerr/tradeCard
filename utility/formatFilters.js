@@ -5,6 +5,11 @@ exports.formatFilters = (queryString) => {
   let keys = [...queryObj.keys()];
   let query = {};
 
+  if (keys.includes("pokemonName")) {
+    query.name = { [Op.substring]: `%${queryObj.get("pokemonName")}%` };
+    console.log("query.name", query.name);
+  }
+
   if (keys.includes("cardType")) {
     query.type = { [Op.in]: queryObj.get("cardType").split(",") };
   }
@@ -13,8 +18,17 @@ exports.formatFilters = (queryString) => {
     query.rarity = { [Op.in]: queryObj.get("rarity").split(",") };
   }
 
-  if (keys.includes("artist")) {
+  if (keys.includes("artist") && keys.includes("artistName")) {
+    query.artist = {
+      [Op.or]: [
+        { [Op.in]: queryObj.get("artist").split(",") },
+        { [Op.substring]: `%${queryObj.get("artistName")}%` },
+      ],
+    };
+  } else if (keys.includes("artist")) {
     query.artist = { [Op.in]: queryObj.get("artist").split(",") };
+  } else if (keys.includes("artistName")) {
+    query.artist = { [Op.substring]: `%${queryObj.get("artistName")}%` };
   }
 
   if (keys.includes("health")) {
@@ -90,6 +104,12 @@ exports.formatFilters = (queryString) => {
         },
       };
     }
+  }
+  if (keys.includes("attackName")) {
+    if (!query.Attack) {
+      query.Attack = {};
+    }
+    query.Attack.name = { [Op.substring]: `%${queryObj.get("attackName")}%` };
   }
 
   return query;

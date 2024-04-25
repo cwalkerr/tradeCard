@@ -7,37 +7,10 @@ const {
 } = require("../models/cardModel.js");
 const { Op } = require("sequelize");
 
-exports.getSeries = async (req, res) => {
-  try {
-    let series = await Series.findAll();
-    if (!series) {
-      return res.status(404).json({ error: "No series found" });
-    }
-    return res.status(200).json((series = series.map((series) => series.name)));
-  } catch (err) {
-    return res.status(500).json({ error: "Error getting series" });
-  }
-};
-
-exports.getSets = async (req, res) => {
-  try {
-    let sets = await Sets.findAll({
-      group: ["series_id", "name"],
-      attributes: ["name", "series_id"],
-    });
-    if (!sets) {
-      return res.status(404).json({ error: "No sets found" });
-    }
-    return res.status(200).json(sets);
-  } catch (err) {
-    return res.status(500).json({ error: "Error getting sets" });
-  }
-};
-
 exports.getSetsInSeries = async (req, res) => {
   try {
     let series = await Series.findAll();
-    if (!series) {
+    if (Object.keys(series).length === 0) {
       return res.status(404).json({ error: "No series found" });
     }
 
@@ -62,7 +35,7 @@ exports.getSetsInSeries = async (req, res) => {
 exports.getEnergyTypes = async (req, res) => {
   try {
     let energyTypes = await EnergyType.findAll();
-    if (!energyTypes) {
+    if (Object.keys(energyTypes).length === 0) {
       return res.status(404).json({ error: "No energy types found" });
     }
     return res
@@ -81,7 +54,7 @@ exports.getRarities = async (req, res) => {
       where: { rarity: { [Op.not]: null } },
       distinct: true,
     });
-    if (!rarities) {
+    if (Object.keys(rarities).length === 0) {
       return res.status(404).json({ error: "No rarities found" });
     }
     return res
@@ -95,7 +68,7 @@ exports.getRarities = async (req, res) => {
 exports.getSubtypes = async (req, res) => {
   try {
     let subtypes = await Subtype.findAll();
-    if (!subtypes) {
+    if (Object.keys(subtypes).length === 0) {
       return res.status(404).json({ error: "No subtypes found" });
     }
     return res

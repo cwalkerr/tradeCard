@@ -28,10 +28,11 @@ exports.getCardsInWishlist = async (req, res) => {
         wishlist_id: req.params.id,
       },
       attributes: ["card_id"],
+      raw: true,
     });
 
-    if (!wishListCards) {
-      return res.status(404).json({ error: "No cards in wishlist" });
+    if (wishListCards.length === 0) {
+      return res.json(null);
     }
     const cardIds = wishListCards.map((card) => card.card_id);
     const cards = await Card.getCardDetails({ card_id: cardIds }, page);

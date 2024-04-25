@@ -779,7 +779,14 @@ Card.getCardGrid = async function (cardIds = [], page) {
 Card.filterResultIds = async function (whereClause = {}) {
   let cardWhereClause = {};
   let include = [];
-  const cardTableKeys = ["rarity", "artist", "type", "hp", "retreat_cost"];
+  const cardTableKeys = [
+    "rarity",
+    "artist",
+    "type",
+    "hp",
+    "retreat_cost",
+    "name",
+  ];
 
   // generate the where clause for the card model
   for (let key in whereClause) {
