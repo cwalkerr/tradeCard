@@ -1,4 +1,4 @@
-const User = require("../models/userModel.js");
+const { User } = require("../models/userModel.js");
 const { Wishlist } = require("../models/wishlistModel.js");
 const Sequelize = require("sequelize");
 
@@ -88,7 +88,11 @@ exports.login = async (req, res) => {
     if (await user.checkPassword(password)) {
       return res
         .status(200)
-        .json({ success: "Login successful", user_id: user.user_id });
+        .json({
+          success: "Login successful",
+          user_id: user.user_id,
+          username: user.username,
+        });
     } else {
       return res.status(400).json({ error: "Incorrect password" });
     }

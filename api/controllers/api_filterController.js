@@ -10,7 +10,7 @@ const { Op } = require("sequelize");
 exports.getSetsInSeries = async (req, res) => {
   try {
     let series = await Series.findAll();
-    if (Object.keys(series).length === 0) {
+    if (series.length === 0) {
       return res.status(404).json({ error: "No series found" });
     }
 
@@ -54,7 +54,7 @@ exports.getRarities = async (req, res) => {
       where: { rarity: { [Op.not]: null } },
       distinct: true,
     });
-    if (Object.keys(rarities).length === 0) {
+    if (rarities.length === 0) {
       return res.status(404).json({ error: "No rarities found" });
     }
     return res
@@ -68,7 +68,7 @@ exports.getRarities = async (req, res) => {
 exports.getSubtypes = async (req, res) => {
   try {
     let subtypes = await Subtype.findAll();
-    if (Object.keys(subtypes).length === 0) {
+    if (subtypes.length === 0) {
       return res.status(404).json({ error: "No subtypes found" });
     }
     return res

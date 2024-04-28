@@ -2,7 +2,7 @@
  * This file is used to define associations between models from different files
  */
 const { Card } = require("./cardModel.js");
-const User = require("./userModel.js");
+const { User } = require("./userModel.js");
 const {
   Collection,
   CollectionCard,

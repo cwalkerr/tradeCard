@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="/css/custom.css" />
+</head>
+<style>
+  p {
+    margin: 0 !important;
+  }
+</style>
+
+<body>
+  <%- include('components/navbar') %>
+  <div class="container mt-4">
+    <div class="border-bottom d-flex align-items-center">
+      <a href="/messages" class="mx-3">
+        <img src="../../media/arrow-return-left.svg" alt="Go Back">
+      </a>
+      <h2 class=""><%=otherUserName%></h2>
+    </div>
+    <% messages.forEach((message) => { %>
+    <div class="row mt-3 <%= message.sender.username === loggedInUser ? 'justify-content-end' : 'justify-content-start' %>">
+      <div class="d-inline-block shadow <%= message.sender.username === loggedInUser ? 'bg-primary' : 'bg-danger' %> text-white mb-3 rounded-pill w-auto">
+        <div class="card-body p-2">
+          <p class="card-text text-break"><%= message.body %></p>
+        </div>
+      </div>
+      <div class="<%= message.sender.username === loggedInUser ? 'text-end' : 'text-start' %>">
+        <small><%= new Date(message.sent_at).toLocaleString({hour: '2-digit', minute: '2-digit'}).replace(/(:\d{2}| [AP]M)$/, "");%></small>
+      </div>
+    </div>
+
+    <% }) %>
+  </div>
+  <div class="container fixed-bottom mb-5">
+
+
+    <form action="/messages/<%=otherUserId%>" method="POST">
+      <div class="row my-4 justify-content-center">
+        <div class="col-md-8 col-12 d-flex mt-3">
+          <input type="text" class="form-control me-3" name="message" placeholder="Type a message" required>
+          <button type="submit" class="btn btn-primary me-3">Send</button>
+        </div>
+      </div>
+    </form>
+  </div>
+  <script src="/bootstrap/js/bootstrap.bundle.min.js"> </script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+    const userId = "<%=userId%>";
+    const otherUserId = "<%=otherUserId%>";
+  </script>
+  <script src="/scripts/updateReadStatus.js"></script>
+</body>
+
+</html>
