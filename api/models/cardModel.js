@@ -902,15 +902,15 @@ Card.filterResultIds = async function (whereClause = {}) {
   }
 
   try {
-    const { count, rows } = await this.findAndCountAll({
+    const result = await this.findAndCountAll({
       attributes: ["card_id"],
       where: cardWhereClause,
       include: include,
     });
 
     return {
-      cards: rows.map((card) => card.card_id),
-      count: count,
+      cards: result.rows.map((card) => card.card_id),
+      count: result.count,
     };
   } catch (err) {
     console.log(err);

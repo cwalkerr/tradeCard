@@ -11,6 +11,7 @@ const userRoutes = require("./web/routes/app_userRoutes");
 const cardRoutes = require("./web/routes/app_cardRoutes");
 const collectionRoutes = require("./web/routes/app_collectionRoutes");
 const wishlistRoutes = require("./web/routes/app_wishlistRoutes");
+const messageRoutes = require("./web/routes/app_messageRoutes");
 // Constant for hour
 const hour = 1000 * 60 * 60;
 
@@ -46,7 +47,7 @@ app.use(
 // Routes, if user is logged in, make home page dashboard - doesn't work
 app.get("/", (req, res) => {
   if (req.session.userID) {
-    return res.redirect("/dashboard");
+    res.render("dashboard");
   } else {
     res.sendFile("index.html");
   }
@@ -56,6 +57,11 @@ app.use("/", userRoutes);
 app.use("/", cardRoutes);
 app.use("/", collectionRoutes);
 app.use("/", wishlistRoutes);
+app.use("/", messageRoutes);
+
+app.get("/profile", (req, res) => {
+  res.render("profile");
+});
 
 // Listen
 app.listen(process.env.SERVER_PORT || 3000, () =>

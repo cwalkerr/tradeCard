@@ -18,10 +18,11 @@ exports.loginController = async (req, res) => {
 
     if (apiResponse.status === 200) {
       req.flash("success", apiResponse.data.success);
-      console.log(apiResponse);
       // create session on successful login
       let sessionObj = req.session;
       sessionObj.userID = apiResponse.data.user_id;
+      sessionObj.username = apiResponse.data.username;
+      console.log("Session created: ", sessionObj);
       return res.redirect("/dashboard");
     }
   } catch (err) {
