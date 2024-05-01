@@ -1,10 +1,7 @@
 const axios = require("axios");
 
 exports.renderLoginPage = (req, res) => {
-  res.render("login", {
-    success: req.flash("success"),
-    error: req.flash("error"),
-  });
+  res.render("login", { error: "" });
 };
 
 exports.loginController = async (req, res) => {
@@ -17,16 +14,22 @@ exports.loginController = async (req, res) => {
     });
 
     if (apiResponse.status === 200) {
-      req.flash("success", apiResponse.data.success);
-      // create session on successful login
-      let sessionObj = req.session;
-      sessionObj.userID = apiResponse.data.user_id;
-      sessionObj.username = apiResponse.data.username;
-      console.log("Session created: ", sessionObj);
-      return res.redirect("/dashboard");
+      res.cookie("jwt", apiResponse.data.accessToken, {
+        httpOnly: true,
+        maxAge: 600000,
+      });
+
+      res.cookie("refreshJwt", apiResponse.data.refreshToken, {
+        httpOnly: true,
+        maxAge: 86400000,
+      });
+      return res.render("dashboard", { success: apiResponse.data.success });
     }
   } catch (err) {
-    req.flash("error", err.response.data.error || "An error occurred");
-    return res.redirect("http://localhost:3000/login");
+    if (err.response.status === 400) {
+      return res.render("login", { error: err.response.data.error });
+    }
+
+    res.render("login", { error: "An error occurred, please try again" });
   }
 };

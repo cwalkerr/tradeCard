@@ -4,11 +4,36 @@ let output = document.getElementById("output");
 let clickedRating = 0;
 let initialRating = 0;
 
+const api = axios.create({
+  baseURL: "http://localhost:4000",
+  withCredentials: true,
+});
+
+// Add an interceptor to the Axios instance
+api.interceptors.response.use(undefined, async (error) => {
+  if (error.config && error.response && error.response.status === 401) {
+    // If a request returns a 401 response, refresh the token
+    try {
+      const response = await axios.post("http://localhost:4000/auth/refresh");
+      const newToken = response.data.accessToken;
+
+      // Update the token in the original request and retry it
+      error.config.headers["Authorization"] = `Bearer ${newToken}`;
+      return api.request(error.config);
+    } catch (refreshError) {
+      console.error("Failed to refresh token:", refreshError);
+      return Promise.reject(error);
+    }
+  }
+
+  return Promise.reject(error);
+});
+
 // Get stored rating if user has rated the collection
 window.onload = async () => {
   try {
-    const getUserRating = await axios.get(
-      `http://localhost:4000/api/collections/${collectionId}/ratings/${userId}`
+    const getUserRating = await api.get(
+      `/api/collections/${collectionId}/ratings/${userId}`
     );
     if (getUserRating.data) {
       initialRating = getUserRating.data;
@@ -27,26 +52,20 @@ const handleRatingUpdate = async (clickedStars) => {
 
   try {
     if (initialRating === 0 && clickedRating > 0) {
-      await axios.post(
-        `http://localhost:4000/api/collections/${collectionId}/ratings`,
-        {
-          rating: clickedRating,
-          user_id: userId,
-        }
-      );
+      await api.post(`/api/collections/${collectionId}/ratings`, {
+        rating: clickedRating,
+        user_id: userId,
+      });
       initialRating = clickedRating; // Update initial rating to allow for changing if page is loaded with no rating
     } else {
-      await axios.put(
-        `http://localhost:4000/api/collections/${collectionId}/ratings`,
-        {
-          rating: clickedRating,
-          user_id: userId,
-        }
-      );
+      await api.put(`/api/collections/${collectionId}/ratings`, {
+        rating: clickedRating,
+        user_id: userId,
+      });
     }
 
-    const getUpdatedRatings = await axios.get(
-      `http://localhost:4000/api/collections/${collectionId}/ratings`
+    const getUpdatedRatings = await api.get(
+      `/api/collections/${collectionId}/ratings`
     );
     const updatedRatings = getUpdatedRatings.data;
     const averageRating = getUpdatedRatings.data.average;

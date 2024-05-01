@@ -1,5 +1,5 @@
-const axios = require("axios");
-const API_URL_WISHLIST = "http://localhost:4000/api/wishlist";
+const api = require("../../utility/refreshToken");
+const API_URL_WISHLIST = "/api/wishlist";
 const SUCCESS_STATUS_CODE = 200;
 const CREATED_STATUS_CODE = 201;
 
@@ -11,32 +11,43 @@ const CREATED_STATUS_CODE = 201;
  * @returns
  */
 exports.getUserWishlist = async (req, res, next) => {
-  try {
-    const wishlist = await axios.get(
-      `${API_URL_WISHLIST}?user_id=${req.session.userID}`
-    );
-    if (wishlist.status === SUCCESS_STATUS_CODE) {
-      req.wishlist = wishlist.data; // this includes wishlist_id and user_id for view
-      console.log("wishlist : ", req.wishlist);
-      next();
+  if (req.user && req.user.id) {
+    try {
+      const wishlist = await api.get(
+        `${API_URL_WISHLIST}?user_id=${req.user.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${req.cookies.jwt}`,
+          },
+        }
+      );
+      if (wishlist.status === SUCCESS_STATUS_CODE) {
+        req.wishlist = wishlist.data;
+        next();
+      }
+    } catch (err) {
+      console.log(err);
+      next(
+        new Error(
+          err.response.data.error || err.message || "Error getting wishlist"
+        )
+      );
+      return;
     }
-  } catch (err) {
-    next(
-      new Error(
-        err.response.data.error || err.message || "Error getting wishlist"
-      )
-    );
-    return;
   }
+  next();
 };
 
 exports.getCardsInWishlist = async (req, res, next) => {
   const wishlist_id = req.wishlist.wishlist_id;
+  console.log(req.cookies.jwt);
 
   try {
-    const wishListCards = await axios.get(
-      `${API_URL_WISHLIST}/${wishlist_id}/`
-    );
+    const wishListCards = await api.get(`${API_URL_WISHLIST}/${wishlist_id}`, {
+      headers: {
+        Authorization: `Bearer ${req.cookies.jwt}`,
+      },
+    });
     if (wishListCards.status === SUCCESS_STATUS_CODE) {
       req.cardsInWishlist = wishListCards.data;
       next();
@@ -53,16 +64,26 @@ exports.getCardsInWishlist = async (req, res, next) => {
 
 exports.addCardToWishlist = async (req, res, next) => {
   const { wishlist_id, card_id } = req.params;
+  console.log(req.cookies.jwt);
   try {
-    const addCard = await axios.post(
-      `${API_URL_WISHLIST}/${wishlist_id}/card/${card_id}`
+    const addCard = await api.post(
+      `${API_URL_WISHLIST}/${wishlist_id}/card/${card_id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${req.cookies.jwt}`,
+        },
+      }
     );
 
     if (addCard.status === CREATED_STATUS_CODE) {
-      req.flash("success", addCard.data.success || "Card added to wishlist");
-      return res.redirect(`/cards/${card_id}`);
+      const success = new URLSearchParams({
+        success: addCard.data.success || "Card added to wishlist",
+      }).toString();
+      return res.redirect(`/cards/${card_id}?${success}`);
     }
   } catch (err) {
+    console.log(err);
     next(
       new Error(
         err.response.data.error ||
@@ -78,18 +99,20 @@ exports.removeCardFromWishlist = async (req, res, next) => {
   const { wishlist_id, card_id } = req.params;
 
   try {
-    const removeCard = await axios.delete(
-      `${API_URL_WISHLIST}/${wishlist_id}/card/${card_id}`
+    const removeCard = await api.delete(
+      `${API_URL_WISHLIST}/${wishlist_id}/card/${card_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${req.cookies.jwt}`,
+        },
+      }
     );
 
     if (removeCard.status === SUCCESS_STATUS_CODE) {
-      req.flash(
-        "success",
-        removeCard.data.success || "Card removed from wishlist"
-      );
       return res.redirect(`/wishlist`);
     }
   } catch (err) {
+    console.log(err);
     next(
       new Error(
         err.response.data.error ||

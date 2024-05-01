@@ -4,6 +4,20 @@ const {
   Card,
 } = require("../models/modelAssosiations.js");
 
+exports.verifyWishlistOwner = async (req, res, next) => {
+  const wishlist = await Wishlist.findByPk(req.params.wishlist_id);
+
+  if (!wishlist) {
+    return res.status(404).json({ error: "Wishlist not found" });
+  }
+
+  if (wishlist.user_id !== req.user.id) {
+    return res.status(403).json({ error: "Access denied" });
+  }
+
+  next();
+};
+
 exports.getWishlist = async (req, res) => {
   const user_id = req.query.user_id;
 
@@ -25,7 +39,7 @@ exports.getCardsInWishlist = async (req, res) => {
   try {
     const wishListCards = await WishlistCard.findAll({
       where: {
-        wishlist_id: req.params.id,
+        wishlist_id: req.params.wishlist_id,
       },
       attributes: ["card_id"],
       raw: true,

@@ -9,16 +9,14 @@ const { catchError } = require("../../middleware/middleware.js");
 router.get(
   "/cards",
   filterController.getFilterOptions,
-  cardController.cardGrid,
-  catchError("/cards")
+  cardController.cardGrid
 );
 
 router.get(
   "/cards/:id",
   collectionController.getCollections,
   wishlistController.getUserWishlist,
-  cardController.cardDetails,
-  catchError("back")
+  cardController.cardDetails
 );
 
 module.exports = router;

@@ -6,14 +6,22 @@ const collectionRoutes = require("./api/routes/api_collectionRoutes");
 const wishlistRoutes = require("./api/routes/api_wishlistRoutes");
 const filterRoutes = require("./api/routes/api_filterRoutes");
 const messageRoutes = require("./api/routes/api_messageRoutes");
+const rateLimit = require("express-rate-limit");
 const cors = require("cors");
 
 const app = express();
-app.use(cors());
-app.use(cors({ origin: "*" }));
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "Too many requests, please try again after 15 minutes",
+});
+
+app.use(limiter);
 
 app.use("/auth", authRoutes);
 app.use("/api", cardRoutes);

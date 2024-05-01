@@ -1,10 +1,10 @@
 const express = require("express");
-const session = require("express-session");
+const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
-const flash = require("connect-flash");
 const path = require("path");
 const methodOverride = require("method-override");
+const cors = require("cors");
 
 // Route imports
 const userRoutes = require("./web/routes/app_userRoutes");
@@ -12,8 +12,6 @@ const cardRoutes = require("./web/routes/app_cardRoutes");
 const collectionRoutes = require("./web/routes/app_collectionRoutes");
 const wishlistRoutes = require("./web/routes/app_wishlistRoutes");
 const messageRoutes = require("./web/routes/app_messageRoutes");
-// Constant for hour
-const hour = 1000 * 60 * 60;
 
 // initialize express app
 const app = express();
@@ -23,6 +21,12 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "web/views"));
 
 // Middleware
+app.use(
+  cors({
+    origin: "http://localhost:4000",
+    credentials: true,
+  })
+);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "web", "public")));
 app.use(
@@ -30,19 +34,29 @@ app.use(
   express.static(path.join(__dirname, "/node_modules/bootstrap/dist"))
 ); // fixes MIME type error
 app.use(express.json());
-app.use(flash());
 app.use(cookieParser());
 app.use(methodOverride("_method"));
 
-// Session middleware
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET,
-    saveUninitialized: true,
-    cookie: { maxAge: hour },
-    resave: false,
-  })
-);
+// jwt user info
+app.use((req, res, next) => {
+  const token = req.cookies.jwt;
+
+  if (token) {
+    jwt.verify(token, process.env.JWT_ACCESS_TOKEN_SECRET, (err, user) => {
+      if (err) {
+        res.locals.user = null;
+        return next();
+      }
+      console.log(user);
+      req.user = user;
+      res.locals.user = user;
+      next();
+    });
+  } else {
+    res.locals.user = null;
+    next();
+  }
+});
 
 // Routes, if user is logged in, make home page dashboard - doesn't work
 app.get("/", (req, res) => {

@@ -8,7 +8,7 @@ router.post("/login", loginController.loginController);
 
 // temporary route for dashboard
 router.get("/dashboard", (req, res) => {
-  res.render("dashboard", { userID: req.session.userID });
+  res.render("dashboard");
 });
 
 router.get("/signup", signupController.renderSignupPage);

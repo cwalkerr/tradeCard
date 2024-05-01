@@ -1,13 +1,13 @@
-const axios = require("axios");
+const api = require("../../utility/refreshToken");
 
-const API_URL_COLLECTIONS = "http://localhost:4000/api/collections";
+const API_URL_COLLECTIONS = "/api/collections";
 const SUCCESS_STATUS_CODE = 200;
 
 exports.getCollectionRatings = async (req, res, next) => {
   const collection_id = req.params.collection_id;
 
   try {
-    const collectionRatings = await axios.get(
+    const collectionRatings = await api.get(
       `${API_URL_COLLECTIONS}/${collection_id}/ratings`
     );
 
@@ -29,18 +29,20 @@ exports.getCollectionRatings = async (req, res, next) => {
 exports.removeRatingFromCollection = async (req, res, next) => {
   const { collection_id, user_id } = req.params;
   try {
-    const removeRating = await axios.delete(
-      `${API_URL_COLLECTIONS}/${collection_id}/ratings/${user_id}`
+    const removeRating = await api.delete(
+      `${API_URL_COLLECTIONS}/${collection_id}/ratings/${user_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${req.cookies.jwt}`,
+        },
+      }
     );
 
     if (removeRating.status === SUCCESS_STATUS_CODE) {
-      req.flash(
-        "success",
-        removeRating.data.success || "Rating removed from collection"
-      );
       res.redirect(`/collections/${collection_id}/cards`);
     }
   } catch (err) {
+    console.log(err);
     next(
       new Error(
         err.response.data.error ||

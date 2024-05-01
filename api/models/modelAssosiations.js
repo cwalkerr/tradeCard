@@ -10,6 +10,7 @@ const {
   Comment,
 } = require("./collectionModel.js");
 const { Wishlist, WishlistCard } = require("./wishlistModel.js");
+const RefreshToken = require("./refreshTokenModel.js");
 
 // associations between Wishlist, User and Card
 User.hasOne(Wishlist, { foreignKey: "user_id" });
@@ -45,6 +46,9 @@ Rating.belongsTo(User, { foreignKey: "user_id" });
 User.hasMany(Comment, { foreignKey: "user_id" });
 Comment.belongsTo(User, { foreignKey: "user_id" });
 
+User.hasMany(RefreshToken, { foreignKey: "user_id" });
+RefreshToken.belongsTo(User, { foreignKey: "user_id" });
+
 module.exports = {
   User,
   Collection,
@@ -54,4 +58,5 @@ module.exports = {
   WishlistCard,
   Rating,
   Comment,
+  RefreshToken,
 };
