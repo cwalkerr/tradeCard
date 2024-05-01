@@ -1,18 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const messageController = require("../controllers/app_messageController.js");
-const {
-  verifyLoggedIn,
-  catchError,
-} = require("../../middleware/middleware.js");
+const { verifyLoggedIn } = require("../../middleware/middleware.js");
 
 router
   .route("/messages")
   .all(verifyLoggedIn("You must be logged in to view messages"))
   .get(
     messageController.getUserMessages,
-    messageController.displayMessageBoard,
-    catchError("/messages")
+    messageController.displayMessageBoard
   );
 
 router
@@ -20,9 +16,8 @@ router
   .all(verifyLoggedIn("You must be logged in to view messages"))
   .get(
     messageController.getMessageThread,
-    messageController.displayMessageThread,
-    catchError("/messages")
+    messageController.displayMessageThread
   )
-  .post(messageController.sendMessage, catchError("/messages"));
+  .post(messageController.sendMessage);
 
 module.exports = router;

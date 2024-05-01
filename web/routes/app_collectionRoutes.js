@@ -5,10 +5,7 @@ const cardController = require("../controllers/app_cardController.js");
 const ratingController = require("../controllers/app_ratingController.js");
 const commentController = require("../controllers/app_commentController.js");
 const filterController = require("../controllers/app_filterController.js");
-const {
-  verifyLoggedIn,
-  catchError,
-} = require("../../middleware/middleware.js");
+const { verifyLoggedIn } = require("../../middleware/middleware.js");
 
 /**
  * GET ALL COLLECTIONS
@@ -16,8 +13,7 @@ const {
 router.get(
   "/collections",
   collectionController.getCollections,
-  collectionController.renderCollections,
-  catchError("/")
+  collectionController.renderCollections
 );
 
 /**
@@ -25,13 +21,12 @@ router.get(
  */
 router
   .route("/collections/user")
-  .all(verifyLoggedIn("You must be logged in view or create collections"))
+  // .all(verifyLoggedIn("You must be logged in view or create collections"))
   .get(
     collectionController.getCollections,
-    collectionController.renderCollections,
-    catchError("/")
+    collectionController.renderCollections
   )
-  .post(collectionController.createCollection, catchError("/collections/user"));
+  .post(collectionController.createCollection);
 
 /**
  * DELETE COLLECTION
@@ -39,8 +34,7 @@ router
 router.delete(
   "/collections/:id",
   verifyLoggedIn("You must be logged in to delete collections"),
-  collectionController.deleteCollection,
-  catchError("/collections/user")
+  collectionController.deleteCollection
 );
 
 /**
@@ -54,8 +48,7 @@ router.get(
   ratingController.getCollectionRatings,
   commentController.getCollectionComments,
   filterController.getFilterOptions,
-  cardController.cardGrid,
-  catchError("/")
+  cardController.cardGrid
 );
 
 /**
@@ -64,8 +57,7 @@ router.get(
 router.post(
   "/collections/cards/:card_id",
   verifyLoggedIn("You must be logged in to add a card to a collection"),
-  collectionController.addCardToCollection,
-  catchError(`back`)
+  collectionController.addCardToCollection
 );
 
 /**
@@ -74,8 +66,7 @@ router.post(
 router.delete(
   "/collections/:collection_id/cards/:card_id",
   verifyLoggedIn("You must be logged in to remove a card from a collection"),
-  collectionController.removeCardFromCollection,
-  catchError(`back`)
+  collectionController.removeCardFromCollection
 );
 
 /**
@@ -86,8 +77,7 @@ router.delete(
 router.delete(
   "/collections/:collection_id/ratings/:user_id",
   verifyLoggedIn("You must be logged in to remove a rating"),
-  ratingController.removeRatingFromCollection,
-  catchError(`back`)
+  ratingController.removeRatingFromCollection
 );
 
 // maybe add a new route file for these, but they are assosiated to collections
@@ -97,8 +87,7 @@ router.delete(
 router.post(
   "/collections/:collection_id/comments",
   verifyLoggedIn("You must be logged in to comment on a collection"),
-  commentController.addCommentToCollection,
-  catchError(`/collections/:collection_id/cards`)
+  commentController.addCommentToCollection
 );
 
 /**
@@ -107,8 +96,7 @@ router.post(
 router.delete(
   "/collections/:collection_id/comments/:comment_id",
   verifyLoggedIn("You must be logged in to delete a comment"),
-  commentController.deleteCommentFromCollection,
-  catchError(`back`)
+  commentController.deleteCommentFromCollection
 );
 
 module.exports = router;

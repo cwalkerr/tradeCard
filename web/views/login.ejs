@@ -27,10 +27,7 @@
     <div class="container mt-3">
       <p class="display-6 text-center text-white mb-3">Sign In</p>
 
-      <!-- flash message from sign up redirection -->
-      <% if (success) { %>
-      <p class="lead text-center text-white mb-3"><%= success %></p>
-      <% } %> <% if (error) { %>
+      <% if (error) { %>
       <p class="lead text-center text-white mb-3"><%= error %></p>
       <% } %>
       <div class="my-4 text-center text-white">

@@ -1,5 +1,4 @@
 const axios = require("axios");
-const e = require("connect-flash");
 const API_CARD_URL = "http://localhost:4000/api/cards";
 const SUCCESS_STATUS_CODE = 200;
 
@@ -62,6 +61,8 @@ exports.cardGrid = async (req, res, next) => {
   }
 
   const { startPage, endPage } = calculatePagination(currentPage, totalPages);
+  let success;
+  req.query.success ? (success = req.query.success) : (success = "");
 
   let data = {
     cards: cards,
@@ -70,10 +71,10 @@ exports.cardGrid = async (req, res, next) => {
     checkedBoxes: checkedBoxes,
     startPage: startPage,
     endPage: endPage,
-    success: req.flash("success"),
-    error: req.flash("error"),
+    success: success, //NOT NEEDED
+    error: "",
     route: req.originalUrl,
-    userId: req.session.userID,
+    userId: req.user ? req.user.id : null,
     seriesSets: req.seriesSets,
     energyTypes: req.energyTypes,
     rarities: req.rarities,
@@ -95,7 +96,7 @@ exports.cardGrid = async (req, res, next) => {
     };
   }
 
-  if (req.originalUrl.includes("/wishlist")) {
+  if (req.user && req.originalUrl.includes("/wishlist")) {
     data = {
       ...data,
       wishlistData: req.wishlist,
@@ -111,6 +112,9 @@ exports.cardGrid = async (req, res, next) => {
  */
 exports.cardDetails = async (req, res, next) => {
   const cardId = req.params.id;
+  let success;
+  req.query.success ? (success = req.query.success) : (success = "");
+
   try {
     const cardDetails = await axios.get(`${API_CARD_URL}/${cardId}`);
 
@@ -120,9 +124,9 @@ exports.cardDetails = async (req, res, next) => {
         card: card,
         wishlistData: req.wishlist,
         collectionData: req.collections,
-        userId: req.session.userID,
-        success: req.flash("success"),
-        error: req.flash("error"),
+        userId: req.user ? req.user.id : null,
+        success: success,
+        error: "",
       });
     }
   } catch (err) {

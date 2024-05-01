@@ -16,6 +16,10 @@ exports.addRating = async (req, res) => {
   const collection_id = req.params.id;
   const { rating, user_id } = req.body;
 
+  if (Number(user_id) !== req.user.id) {
+    return res.sendStatus(403);
+  }
+
   try {
     await Rating.create({
       collection_id: collection_id,
@@ -33,6 +37,13 @@ exports.addRating = async (req, res) => {
 exports.updateRating = async (req, res) => {
   const collection_id = req.params.id;
   const { rating, user_id } = req.body;
+
+  console.log("user_id: ", user_id);
+  console.log("req.user.id: ", req.user.id);
+
+  if (Number(user_id) !== req.user.id) {
+    return res.sendStatus(403);
+  }
 
   try {
     await Rating.update(
@@ -56,7 +67,7 @@ exports.updateRating = async (req, res) => {
 
 exports.deleteRating = async (req, res) => {
   const collection_id = req.params.id;
-  const user_id = req.params.user_id;
+  const user_id = req.params.userId;
 
   try {
     await Rating.destroy({
@@ -74,7 +85,7 @@ exports.deleteRating = async (req, res) => {
 
 exports.getUserRating = async (req, res) => {
   const collection_id = req.params.id;
-  const user_id = req.params.user_id;
+  const user_id = req.params.userId;
 
   try {
     const rating = await Rating.findOne({

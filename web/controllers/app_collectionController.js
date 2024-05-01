@@ -1,6 +1,6 @@
-const axios = require("axios");
+const api = require("../../utility/refreshToken");
 
-const API_URL_COLLECTIONS = "http://localhost:4000/api/collections";
+const API_URL_COLLECTIONS = "/api/collections";
 const SUCCESS_STATUS_CODE = 200;
 const CREATED_STATUS_CODE = 201;
 
@@ -12,28 +12,37 @@ const CREATED_STATUS_CODE = 201;
  */
 exports.getCollections = async (req, res, next) => {
   let url;
+  let headers = {};
   const collection_id = req.params.collection_id;
 
   if (
     req.originalUrl.includes("/user") ||
-    (req.originalUrl.startsWith("/cards/") && req.session.userID) // this is a workaround to get user collections loaded into the card details page
+    (req.originalUrl.startsWith("/cards/") && req.user && req.user.id) // this is a workaround to get user collections loaded into the card details page
   ) {
-    url = `${API_URL_COLLECTIONS}?user_id=${req.session.userID}`;
+    url = `${API_URL_COLLECTIONS}?user_id=${req.user.id}`;
   } else if (collection_id) {
     url = `${API_URL_COLLECTIONS}/${req.params.collection_id}`;
   } else {
     url = `${API_URL_COLLECTIONS}`;
   }
+  console.log("url: ", url);
 
+  if (req.user && req.user.id) {
+    headers = {
+      Authorization: `Bearer ${req.cookies.jwt}`,
+    };
+  }
   try {
-    const collections = await axios.get(url);
+    const collections = await api.get(url, {
+      headers: headers,
+    });
 
     if (collections.status === SUCCESS_STATUS_CODE) {
       req.collections = collections.data;
-      console.log("getCollections : ", req.collections);
       next();
     }
   } catch (err) {
+    console.log("getCollections error : ", err);
     next(
       new Error(
         err.response.data.error ||
@@ -52,11 +61,11 @@ exports.getCollections = async (req, res, next) => {
  */
 exports.renderCollections = (req, res) => {
   res.render("collections", {
-    success: req.flash("success"),
-    error: req.flash("error"),
     collections: req.collections,
-    userId: req.session.userID,
     route: req.originalUrl,
+    userId: req.user ? req.user.id : null,
+    success: "",
+    error: "",
   });
 };
 
@@ -68,27 +77,18 @@ exports.renderCollections = (req, res) => {
  */
 exports.createCollection = async (req, res, next) => {
   const { name, description } = req.body;
-  const userId = req.session.userID;
   try {
-    const createCollection = await axios.post(`${API_URL_COLLECTIONS}/create`, {
-      name: name,
-      description: description,
-      user_id: userId,
-    });
-
-    console.log("createCollection : ", createCollection);
-    console.log("createCollection status : ", createCollection.status);
-    console.log("createCollection data : ", createCollection.data);
+    const createCollection = await api.post(
+      `${API_URL_COLLECTIONS}/create`,
+      { name: name, description: description, user_id: req.user.id },
+      {
+        headers: {
+          Authorization: `Bearer ${req.cookies.jwt}`,
+        },
+      }
+    );
 
     if (createCollection.status === CREATED_STATUS_CODE) {
-      console.log(
-        "createCollection.data.success : ",
-        createCollection.data.success
-      );
-      req.flash(
-        "success",
-        createCollection.data.success || "Collection created"
-      );
       return res.redirect("/collections/user");
     }
   } catch (err) {
@@ -110,15 +110,16 @@ exports.createCollection = async (req, res, next) => {
  */
 exports.deleteCollection = async (req, res, next) => {
   try {
-    const deleteCollection = await axios.delete(
-      `${API_URL_COLLECTIONS}/${req.params.id}?user_id=${req.session.userID}`
+    const deleteCollection = await api.delete(
+      `${API_URL_COLLECTIONS}/${req.params.id}?user_id=${req.user.id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${req.cookies.jwt}`,
+        },
+      }
     );
 
     if (deleteCollection.status === SUCCESS_STATUS_CODE) {
-      req.flash(
-        "success",
-        deleteCollection.data.success || "Collection deleted"
-      );
       return res.redirect("/collections/user");
     }
   } catch (err) {
@@ -142,7 +143,7 @@ exports.getCardsInCollection = async (req, res, next) => {
   const collection_id = req.params.collection_id;
   const page = req.query.page || 1;
   try {
-    const cardsInCollection = await axios.get(
+    const cardsInCollection = await api.get(
       `${API_URL_COLLECTIONS}/${collection_id}/cards?page=${page}`
     );
 
@@ -171,16 +172,28 @@ exports.addCardToCollection = async (req, res, next) => {
   const card_id = req.params.card_id;
   const collection_id = req.body.collection_id;
 
+  console.log("addCardToCollection req.body : ", req.body);
+  console.log("addCardToCollection req.params : ", req.params);
+
   try {
-    const addCard = await axios.post(
-      `${API_URL_COLLECTIONS}/${collection_id}/cards/${card_id}`
+    const addCard = await api.post(
+      `${API_URL_COLLECTIONS}/${collection_id}/cards/${card_id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${req.cookies.jwt}`,
+        },
+      }
     );
 
     if (addCard.status === CREATED_STATUS_CODE) {
-      req.flash("success", addCard.data.success || "Card added to collection");
-      return res.redirect(`/cards/${card_id}`);
+      const success = new URLSearchParams({
+        success: addCard.data.success || "Card added to collection",
+      }).toString();
+      return res.redirect(`/cards/${card_id}?${success}`);
     }
   } catch (err) {
+    console.log("addCardToCollection error : ", err);
     next(
       new Error(
         err.response.data.error ||
@@ -202,15 +215,16 @@ exports.removeCardFromCollection = async (req, res, next) => {
   const { collection_id, card_id } = req.params;
 
   try {
-    const removeCard = await axios.delete(
-      `${API_URL_COLLECTIONS}/${collection_id}/cards/${card_id}`
+    const removeCard = await api.delete(
+      `${API_URL_COLLECTIONS}/${collection_id}/cards/${card_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${req.cookies.jwt}`,
+        },
+      }
     );
 
     if (removeCard.status === SUCCESS_STATUS_CODE) {
-      req.flash(
-        "success",
-        removeCard.data.success || "Card removed from collection" // success message doesnt work here
-      );
       return res.redirect(`/collections/${collection_id}/cards`);
     }
   } catch (err) {

@@ -16,15 +16,14 @@ router
     wishlistController.getUserWishlist,
     wishlistController.getCardsInWishlist,
     filterController.getFilterOptions,
-    cardController.cardGrid,
-    catchError("/dashboard")
+    cardController.cardGrid
   );
 
 // add or remove cards from wishlist dont think this error handling works as i want anywhere
 router
   .route("/wishlist/:wishlist_id/card/:card_id")
   .all(verifyLoggedIn("You must be logged in to manage your wishlist"))
-  .post(wishlistController.addCardToWishlist, catchError("back"))
-  .delete(wishlistController.removeCardFromWishlist, catchError("back"));
+  .post(wishlistController.addCardToWishlist)
+  .delete(wishlistController.removeCardFromWishlist);
 
 module.exports = router;

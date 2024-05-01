@@ -1,8 +1,8 @@
 const axios = require("axios");
+const sequelize = require("sequelize");
 
 exports.renderSignupPage = (req, res) => {
-  // render signup page
-  res.render("signup", { error: req.flash("error") });
+  res.render("signup");
 };
 
 exports.signupController = async (req, res) => {
@@ -17,24 +17,19 @@ exports.signupController = async (req, res) => {
       passwordCheck,
     });
 
-    // success response
     if (apiResponse.status === 200) {
-      req.flash("success", apiResponse.data.success);
-      return res.redirect("/login");
+      return res.render("/login", { success: apiResponse.data.success });
+    }
+
+    if (apiResponse.status === 400) {
+      return res.render("/signup", { error: apiResponse.data.error });
     }
   } catch (err) {
-    if (err.response && err.response.data && err.response.data.error) {
-      console.log("Error message: " + err.response.data.error);
-      if (
-        err.response.data.error == "This email is already in use, please login"
-      ) {
-        req.flash("error", err.response.data.error);
-        return res.redirect("/login");
-      }
+    if (err instanceof sequelize.ValidationError) {
+      const messages = err.errors.map((e) => e.message);
+      res.render("signup", { error: messages });
     } else {
-      console.log("An error occurred");
+      res.render("signup", { error: err.message || "An error occurred" });
     }
-    req.flash("error", err.response.data.error || "An error occurred");
-    return res.redirect("/signup");
   }
 };
