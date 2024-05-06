@@ -1,0 +1,12 @@
+<div class="row mt-2">
+  <div class="col text-end p-2">
+    <p class="mb-0">
+      <%= 30 * currentPage %> - <%= (30 * currentPage) + 30 %> of <%= count %>
+    </p>
+  </div>
+  <div class="col text-start border-start border-black border-1 p-2">
+    <p class="mb-0">
+      <em>Page:</em> <%= currentPage %> / <%= totalPages %>
+    </p>
+  </div>
+</div>

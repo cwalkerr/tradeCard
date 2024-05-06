@@ -20,6 +20,7 @@ const calculatePagination = (currentPage, totalPages) => {
 
 exports.cardGrid = async (req, res, next) => {
   const { page, ...checkedBoxes } = req.query;
+  let count = 0;
   let cards = null;
   let totalPages;
   let currentPage;
@@ -46,6 +47,7 @@ exports.cardGrid = async (req, res, next) => {
           cards = null;
         } else {
           cards = allCards.data.cards;
+          count = allCards.data.count;
           totalPages = allCards.data.totalPages;
           currentPage = allCards.data.currentPage;
         }
@@ -66,6 +68,7 @@ exports.cardGrid = async (req, res, next) => {
 
   let data = {
     cards: cards,
+    count: count,
     totalPages: totalPages,
     currentPage: currentPage,
     checkedBoxes: checkedBoxes,
@@ -115,6 +118,10 @@ exports.cardDetails = async (req, res, next) => {
   let success;
   req.query.success ? (success = req.query.success) : (success = "");
 
+  console.log("req.user: ", req.user);
+  console.log("req.wishlist: ", req.wishlist);
+  console.log("req.collections: ", req.collections);
+
   try {
     const cardDetails = await axios.get(`${API_CARD_URL}/${cardId}`);
 
@@ -130,9 +137,7 @@ exports.cardDetails = async (req, res, next) => {
       });
     }
   } catch (err) {
-    next(
-      new Error(err.response.data.error || err.message || "Error getting card")
-    );
-    return;
+    console.log(err);
+    next(err);
   }
 };

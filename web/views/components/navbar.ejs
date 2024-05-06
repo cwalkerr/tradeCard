@@ -1,32 +1,33 @@
-<nav class="navbar navbar-expand-md lead bg-tertiary shadow">
+<nav class="navbar navbar-expand-md nav-underline border-primary-subtle">
   <div class="container-fluid">
     <!-- NAV BRAND -->
-    <a class="navbar-brand text-primary" href="/">
+    <a class="navbar-brand" href="/">
       <img src="../../media/logo.png" alt="logo" height="100px" width="100px" />
     </a>
     <!-- BURGER ICON -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <!-- NAV LINKS - the collapse indicates that which is shown after burger clicked?-->
     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-      <ul class="navbar-nav gap-3 fw-medium">
+      <ul class="navbar-nav gap-4 fw-medium justify-content-end">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/">Home</a>
+          <a class="nav-link fs-5" href="/dashboard">Dashboard</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/cards">Cards</a>
+          <a class="nav-link fs-5" href="/cards">Cards</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/collections">Collections</a>
+          <a class="nav-link fs-5" href="/collections">Collections</a>
         </li>
-
-        <!-- DROPDOWN MENU FOR ACCOUNT STUFF -->
-        <li class="nav-item dropdown">
+        <li class="nav-item">
+          <a class="nav-link fs-5" href="/messages"><svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="currentColor" class="bi bi-envelope" viewBox="0 0 16 16">
+              <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v.217l7 4.2 7-4.2V4a1 1 0 0 0-1-1zm13 2.383-4.708 2.825L15 11.105zm-.034 6.876-5.64-3.471L8 9.583l-1.326-.795-5.64 3.47A1 1 0 0 0 2 13h12a1 1 0 0 0 .966-.741M1 11.105l4.708-2.897L1 5.383z" />
+            </svg></a>
+        </li>
+        <li class="nav-item dropdown me-4">
           <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
             <!-- SVG ACCOUNT PERSON CIRCLE -->
-            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="#406A1" class="bi bi-person-circle" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" fill="midnight-purple" class="bi bi-person-circle" viewBox="0 0 16 16">
               <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
               <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-6.468 11.37C3.242 11.226 4.806 10 8 10s4.767 1.226 6.468 2.37A7 7 0 0 0 8 1" />
             </svg>

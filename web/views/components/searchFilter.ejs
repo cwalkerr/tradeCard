@@ -8,41 +8,54 @@
 </style>
 
 <div class="container my-4">
-  <div class="mb-3 d-flex">
-    <form action="/cards">
-      <label for="search" class="form-label">Search Cards</label>
-      <input type="search" class="form-control" id="search" name="pokemonName" placeholder="Search by Name">
-      <button class="btn btn-success" type="submit">Search</button>
-    </form>
-    <button class="btn btn-primary d-flex align-items-center mx-2" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterPage" aria-controls="filterPage">
-      Filter
-      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-list mx-1" viewBox="0 0 16 16">
-        <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
-      </svg>
-    </button>
+  <div class="row justify-content-center gap-2 mb-3">
+    <div class="col-12 col-md-8 col-lg-6">
+      <form action="/cards" class="d-flex gap-2 align-items-center">
+        <input type="search" class="form-control shadow-sm" id="search" name="pokemonName" placeholder="Search by Name">
+        <button class="btn btn-success d-flex align-items-center gap-2 rounded-pill shadow-sm" type="submit">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+          </svg>Search</button>
+      </form>
+    </div>
   </div>
-  <div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-      Order By
-    </button>
-    <ul class="dropdown-menu">
-      <li><a class="dropdown-item" href="#">Name - ASC</a></li>
-      <li><a class="dropdown-item" href="#">Name - DESC</a></li>
-      <li><a class="dropdown-item" href="#">Release Date - ASC</a></li>
-      <li><a class="dropdown-item" href="#">Release Date - DESC</a></li>
-    </ul>
+  <div class="row justify-content-center gap-3 gap-lg-5 gap-xl-3">
+    <div class="col-3 col-md-2 col-lg-1 d-flex justify-content-center">
+      <button class="btn btn-primary d-flex align-items-center gap-2 rounded-pill shadow-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#filterPage" aria-controls="filterPage">
+        Filter
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-list mx-1" viewBox="0 0 16 16">
+          <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+        </svg>
+      </button>
+    </div>
+    <div class="col-3 col-md-2 col-lg-1 d-flex justify-content-center">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle rounded-pill shadow-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          Order By
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#">Name - ASC</a></li>
+          <li><a class="dropdown-item" href="#">Name - DESC</a></li>
+          <li><a class="dropdown-item" href="#">Release Date - ASC</a></li>
+          <li><a class="dropdown-item" href="#">Release Date - DESC</a></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>
 <!-- FILTER OFFCANVAS -->
 <div class="offcanvas offcanvas-start" tabindex="-1" id="filterPage" aria-labelledby="filterPage">
   <div class="container">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title border-bottom" id="filterPageTitle">Filter</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <div class="offcanvas-header justify-content-center">
+      <img class="mt-5" src="/media/logo.png" alt="logo" height="150px" width="150px">
     </div>
     <div class="offcanvas-body">
+      <h5 class="offcanvas-title d-flex border-bottom justify-content-between mx-1 p-1" id="filterPageTitle">Filter
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </h5>
+
       <div class="my-4">
-        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#cardType">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5  d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#cardType">
           Card Type
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -53,19 +66,19 @@
             <div class="card card-body border-0 border-bottom border-dark-subtle flex-row justify-content-around">
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" value="Pokemon" id="pokemonCheck" name="cardType">
-                <label class="form-check-label font-monospace fw-semibold" for="pokemonCheck">
+                <label class="form-check-label" for="pokemonCheck">
                   Pokemon
                 </label>
               </div>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" value="Trainer" id="trainerCheck" name="cardType">
-                <label class="form-check-label font-monospace fw-semibold" for="trainerCheck">
+                <label class="form-check-label" for="trainerCheck">
                   Trainer
                 </label>
               </div>
               <div class="form-check form-check-inline">
                 <input class="form-check-input" type="checkbox" value="Energy" id="energyCheck" name="cardType">
-                <label class="form-check-label font-monospace fw-semibold" for="energyCheck">
+                <label class="form-check-label" for="energyCheck">
                   Energy
                 </label>
               </div>
@@ -73,7 +86,7 @@
           </div>
       </div>
       <div class="my-4">
-        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#subtypes">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5  d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#subtypes">
           Subtype
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -86,7 +99,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="<%=subtypes[i]%>" id="subtypeCheck<%=i%>" name="subtype">
-                  <label class="form-check-label font-monospace fw-semibold" for="subtypeCheck<%=i%>">
+                  <label class="form-check-label" for="subtypeCheck<%=i%>">
                     <%= subtypes[i] %>
                   </label>
                 </div>
@@ -97,7 +110,7 @@
         </div>
       </div>
       <div class="my-4">
-        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#energyTypes">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5  d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#energyTypes">
           Energy Type
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -110,7 +123,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="<%=energyTypes[i]%>" id="energyTypeCheck<%=i%>" name="energyType">
-                  <label class="form-check-label font-monospace fw-semibold" for="energyTypeCheck<%=i%>">
+                  <label class="form-check-label" for="energyTypeCheck<%=i%>">
                     <img src="/media/energy-<%=energyTypes[i]%>.png" alt="">
                     <%= energyTypes[i] %>
                   </label>
@@ -122,7 +135,7 @@
         </div>
       </div>
       <div class="my-4">
-        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#rarities">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5  d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#rarities">
           Rarity
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -135,7 +148,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="<%=rarities[i]%>" id="rarityCheck<%=i%>" name="rarity">
-                  <label class="form-check-label font-monospace fw-semibold" for="rarityCheck<%=i%>">
+                  <label class="form-check-label" for="rarityCheck<%=i%>">
                     <%= rarities[i] %>
                   </label>
                 </div>
@@ -146,7 +159,7 @@
         </div>
       </div>
       <div class="my-4">
-        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#hp">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5  d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#hp">
           Health Points
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -172,7 +185,7 @@
         </div>
       </div>
       <div class="my-4">
-        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#artists">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5  d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#artists">
           Artist
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -184,7 +197,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="5ban Graphics" id="5banGraphicsCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="5banGraphicsCheck">
+                  <label class="form-check-label" for="5banGraphicsCheck">
                     5ban Graphics
                   </label>
                 </div>
@@ -192,7 +205,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Ken Sugimori" id="kenSugimoriCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="kenSugimoriCheck">
+                  <label class="form-check-label" for="kenSugimoriCheck">
                     Ken Sugimori
                   </label>
                 </div>
@@ -200,7 +213,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Mitsuhiro Arita" id="mitsuhiroAritaCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="mitsuhiroAritaCheck">
+                  <label class="form-check-label" for="mitsuhiroAritaCheck">
                     Mitsuhiro Arita
                   </label>
                 </div>
@@ -208,7 +221,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Kagemaru Himeno" id="kagemaruHimenoCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="kagemaruHimenoCheck">
+                  <label class="form-check-label" for="kagemaruHimenoCheck">
                     Kagemaru Himeno
                   </label>
                 </div>
@@ -216,7 +229,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Kouki Saitou" id="koukiSaitouCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="koukiSaitouCheck">
+                  <label class="form-check-label" for="koukiSaitouCheck">
                     Kouki Saitou
                   </label>
                 </div>
@@ -224,7 +237,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Masakazu Fukuda" id="masakazuFukudaCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="masakazuFukudaCheck">
+                  <label class="form-check-label" for="masakazuFukudaCheck">
                     Masakazu Fukuda
                   </label>
                 </div>
@@ -232,7 +245,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Ryo Ueda" id="ryoUedaCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="ryoUedaCheck">
+                  <label class="form-check-label" for="ryoUedaCheck">
                     Ryo Ueda
                   </label>
                 </div>
@@ -240,7 +253,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Atsuko Nishida" id="atsukoNishidaCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="atsukoNishidaCheck">
+                  <label class="form-check-label" for="atsukoNishidaCheck">
                     Atsuko Nishida
                   </label>
                 </div>
@@ -248,7 +261,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Midori Harada" id="midoriHaradaCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="midoriHaradaCheck">
+                  <label class="form-check-label" for="midoriHaradaCheck">
                     Midori Harada
                   </label>
                 </div>
@@ -256,7 +269,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Shin Nagasawa" id="shinNagasawaCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="shinNagasawaCheck">
+                  <label class="form-check-label" for="shinNagasawaCheck">
                     Shin Nagasawa
                   </label>
                 </div>
@@ -264,7 +277,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Naoki Saito" id="naokiSaitoCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="naokiSaitoCheck">
+                  <label class="form-check-label" for="naokiSaitoCheck">
                     Naoki Saito
                   </label>
                 </div>
@@ -272,7 +285,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Toyste Beach" id="toysteBeachCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="toysteBeachCheck">
+                  <label class="form-check-label" for="toysteBeachCheck">
                     Toyste Beach
                   </label>
                 </div>
@@ -280,7 +293,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Naoyo Kimura" id="naoyoKimuraCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="naoyoKimuraCheck">
+                  <label class="form-check-label" for="naoyoKimuraCheck">
                     Naoyo Kimura
                   </label>
                 </div>
@@ -288,7 +301,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Tomokazu Komiya" id="tomokazuKomiyaCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="tomokazuKomiyaCheck">
+                  <label class="form-check-label" for="tomokazuKomiyaCheck">
                     Tomokazu Komiya
                   </label>
                 </div>
@@ -296,7 +309,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="Akira Komayama" id="akiraKomayamaCheck" name="artist">
-                  <label class="form-check-label font-monospace fw-semibold" for="akiraKomayamaCheck">
+                  <label class="form-check-label" for="akiraKomayamaCheck">
                     Akira Komayama
                   </label>
                 </div>
@@ -311,7 +324,7 @@
         </div>
       </div>
       <div class="my-4">
-        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#seriess">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5  d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#seriess">
           Series
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -325,7 +338,7 @@
               <div>
                 <input class="form-check-input mx-3" type="checkbox" name="series" id="CheckSeries<%=[seriesIndex]%>" value="<%= seriesSets[seriesIndex].series %>" aria-label="...">
               </div>
-              <button class="btn btn-light border-0 border-bottom border-dark-subtle w-50 my-2 d-flex justify-content-between align-items-center fw-bold font-monospace" type="button" data-bs-toggle="collapse" data-bs-target="#seriesCollapse<%=seriesIndex%>">
+              <button class="btn btn-light border-0 border-bottom border-dark-subtle w-50 my-2 d-flex justify-content-between align-items-center " type="button" data-bs-toggle="collapse" data-bs-target="#seriesCollapse<%=seriesIndex%>">
                 <%= seriesSets[seriesIndex].series %>
                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
                   <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -340,7 +353,7 @@
                   <div class="col-md-4">
                     <div class="form-check">
                       <input class="form-check-input" type="checkbox" value="<%=seriesSets[seriesIndex].sets[setIndex]%>" id="Series<%=seriesIndex%>Set<%=setIndex%>" name="set">
-                      <label class="form-check-label font-monospace fw-semibold" for="Series<%=seriesIndex%>Set<%=setIndex%>">
+                      <label class="form-check-label" for="Series<%=seriesIndex%>Set<%=setIndex%>">
                         <%= seriesSets[seriesIndex].sets[setIndex] %>
                       </label>
                     </div>
@@ -354,7 +367,7 @@
         </div>
       </div>
       <div class="my-4">
-        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#retreatCosts">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5  d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#retreatCosts">
           Retreat Cost
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -380,7 +393,7 @@
         </div>
       </div>
       <div class="my-4">
-        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#attacks">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5  d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#attacks">
           Attacks
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -390,7 +403,7 @@
           <div class="card card-body border-0 border-bottom border-dark-subtle">
             <div class="row row-gap-3">
               <div class="col">
-                <p class="fs-5 fw-semibold font-monospace">Attack Cost</p>
+                <p class="fs- ">Attack Cost</p>
               </div>
             </div>
             <div class="row row-gap-3">
@@ -409,7 +422,7 @@
             </div>
             <div class="row mt-4 border-top border-dark-subtle">
               <div class="col mt-4">
-                <p class="fs-5 fw-semibold font-monospace">Attack Name</p>
+                <p class="fs- ">Attack Name</p>
               </div>
             </div>
             <div class="row justify-content-center mb-4">
@@ -421,7 +434,7 @@
         </div>
       </div>
       <div class="my-4">
-        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#abilities">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5  d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#abilities">
           Abilities
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -431,25 +444,25 @@
           <div class="card card-body border-0 border-bottom border-dark-subtle flex-row justify-content-around">
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="checkbox" value="Pokémon Power" id="pokemonPowerCheck" name="abilityType">
-              <label class="form-check-label font-monospace fw-semibold" for="pokemonPowerCheck">
+              <label class="form-check-label" for="pokemonPowerCheck">
                 Pokémon Power
               </label>
             </div>
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="checkbox" value="Poké-Body" id="pokeBodyCheck" name="abilityType">
-              <label class="form-check-label font-monospace fw-semibold" for="pokeBodyCheck">
+              <label class="form-check-label" for="pokeBodyCheck">
                 Poké-Body
               </label>
             </div>
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="checkbox" value="Poké-Power" id="pokePowerCheck" name="abilityType">
-              <label class="form-check-label font-monospace fw-semibold" for="pokePowerCheck">
+              <label class="form-check-label" for="pokePowerCheck">
                 Poké-Power
               </label>
             </div>
             <div class="form-check form-check-inline">
               <input class="form-check-input" type="checkbox" value="Ability" id="abilityCheck" name="abilityType">
-              <label class="form-check-label font-monospace fw-semibold" for="abilityCheck">
+              <label class="form-check-label" for="abilityCheck">
                 Ability
               </label>
             </div>
@@ -457,7 +470,7 @@
         </div>
       </div>
       <div class="my-4">
-        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#weakness">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5  d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#weakness">
           Weaknesses
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -470,7 +483,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="<%=energyTypes[i]%>" id="energyTypeCheck<%=i%>" name="weaknessEnergyType">
-                  <label class="form-check-label font-monospace fw-semibold" for="energyTypeCheck<%=i%>">
+                  <label class="form-check-label" for="energyTypeCheck<%=i%>">
                     <img src="/media/energy-<%=energyTypes[i]%>.png" alt="">
                     <%= energyTypes[i] %>
                   </label>
@@ -482,7 +495,7 @@
         </div>
       </div>
       <div class="my-4">
-        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5 fw-bold font-monospace d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#resistance">
+        <button class="btn btn-light border-0 border-bottom border-dark-subtle my-2 w-100 fs-5  d-flex justify-content-between align-items-center" type="button" data-bs-toggle="collapse" data-bs-target="#resistance">
           Resistances
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
             <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
@@ -495,7 +508,7 @@
               <div class="col-md-4">
                 <div class="form-check">
                   <input class="form-check-input" type="checkbox" value="<%=energyTypes[i]%>" id="energyTypeCheck<%=i%>" name="resistanceEnergyType">
-                  <label class="form-check-label font-monospace fw-semibold" for="energyTypeCheck<%=i%>">
+                  <label class="form-check-label" for="energyTypeCheck<%=i%>">
                     <img src="/media/energy-<%=energyTypes[i]%>.png" alt="">
                     <%= energyTypes[i] %>
                   </label>
@@ -506,9 +519,13 @@
           </div>
         </div>
       </div>
-      <button class="btn-submit" type="submit">View Selection</button>
-      </form>
     </div>
+    <div class="row my-2">
+      <div class="col text-center text-md-end me-4 mb-4">
+        <button class="btn btn-success rounded-pill shadow-sm" type="submit">View Selection</button>
+      </div>
+    </div>
+    </form>
   </div>
 </div>
 

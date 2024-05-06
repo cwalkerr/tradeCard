@@ -11,67 +11,58 @@
 <body>
   <%- include('components/navbar.ejs') %>
 
-  <div class="container-fluid d-flex align-items-center justify-content-center flex-wrap gap-4" style="
+  <div class="container-fluid d-flex justify-content-center align-content-start flex-wrap gap-4" style="
             background-image: url(./media/flat-mountains.svg);
             background-size: cover;
             height: 100vh;
             width: 100%;
           ">
-    <div class="col-xl-2 col-md-5 col-10 mt-3">
-      <div class="card shadow">
-        <div class="card-body">
-          <h4 class="card-title">My Collections</h4>
-          <p class="card-text lead">Total Collections: 0</p>
-          <a href="/collections/user" class="btn">View Collections</a>
+    <!-- LOGO -->
+    <div class="container d-flex justify-content-center mt-5">
+      <a href="/index.html">
+        <img class="mt-5" src="/media/logowhite.png" alt="logo" height="200px" width="200px" />
+      </a>
+    </div>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-xl-3 col-md-6 col-sm-12 mt-5">
+          <div class="card shadow">
+            <div class="card-body">
+              <h4 class="card-title">My Collections</h4>
+              <p class="card-text lead">Total Collections: 0</p>
+              <a href="/collections/user" class="btn">View Collections</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6 col-sm-12 mt-5">
+          <div class="card shadow">
+            <div class="card-body">
+              <h4 class="card-title">Total Cards</h4>
+              <p class="card-text lead">Total Cards: 0</p>
+              <a href="#" class="btn">View My Cards</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6 col-sm-12 mt-5">
+          <div class="card shadow">
+            <div class="card-body">
+              <h4 class="card-title">Completed Expansions</h4>
+              <p class="card-text lead">Completed Expansions: 0</p>
+              <a href="#" class="btn">View Expansion Progress</a>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-md-6 col-sm-12 mt-5">
+          <div class="card shadow">
+            <div class="card-body">
+              <h4 class="card-title">Wishlist</h4>
+              <p class="card-text lead">Cards in wishlist: 0</p>
+              <a href="/wishlist" class="btn">View Wishlist</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <div class="col-xl-2 col-md-5 col-10 mt-3">
-      <div class="card shadow">
-        <div class="card-body">
-          <h4 class="card-title">Total Cards</h4>
-          <p class="card-text lead">Total Cards: 0</p>
-          <a href="#" class="btn">View My Cards</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-2 col-md-5 col-10 mt-3">
-      <div class="card shadow">
-        <div class="card-body">
-          <h4 class="card-title">Completed Expansions</h4>
-          <p class="card-text lead">Completed Expansions: 0</p>
-          <a href="#" class="btn">View Expansion Progress</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-xl-2 col-md-5 col-10 mt-3">
-      <div class="card shadow">
-        <div class="card-body">
-          <h4 class="card-title">Wishlist</h4>
-          <p class="card-text lead">Cards in wishlist: 0</p>
-          <a href="/wishlist" class="btn">View Wishlist</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12">
-      <div class="card shadow">
-        <div class="card-body">
-          <h4 class="card-title">Recent Activity</h4>
-          <ul class="list-group">
-            <li class="list-group-item">An item</li>
-            <li class="list-group-item">A second item</li>
-            <li class="list-group-item">A third item</li>
-            <li class="list-group-item">A fourth item</li>
-            <li class="list-group-item">And a fifth one</li>
-          </ul>
-          <a href="#" class="btn">View All Activity</a>
-        </div>
-      </div>
-    </div>
-    <div class="col-12"></div>
-  </div>
-  </div>
   </div>
   <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
