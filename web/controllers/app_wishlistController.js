@@ -35,7 +35,6 @@ exports.getUserWishlist = async (req, res, next) => {
       return;
     }
   }
-  next();
 };
 
 exports.getCardsInWishlist = async (req, res, next) => {

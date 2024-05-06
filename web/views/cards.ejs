@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Document</title>
+  <title><%= route.startsWith('/collections') ? collectionData.name : (route.startsWith('/wishlist')) ? 'Wishlist' : 'Cards'%></title>
   <link rel="stylesheet" href="/css/custom.css" />
 </head>
 
@@ -45,236 +45,110 @@
   </style>
   <%- include('components/navbar.ejs') %>
   <%- include('components/searchFilter.ejs') %>
-  <div class="<%= route.startsWith('/collections') ? 'container-fluid' : 'container' %>">
+  <div class="container-lg container-fluid">
     <% if (route.startsWith ('/collections')) { %>
-    <div class="row mx-5">
-      <div class="col-4">
-        <h2 class="mt-3"><%= collectionData.name %></h2>
-        <h4>By : <%= collectionData.User.username %></h4>
-        <p class="lead"><%= collectionData.description %></p>
-
-        <div class="row my-3">
-          <div class="col border-top border-bottom">
-            <h4 id="averageRating" class="my-3 lead fw-semibold">Community Rating : (&#9733; <%= ratingData.average %>/5)</h4>
-            <h4><span style="color: gold" class="p-2">&#9733; &#9733; &#9733; &#9733; &#9733; </span><span id="count5">(<%=getCount(5);%>)</span></h4>
-            <h4><span style="color: gold" class="p-2">&#9733; &#9733; &#9733; &#9733; </span><span id="count4">(<%=getCount(4);%>)</span></h4>
-            <h4><span style="color: gold" class="p-2">&#9733; &#9733; &#9733; </span><span id="count3">(<%=getCount(3);%>)</span></h4>
-            <h4><span style="color: gold" class="p-2">&#9733; &#9733; </span><span id="count2">(<%=getCount(2);%>)</span></h4>
-            <h4><span style="color: gold" class="p-2">&#9733; </span><span id="count1">(<%=getCount(1);%>)</span></h4>
-          </div>
-        </div>
-        <% if (userId && userId !== collectionData.user_id) { %>
-        <div class="row my-3">
-          <div class="col">
-            <h4 class="my-3 lead fw-semibold">Rate this collection</h4>
-            <div class="rating">
-              <span class="star" onmouseover="hover(1)" onmouseout="remove()" onclick="handleRatingUpdate(1)">&#9733;</span>
-              <span class="star" onmouseover="hover(2)" onmouseout="remove()" onclick="handleRatingUpdate(2)">&#9733;</span>
-              <span class="star" onmouseover="hover(3)" onmouseout="remove()" onclick="handleRatingUpdate(3)">&#9733;</span>
-              <span class="star" onmouseover="hover(4)" onmouseout="remove()" onclick="handleRatingUpdate(4)">&#9733;</span>
-              <span class="star" onmouseover="hover(5)" onmouseout="remove()" onclick="handleRatingUpdate(5)">&#9733;</span>
-              <p id="output"></p>
-              <form action="/collections/<%=collectionData.collection_id%>/ratings/<%=userId%>/?_method=DELETE" method="POST">
-                <button type="submit" class="btn btn-danger p-2">
-                  Remove Rating
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-        <% } %>
-        <!-- COMMENTS -->
-        <div class="row my-3 border-top">
-          <div class="col">
-            <h4 class="my-3 lead fw-semibold">Comments</h4>
-            <% comments.forEach((comment) => { %>
-            <div class="card my-2">
-              <div class="card-body">
-                <h5 class="card-title"> <%= comment.User.username %> </h5>
-                <% const dateTime = new Date(comment.created_at).toLocaleString({hour: '2-digit', minute: '2-digit'}).replace(/(:\d{2}| [AP]M)$/, ""); %>
-                <p class="card-text"><em><%= dateTime %></em>: <%= comment.comment %></p>
-                <% if (userId === comment.user_id) { %>
-                <form action="/collections/<%=collectionData.collection_id%>/comments/<%=comment.comment_id%>/?_method=DELETE" method="POST">
-                  <button type="submit" class="btn btn-close position-absolute p-3 top-0 end-0">
-                  </button>
-                </form>
-                <% } else if (userId) {  %>
-                <a href="#" data-bs-toggle="modal" data-bs-target="#messageModal">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-text" viewBox="0 0 16 16">
-                    <path d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105" />
-                    <path d="M4 5.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5M4 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 4 8m0 2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5" />
-                  </svg>
-                </a>
-              </div>
-            </div>
-            <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h5 class="modal-title" id="messageModalLabel">Message to <%= comment.User.username %></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                  </div>
-                  <div class="modal-body">
-                    <form action="/messages/<%=comment.user_id %>" method="POST">
-                      <div class="mb-3">
-                        <label for="message-text" class="form-label">Message</label>
-                        <textarea class="form-control" id="message" name="message" required></textarea>
-                      </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="submit" class="btn btn-success">Send Message</button>
-                    </form>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+    <%- include('components/collectionDetails.ejs') %>
+    <div class="row justify-content-center gap-2 mt-3">
+      <% if (cards === null) { %>
+      <h4 class="text-center">This collection hasn't got any cards yet</h4>
+      <% } else { %>
+      <%- include('components/paginationInfo.ejs') %>
+      <% cards.forEach((card) => { %>
+      <div class="col-xl-2 col-lg-3 col-5">
+        <a href="/cards/<%= card.card_id%>">
+          <div class="card shadow my-2 position-relative pokemonCard">
+            <!-- REMOVE CARD FROM COLLECTION BUTTON -->
+            <% if (route.startsWith ('/collections/') && userId === collectionData.user_id) { %>
+            <%- include('components/removeFromCollectionButton.ejs', {card: card}) %>
             <% } %>
-            <% }) %>
-            <% if (userId && userId !== collectionData.user_id) { %>
-            <div class="my-3">
-              <form action="/collections/<%=collectionData.collection_id%>/comments" method="POST">
-                <div class="form-group">
-                  <label for="comment" class=" form-label">Leave a comment</label>
-                  <textarea type="text" id="comment" class="form-control" name="comment" rows="3" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary mt-2">Submit</button>
-              </form>
+            <img src="<%= card.Images[0].url %>" class="card-img-top img-fluid" alt="..." />
+            <div class="card-body pokemonCardBody">
+              <h6 class="card-title lead fw-semibold ">
+                <%= card.name %>
+              </h6>
             </div>
-            <% } %>
           </div>
-        </div>
+        </a>
       </div>
-      <div class="col-8">
-        <div class="row justify-content-center gap-2 mt-5">
-          <% if (cards === null) { %>
-          <h4>This collection hasn't got any cards yet</h4>
-          <% } else { %>
-          <% cards.forEach((card) => { %>
-          <div class="col-xxl-2 col-lg-3 col-5">
-            <a href="/cards/<%= card.card_id%>">
-              <div class="card shadow my-2 position-relative pokemonCard">
-                <!-- REMOVE CARD FROM COLLECTION BUTTON -->
-                <% if (route.startsWith ('/collections/') && userId === collectionData.user_id) { %>
-                <form action="/collections/<%=collectionData.collection_id%>/cards/<%=card.card_id%>/?_method=DELETE" method="POST">
-                  <button class="btn btn-danger position-absolute top-0 start-100 translate-middle  p-2 border border-light rounded-circle">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                      <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-                    </svg>
-                  </button>
-                </form>
-                <% } %>
-                <img src="<%= card.Images[0].url %>" class="card-img-top img-fluid" alt="..." />
-                <div class="card-body pokemonCardBody">
-                  <h6 class="card-title lead fw-semibold font-monospace">
-                    <%= card.name %>
-                  </h6>
-                </div>
-              </div>
-            </a>
-          </div>
-          <% }) %>
-          <% } %>
-        </div>
+      <% }) %>
+      <% } %>
+    </div>
+    <% } else if (route.startsWith('/wishlist')) {  %>
+    <div class="row justify-content-center gap-2 mt-5">
+      <div class="col">
+        <h4>Wishlist</h4>
       </div>
     </div>
-  </div>
-  <% } else if (route.startsWith('/wishlist')) {  %>
-  <div class="row justify-content-center gap-2 mt-5">
-    <div class="col">
-      <h4>Wishlist</h4>
+    <div class="row justify-content-center gap-2 mt-5">
+      <% if (cards === null) { %>
+      <h4>This wishlist hasn't got any cards yet</h4>
+      <a href="/cards">Find some cards to add here!</a>
+      <% } else { %>
+      <%- include('components/paginationInfo.ejs') %>
+      <% cards.forEach((card) => { %>
+      <div class="col-xxl-2 col-lg-3 col-5">
+        <a href="/cards/<%= card.card_id%>">
+          <div class="card shadow my-2 position-relative pokemonCard">
+            <!-- REMOVE CARD FROM WISHLIST BUTTON -->
+            <% if (route.startsWith ('/wishlist') && userId === wishlistData.user_id) { %>
+            <%- include('components/removeFromWishlistButton.ejs', {card: card}) %>
+            <% } %>
+            <img src="<%= card.Images[0].url %>" class="card-img-top img-fluid" alt="..." />
+            <div class="card-body pokemonCardBody">
+              <h6 class="card-title lead fw-semibold ">
+                <%= card.name %>
+              </h6>
+            </div>
+          </div>
+        </a>
+      </div>
+      <% }) %>
+      <% } %>
     </div>
-  </div>
-  <div class="row justify-content-center gap-2 mt-5">
+    <% } else {  %>
+    <!-- Cards grid -->
     <% if (cards === null) { %>
-    <h4>This wishlist hasn't got any cards yet</h4>
-    <a href="/cards">Find some cards to add here!</a>
+    <h4>No cards found</h4>
     <% } else { %>
-    <% cards.forEach((card) => { %>
-    <div class="col-xxl-2 col-lg-3 col-5">
-      <a href="/cards/<%= card.card_id%>">
-        <div class="card shadow my-2 position-relative pokemonCard">
-          <!-- REMOVE CARD FROM WISHLIST BUTTON -->
-          <% if (route.startsWith ('/wishlist') && userId === wishlistData.user_id) { %>
-          <form action="/wishlist/<%=wishlistData.wishlist_id%>/card/<%=card.card_id%>/?_method=DELETE" method="POST">
-            <button class="btn btn-danger position-absolute top-0 start-100 translate-middle  p-2 border border-light rounded-circle">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
-                <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
-              </svg>
-            </button>
-          </form>
-          <% } %>
-          <img src="<%= card.Images[0].url %>" class="card-img-top img-fluid" alt="..." />
-          <div class="card-body pokemonCardBody">
-            <h6 class="card-title lead fw-semibold font-monospace">
-              <%= card.name %>
-            </h6>
+    <%- include('components/paginationInfo.ejs') %>
+    <div class="row justify-content-center gap-2 mt-3">
+      <% cards.forEach((card) => { %>
+      <div class="col-xxl-2 col-lg-3 col-5">
+        <a href="/cards/<%= card.card_id%>">
+          <div class="card shadow my-2 position-relative pokemonCard">
+            <img src="<%= card.Images[0].url %>" class="card-img-top img-fluid" alt="..." />
+            <div class="card-body pokemonCardBody">
+              <h6 class="card-title lead fw-semibold">
+                <%= card.name %>
+              </h6>
+            </div>
           </div>
-        </div>
-      </a>
+        </a>
+      </div>
+      <% }) %>
     </div>
-    <% }) %>
     <% } %>
-  </div>
-  <% } else {  %>
-  <!-- Cards grid -->
-  <% if (cards === null) { %>
-  <h4>No cards found</h4>
-  <% } else { %>
-  <div class="row justify-content-center gap-2 mt-5">
-    <% cards.forEach((card) => { %>
-    <div class="col-xxl-2 col-lg-3 col-5">
-      <a href="/cards/<%= card.card_id%>">
-        <div class="card shadow my-2 position-relative pokemonCard">
-          <img src="<%= card.Images[0].url %>" class="card-img-top img-fluid" alt="..." />
-          <div class="card-body pokemonCardBody">
-            <h6 class="card-title lead fw-semibold font-monospace">
-              <%= card.name %>
-            </h6>
-          </div>
-        </div>
-      </a>
+    <% } %>
+    <div class="container">
+      <% if (totalPages > 1) { %>
+      <%- include('components/paginationControls.ejs') %>
+      <% } %>
     </div>
-    <% }) %>
-  </div>
-  <% } %>
-  <% } %>
-  <div class="container">
-    <% if (totalPages > 1) { %>
-    <nav aria-label="Page navigation">
-      <ul class="pagination d-flex justify-content-center my-4">
-        <% if (currentPage > 1) { %>
-        <li class="page-item">
-          <a class="page-link" href="?<%= new URLSearchParams({ ...checkedBoxes, page: currentPage - 1 }).toString() %>">Previous</a>
-        </li>
-        <% } %> <% for (let i = startPage; i <= endPage; i++) { %>
-        <li class="page-item <%= currentPage === i ? 'active' : '' %>">
-          <a class="page-link" href="?<%= new URLSearchParams({ ...checkedBoxes, page: i }).toString() %>"><%= i %></a>
-        </li>
-        <% } %> <% if (currentPage < totalPages) { %>
-        <li class="page-item">
-          <a class="page-link" href="?<%= new URLSearchParams({ ...checkedBoxes, page: currentPage + 1 }).toString() %>">Next</a>
-        </li>
-        <% } %>
-      </ul>
-    </nav>
+
+
+
+    <!-- SCRIPTS -->
+
+    <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <% if (route.includes("/collections")&& userId ) { %>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+      const userId = "<%= userId %>";
+      const collectionId = "<%= collectionData.collection_id %>";
+    </script>
+    <script src="/scripts/rating.js"></script>
     <% } %>
-  </div>
-
-
-
-  <!-- SCRIPTS -->
-
-  <script src="/bootstrap/js/bootstrap.bundle.min.js"></script>
-
-  <% if (route.includes("/collections")&& userId ) { %>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script>
-    const userId = "<%= userId %>";
-    const collectionId = "<%= collectionData.collection_id %>";
-  </script>
-  <script src="/scripts/rating.js"></script>
-  <% } %>
 </body>
 
 </html>

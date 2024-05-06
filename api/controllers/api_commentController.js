@@ -14,6 +14,7 @@ exports.getAllComments = async (req, res) => {
           attributes: ["username"],
         },
       ],
+      order: [["created_at", "DESC"]],
     });
 
     return res.status(200).json(comments);

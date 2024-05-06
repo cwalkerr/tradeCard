@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 // remove expired refresh tokens every hour
 setInterval(async () => {
   const now = new Date();
-  await RefreshToken.destroy({ where: { expiresAt: { [Op.lt]: now } } });
+  await RefreshToken.destroy({ where: { expires_at: { [Op.lt]: now } } });
 }, 60 * 60 * 1000);
 
 /**

@@ -12,68 +12,59 @@
   <%- include('components/navbar.ejs') %>
   <div class="container">
     <div class="row">
-      <% if (userId && route.includes('/user')) {  %>
       <div class="col">
-        <h1 class="lead">My Collections</h1>
-      </div>
-      <% } %>
-      <div class="col">
-        <!-- this is causing login success msg to display - fix -->
         <% if (success) { %>
         <p class=" lead text-center"><%= success %></p>
         <% } %>
       </div>
     </div>
-
     <% if (collections) { %>
-    <% collections.forEach((collection) => { %>
-    <!-- MODAL FOR DELETION WARNING -->
-    <div class="modal fade" tabindex="-1" id="deleteCollectionModal<%= collection.collection_id %>">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Delete Collection</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <p>Are you sure you want to delete this collection?</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <form action="/collections/<%= collection.collection_id %>/?_method=DELETE" method="POST">
-              <button type="submit" class="btn btn-danger">Yes, Delete Collection</button>
-            </form>
+    <div class="row my-2 justify-content-center">
+      <h4 class="my-4 text-center"><% if (userId && route.includes('/user')) {  %> My <% } %>Collections</h4>
+      <% collections.forEach((collection) => { %>
+      <!-- MODAL FOR DELETION WARNING -->
+      <div class="modal fade" tabindex="-1" id="deleteCollectionModal<%= collection.collection_id %>">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">Delete Collection</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p>Are you sure you want to delete this collection?</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <form action="/collections/<%= collection.collection_id %>/?_method=DELETE" method="POST">
+                <button type="submit" class="btn btn-danger">Yes, Delete Collection</button>
+              </form>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col mx-3">
-        <a href="/collections/<%=collection.collection_id%>/cards">
-          <div class="card">
+      <div class="col-lg-3 col-md-4 col-sm-12 m-2">
+        <a class="text-decoration-none text-dark" href="/collections/<%=collection.collection_id%>/cards">
+          <div class="card shadow-sm h-100 border-0 ">
             <div class="card-body">
-
               <div class="card-title lead fw-semibold">
                 <%= collection.name %>
               </div>
               <div class="card-text">
                 <% if (!route.includes('/user')) { %>
-                User: <%= collection.User.username %>
+                User : <%= collection.User.username %>
                 <br>
                 <% } %>
                 <%= collection.description %>
               </div>
-
+            </div>
         </a>
         <% if (userId && route.includes('/user')) {%>
-        <button type="button" class="btn btn-danger d-flex justify-content-end" data-bs-toggle="modal" data-bs-target="#deleteCollectionModal<%= collection.collection_id %>">
-          Delete Collection
+        <button type="button" class="btn btn-close position-absolute top-0 end-0 p-2" data-bs-toggle="modal" data-bs-target="#deleteCollectionModal<%= collection.collection_id %>">
         </button>
         <% } %>
       </div>
     </div>
     <% }) %>
-
     <% } else { %>
     <div class="row">
       <div class="col">
@@ -81,20 +72,17 @@
       </div>
     </div>
     <% } %>
-
     <!-- BUTTON TO CREATE NEW COLLECTION -->
     <% if (userId && route.includes('/user')) {%>
-    <div class="row justify-content-center">
-      <div class="col">
-        <button type="button" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#createCollectionModal">
+    <div class="row justify-content-center mt-4">
+      <div class="d-flex justify-content-center col">
+        <button type="button" class="btn btn-lg btn-light shadow-sm rounded-pill" data-bs-toggle="modal" data-bs-target="#createCollectionModal">
           Create Collection
         </button>
       </div>
     </div>
     <% } %>
   </div>
-
-
   <!-- MODAL FOR CREATING COLLECTION -->
   <div class="modal fade" id="createCollectionModal" tabindex="-1">
     <div class="modal-dialog">
