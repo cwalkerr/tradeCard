@@ -1,35 +1,39 @@
 const axios = require("axios");
-const sequelize = require("sequelize");
+const API_ENDPOINT = "http://localhost:4000/auth/signup";
 
 exports.renderSignupPage = (req, res) => {
-  res.render("signup");
+  res.render("signup", { error: "" });
 };
 
 exports.signupController = async (req, res) => {
   const { email, username, password, passwordCheck } = req.body;
 
+  if (!email || !username || !password) {
+    return res.render("signup", { error: "Please enter all fields" });
+  }
+
+  if (password !== passwordCheck) {
+    return res.render("signup", { error: "Passwords do not match" });
+  }
+
   // deal with signup request
   try {
-    const apiResponse = await axios.post("http://localhost:4000/auth/signup", {
+    const apiResponse = await axios.post(API_ENDPOINT, {
       email,
       username,
       password,
       passwordCheck,
     });
 
-    if (apiResponse.status === 200) {
-      return res.render("/login", { success: apiResponse.data.success });
-    }
-
-    if (apiResponse.status === 400) {
-      return res.render("/signup", { error: apiResponse.data.error });
+    if (apiResponse.data.success) {
+      return res.render("login", {
+        success: apiResponse.data.success,
+        error: "",
+      });
     }
   } catch (err) {
-    if (err instanceof sequelize.ValidationError) {
-      const messages = err.errors.map((e) => e.message);
-      res.render("signup", { error: messages });
-    } else {
-      res.render("signup", { error: err.message || "An error occurred" });
-    }
+    return res.render("signup", {
+      error: err.response.data.error || "An error occurred",
+    });
   }
 };

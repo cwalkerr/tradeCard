@@ -3,10 +3,7 @@ const router = express.Router();
 const wishlistController = require("../controllers/app_wishlistController.js");
 const cardController = require("../controllers/app_cardController.js");
 const filterController = require("../controllers/app_filterController.js");
-const {
-  verifyLoggedIn,
-  catchError,
-} = require("../../middleware/middleware.js");
+const { verifyLoggedIn } = require("../../middleware/middleware.js");
 
 // view cards in wishlist
 router

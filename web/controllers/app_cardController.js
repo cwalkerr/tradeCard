@@ -53,18 +53,15 @@ exports.cardGrid = async (req, res, next) => {
         }
       }
     } catch (err) {
-      next(
-        new Error(
-          err.response.data.error || err.message || "Error getting cards"
-        )
-      );
-      return;
+      res.redirect("/cards");
     }
   }
 
   const { startPage, endPage } = calculatePagination(currentPage, totalPages);
   let success;
+  let error;
   req.query.success ? (success = req.query.success) : (success = "");
+  req.query.error ? (error = req.query.error) : (error = "");
 
   let data = {
     cards: cards,
@@ -74,8 +71,8 @@ exports.cardGrid = async (req, res, next) => {
     checkedBoxes: checkedBoxes,
     startPage: startPage,
     endPage: endPage,
-    success: success, //NOT NEEDED
-    error: "",
+    success: success,
+    error: error,
     route: req.originalUrl,
     userId: req.user ? req.user.id : null,
     seriesSets: req.seriesSets,
@@ -113,14 +110,13 @@ exports.cardGrid = async (req, res, next) => {
  * Populate and render individual card details view
  * passes wishlist and collection data to allow for adding to wishlist or collection
  */
-exports.cardDetails = async (req, res, next) => {
+exports.cardDetails = async (req, res) => {
   const cardId = req.params.id;
   let success;
+  let error;
+  const userId = req.user ? req.user.id : null;
   req.query.success ? (success = req.query.success) : (success = "");
-
-  console.log("req.user: ", req.user);
-  console.log("req.wishlist: ", req.wishlist);
-  console.log("req.collections: ", req.collections);
+  req.query.error ? (error = req.query.error) : (error = "");
 
   try {
     const cardDetails = await axios.get(`${API_CARD_URL}/${cardId}`);
@@ -129,15 +125,17 @@ exports.cardDetails = async (req, res, next) => {
       const card = cardDetails.data.cards[0];
       res.render("card", {
         card: card,
-        wishlistData: req.wishlist,
-        collectionData: req.collections,
-        userId: req.user ? req.user.id : null,
+        wishlistData: req.wishlist ? req.wishlist : null,
+        collectionData: req.collections ? req.collections : null,
+        userId: userId,
         success: success,
-        error: "",
+        error: error,
       });
     }
   } catch (err) {
-    console.log(err);
-    next(err);
+    const error = new URLSearchParams({
+      error: err.response.data.error || err.message || "Error getting card",
+    }).toString();
+    return res.redirect(`/cards/${cardId}?${error}`);
   }
 };

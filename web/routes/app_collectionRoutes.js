@@ -21,7 +21,7 @@ router.get(
  */
 router
   .route("/collections/user")
-  // .all(verifyLoggedIn("You must be logged in view or create collections"))
+  .all(verifyLoggedIn("You must be logged in view or create collections"))
   .get(
     collectionController.getCollections,
     collectionController.renderCollections
@@ -80,7 +80,6 @@ router.delete(
   ratingController.removeRatingFromCollection
 );
 
-// maybe add a new route file for these, but they are assosiated to collections
 /**
  * ADDS A COMMENT TO A COLLECTION
  */

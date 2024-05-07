@@ -44,7 +44,9 @@
     }
   </style>
   <%- include('components/navbar.ejs') %>
+  <% if (route.startsWith('/cards')) { %>
   <%- include('components/searchFilter.ejs') %>
+  <% } %>
   <div class="container-lg container-fluid">
     <% if (route.startsWith ('/collections')) { %>
     <%- include('components/collectionDetails.ejs') %>

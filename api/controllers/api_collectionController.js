@@ -4,6 +4,8 @@ const {
   CollectionCard,
   User,
 } = require("../models/modelAssosiations.js");
+const { tryCatch } = require("../../utility/tryCatch.js");
+const apiError = require("../../utility/customError.js");
 
 /**
  * generates a where clause for get requests based on user_id or collection_id or all
@@ -37,13 +39,16 @@ const generateQuery = (user_id, collection_id) => {
 };
 
 const verifyOwner = async (user_id, collection_id) => {
-  console.log("USER ID : ", user_id);
-  console.log("COLLECTION ID : ", collection_id);
   const collection = await Collection.findOne({
     where: {
       collection_id: collection_id,
     },
   });
+
+  if (!collection) {
+    throw new apiError("Collection not found", 404);
+  }
+
   return collection.user_id === user_id ? true : false;
 };
 
@@ -70,7 +75,6 @@ exports.getCollections = async (req, res) => {
     }
     return res.status(200).json(collections);
   } catch (err) {
-    console.log(err);
     return res.status(500).json({ error: "Error getting collections" });
   }
 };
@@ -81,25 +85,23 @@ exports.getCollections = async (req, res) => {
  * @param {*} res
  * @returns json success or error message
  */
-exports.createCollection = async (req, res) => {
+exports.createCollection = tryCatch(async (req, res) => {
   const { name, description, user_id } = req.body;
-  console.log(name, description, user_id);
-  console.log("USER IN API CREATE COL : ", req.user);
-  if (user_id !== req.user.id) {
-    return res.sendStatus(403);
-  }
-  try {
-    await Collection.create({
-      name: name,
-      description: description,
-      user_id: user_id,
-    });
 
-    return res.status(201).json({ success: "Collection created" });
-  } catch (err) {
-    return res.status(500).json({ error: "Error creating collection" });
+  if (!name || !user_id) {
+    throw new apiError("Missing fields", 400);
   }
-};
+
+  if (user_id !== req.user.id) {
+    throw new apiError("You are not authorised to create this collection", 403);
+  }
+  await Collection.create({
+    name: name,
+    description: description,
+    user_id: user_id,
+  });
+  return res.status(201).json({ success: "Collection created" });
+});
 
 /**
  * deletes a collection for the session user
@@ -107,41 +109,33 @@ exports.createCollection = async (req, res) => {
  * @param {*} res
  * @returns json success or error message
  */
-exports.deleteCollection = async (req, res) => {
+exports.deleteCollection = tryCatch(async (req, res) => {
   const collectionID = req.params.id;
 
-  try {
-    if (!(await verifyOwner(req.user.id, collectionID))) {
-      return res
-        .status(403)
-        .json({ error: "You are not authorised to delete this collection" });
-    }
-
-    // delete all cards in the collection first to avoid foreign key constraint
-    await CollectionCard.destroy({
-      where: {
-        collection_id: collectionID,
-      },
-    });
-
-    // continue with delete
-    await Collection.destroy({
-      where: {
-        collection_id: collectionID,
-      },
-    });
-    return res.status(200).json({ success: "Collection deleted" });
-  } catch (err) {
-    console.log(err);
-    return res.status(500).json({ error: "Error deleting collection" });
+  if (!(await verifyOwner(req.user.id, collectionID))) {
+    throw new apiError("You are not authorised to delete this collection", 403);
   }
-};
+
+  // delete all cards in the collection first to avoid foreign key constraint
+  await CollectionCard.destroy({
+    where: {
+      collection_id: collectionID,
+    },
+  });
+
+  // continue with delete
+  await Collection.destroy({
+    where: {
+      collection_id: collectionID,
+    },
+  });
+
+  return res.status(200).json({ success: "Collection deleted" });
+});
 
 /**
  * gets card ids that belong in the specified collection
  * then gets the card details for those card ids
- * maybe can have a seperate function to get the ids
- * then either use getCardDetails or getCardGrid depemding on the use case (web app or api)
  * @param {} req
  * @param {*} res
  * @returns json array of cards in the collection
@@ -164,7 +158,6 @@ exports.getCardsInCollection = async (req, res) => {
     const cards = await Card.getCardDetails({ card_id: cardIds }, page);
     return res.status(200).json(cards);
   } catch (err) {
-    console.log(err);
     return res.status(500).json({ error: "Error getting cards" });
   }
 };
@@ -175,29 +168,23 @@ exports.getCardsInCollection = async (req, res) => {
  * @param {*} res
  * @returns json success or error message
  */
-exports.addCardToCollection = async (req, res) => {
+exports.addCardToCollection = tryCatch(async (req, res) => {
   const { collection_id, card_id } = req.params;
 
-  console.log(req.user);
-
-  console.log(req.user.id);
-  if (!(await verifyOwner(req.user.id, collection_id))) {
-    return res.status(403).json({
-      error: "You are not authorised to add cards to this collection",
-    });
+  if ((await verifyOwner(req.user.id, collection_id)) === false) {
+    throw new apiError(
+      "You are not authorised to add cards to this collection",
+      403
+    );
   }
 
-  try {
-    await CollectionCard.create({
-      collection_id: collection_id,
-      card_id: card_id,
-    });
-    return res.status(201).json({ success: "Card added to collection" });
-  } catch (err) {
-    console.log("API ERRORS : ", err);
-    return res.status(500).json({ error: "Error adding card to collection" });
-  }
-};
+  await CollectionCard.create({
+    collection_id: collection_id,
+    card_id: card_id,
+  });
+
+  return res.status(201).json({ success: "Card added to collection" });
+});
 
 /**
  * removes a card from a collection
@@ -205,25 +192,26 @@ exports.addCardToCollection = async (req, res) => {
  * @param {*} res
  * @returns success or error message
  */
-exports.removeCardFromCollection = async (req, res) => {
+exports.removeCardFromCollection = tryCatch(async (req, res) => {
   const { collection_id, card_id } = req.params;
 
-  if (!(await verifyOwner(req.user.id, collection_id))) {
-    return res.status(403).json({
-      error: "You are not authorised to remove cards from this collection",
-    });
+  if ((await verifyOwner(req.user.id, collection_id)) === false) {
+    throw new apiError(
+      "You are not authorised to remove cards from this collection",
+      403
+    );
   }
-  try {
-    await CollectionCard.destroy({
-      where: {
-        collection_id: collection_id,
-        card_id: card_id,
-      },
-    });
-    return res.status(200).json({ success: "Card removed from collection" });
-  } catch (err) {
-    return res
-      .status(500)
-      .json({ error: "Error removing card from collection" });
+  const removeCard = await CollectionCard.destroy({
+    where: {
+      collection_id: collection_id,
+      card_id: card_id,
+    },
+    limit: 1,
+  });
+
+  if (removeCard === 0) {
+    throw new apiError("Card not found in collection", 404);
   }
-};
+
+  return res.status(200).json({ success: "Card removed from collection" });
+});

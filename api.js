@@ -17,7 +17,7 @@ app.use(cookieParser());
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 1000,
+  max: 500,
   message: "Too many requests, please try again after 15 minutes",
 });
 

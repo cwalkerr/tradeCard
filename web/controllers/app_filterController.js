@@ -24,11 +24,7 @@ exports.getFilterOptions = async (req, res, next) => {
       next();
     }
   } catch (err) {
-    next(
-      new Error(
-        err.response.data.error || err.message || "Error getting filter options"
-      )
-    );
+    console.log(err);
     return;
   }
 };

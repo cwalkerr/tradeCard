@@ -2,16 +2,24 @@ const express = require("express");
 const router = express.Router();
 const loginController = require("../controllers/app_loginController.js");
 const signupController = require("../controllers/app_signupController.js");
+const { verifyLoggedIn } = require("../../middleware/middleware.js");
 
-router.get("/login", loginController.renderLoginPage);
-router.post("/login", loginController.loginController);
+router
+  .route("/login")
+  .get(loginController.renderLoginPage)
+  .post(loginController.loginController);
 
 // temporary route for dashboard
 router.get("/dashboard", (req, res) => {
-  res.render("dashboard");
+  res.render("dashboard", {
+    error: "",
+    success: "",
+  });
 });
 
-router.get("/signup", signupController.renderSignupPage);
-router.post("/signup", signupController.signupController);
+router
+  .route("/signup")
+  .get(signupController.renderSignupPage)
+  .post(signupController.signupController);
 
 module.exports = router;
