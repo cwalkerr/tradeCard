@@ -1,0 +1,509 @@
+commit a1bd9f882844e75e2fb72d05dafd4bb235f3957f
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-05-07T09:00:58+01:00
+
+    change db name in env
+
+1	1	.env
+
+commit 9fcde37ee153db92d223b42949b4818675548b14
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-05-07T08:58:20+01:00
+
+    improve error handling, submission cleanup
+
+16	0	.env
+1	7	.gitignore
+1	1	api.js
+88	119	api/controllers/api_authController.js
+0	1	api/controllers/api_cardController.js
+71	83	api/controllers/api_collectionController.js
+35	36	api/controllers/api_commentController.js
+1	1	api/controllers/api_filterController.js
+1	1	api/controllers/api_messageController.js
+50	53	api/controllers/api_ratingController.js
+20	15	api/controllers/api_wishlistController.js
+4	3	api/routes/api_authRoutes.js
+29	11	api/routes/api_collectionRoutes.js
+9	2	api/routes/api_wishlistRoutes.js
+850	0	dbpopulation/populateDBcards.js
+77	0	dbpopulation/populateDBsets.js
+0	2	middleware/authMiddleware.js
+14	0	middleware/errorHandler.js
+24	13	middleware/middleware.js
+9	0	utility/customError.js
+0	26	utility/refreshToken.js
+7	0	utility/tryCatch.js
+17	19	web/controllers/app_cardController.js
+45	61	web/controllers/app_collectionController.js
+19	20	web/controllers/app_commentController.js
+1	5	web/controllers/app_filterController.js
+13	9	web/controllers/app_loginController.js
+34	24	web/controllers/app_messageController.js
+14	18	web/controllers/app_ratingController.js
+19	15	web/controllers/app_signupController.js
+37	41	web/controllers/app_wishlistController.js
+1	1	web/public/index.html
+0	2	web/public/scripts/rating.js
+0	1	web/routes/app_cardRoutes.js
+1	2	web/routes/app_collectionRoutes.js
+13	5	web/routes/app_userRoutes.js
+1	4	web/routes/app_wishlistRoutes.js
+2	0	web/views/cards.ejs
+1	18	web/views/components/searchFilter.ejs
+4	0	web/views/login.ejs
+0	1	web/views/messages.ejs
+
+commit f40d20128cb0113a42df87e183f1e017a6941ffa
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-05-06T18:53:30+01:00
+
+    improve ui design, fix responsiveness issues
+
+1	1	api.js
+1	1	api/controllers/api_authController.js
+1	0	api/controllers/api_commentController.js
+2	0	api/routes/api_cardRoutes.js
+0	61	package-lock.json
+0	3	package.json
+9	4	web/controllers/app_cardController.js
+0	1	web/controllers/app_wishlistController.js
+159	138	web/views/card.ejs
+86	212	web/views/cards.ejs
+29	41	web/views/collections.ejs
+124	0	web/views/components/collectionDetails.ejs
+13	12	web/views/components/navbar.ejs
+17	0	web/views/components/paginationControls.ejs
+12	0	web/views/components/paginationInfo.ejs
+7	0	web/views/components/removeFromCollectionButton.ejs
+7	0	web/views/components/removeFromWishlistButton.ejs
+87	70	web/views/components/searchFilter.ejs
+40	49	web/views/dashboard.ejs
+
+commit f89e2eb5eb5debb0dd6412d0223501cbce61fec1
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-05-02T00:45:22+01:00
+
+    replace session with jwts, secure and limit api routes
+
+10	2	api.js
+78	9	api/controllers/api_authController.js
+32	11	api/controllers/api_collectionController.js
+14	1	api/controllers/api_commentController.js
+13	2	api/controllers/api_ratingController.js
+15	1	api/controllers/api_wishlistController.js
+5	0	api/models/modelAssosiations.js
+33	0	api/models/refreshTokenModel.js
+1	0	api/routes/api_authRoutes.js
+21	10	api/routes/api_collectionRoutes.js
+11	1	api/routes/api_messageRoutes.js
+9	2	api/routes/api_wishlistRoutes.js
+28	14	app.js
+38	0	middleware/authMiddleware.js
+15	10	middleware/middleware.js
+116	6	package-lock.json
+5	1	package.json
+26	0	utility/refreshToken.js
+12	8	web/controllers/app_cardController.js
+58	44	web/controllers/app_collectionController.js
+17	8	web/controllers/app_commentController.js
+16	13	web/controllers/app_loginController.js
+21	16	web/controllers/app_messageController.js
+11	9	web/controllers/app_ratingController.js
+11	16	web/controllers/app_signupController.js
+53	30	web/controllers/app_wishlistController.js
+37	18	web/public/scripts/rating.js
+28	6	web/public/scripts/updateReadStatus.js
+2	4	web/routes/app_cardRoutes.js
+12	24	web/routes/app_collectionRoutes.js
+4	9	web/routes/app_messageRoutes.js
+1	1	web/routes/app_userRoutes.js
+3	4	web/routes/app_wishlistRoutes.js
+14	3	web/views/components/searchFilter.ejs
+1	4	web/views/login.ejs
+
+commit 1e29fb02a8be1b0f9d928743f7fbcc37bdfde2d4
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-29T00:25:22+01:00
+
+    add messaging feature
+
+2	0	api.js
+6	2	api/controllers/api_authController.js
+3	3	api/controllers/api_filterController.js
+54	0	api/controllers/api_messageController.js
+3	3	api/models/cardModel.js
+1	1	api/models/modelAssosiations.js
+121	2	api/models/userModel.js
+12	0	api/routes/api_messageRoutes.js
+7	1	app.js
+2	1	web/controllers/app_loginController.js
+100	0	web/controllers/app_messageController.js
+3	0	web/public/media/arrow-return-left.svg
+12	0	web/public/scripts/updateReadStatus.js
+28	0	web/routes/app_messageRoutes.js
+33	1	web/views/cards.ejs
+60	0	web/views/messageThread.ejs
+61	0	web/views/messages.ejs
+
+commit 39289bc2312ec8f17c8dc0f9f4389d500fbe932d
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-25T21:26:43+01:00
+
+    add searching cards feature
+
+8	8	api/controllers/api_cardController.js
+4	5	api/controllers/api_collectionController.js
+4	31	api/controllers/api_filterController.js
+3	2	api/controllers/api_wishlistController.js
+8	1	api/models/cardModel.js
+21	1	utility/formatFilters.js
+8	4	web/controllers/app_cardController.js
+0	28	web/controllers/app_filterController.js
+1	1	web/views/cards.ejs
+7	4	web/views/components/searchFilter.ejs
+
+commit 47aa9438bec63ef7367fa7601251a98693486742
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-25T17:33:07+01:00
+
+    add filtering of cards feature
+
+2	0	api.js
+45	21	api/controllers/api_cardController.js
+1	2	api/controllers/api_collectionController.js
+107	0	api/controllers/api_filterController.js
+155	60	api/models/cardModel.js
+0	1	api/routes/api_authRoutes.js
+5	1	api/routes/api_cardRoutes.js
+10	0	api/routes/api_filterRoutes.js
+1	1	api/routes/api_wishlistRoutes.js
+1	0	config/db.js
+1	2	package.json
+96	0	utility/formatFilters.js
+67	53	web/controllers/app_cardController.js
+2	1	web/controllers/app_collectionController.js
+62	0	web/controllers/app_filterController.js
+7	1	web/routes/app_cardRoutes.js
+4	2	web/routes/app_collectionRoutes.js
+2	0	web/routes/app_wishlistRoutes.js
+4	4	web/views/card.ejs
+59	56	web/views/cards.ejs
+614	0	web/views/components/searchFilter.ejs
+
+commit cccb356228682c25b1363d4b0c891c94ed9d14e0
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-22T03:27:49+01:00
+
+    Refactor: improve code quality, flexability, modularity, readability
+
+1	1	.gitignore
+53	38	api/controllers/api_cardController.js
+99	82	api/controllers/api_collectionController.js
+1	1	api/controllers/api_commentController.js
+9	3	api/controllers/api_ratingController.js
+22	13	api/controllers/api_wishlistController.js
+51	34	api/models/cardModel.js
+0	39	api/models/collectionModel.js
+0	13	api/models/wishlistModel.js
+2	2	api/routes/api_cardRoutes.js
+31	24	api/routes/api_collectionRoutes.js
+8	15	api/routes/api_wishlistRoutes.js
+6	2	app.js
+9	0	eslint.config.mjs
+17	2	middleware/middleware.js
+140	38	package-lock.json
+3	1	package.json
+96	131	web/controllers/app_cardController.js
+161	165	web/controllers/app_collectionController.js
+72	0	web/controllers/app_commentController.js
+52	0	web/controllers/app_ratingController.js
+60	26	web/controllers/app_wishlistController.js
+5	3	web/routes/app_cardRoutes.js
+72	27	web/routes/app_collectionRoutes.js
+19	20	web/routes/app_wishlistRoutes.js
+11	10	web/views/card.ejs
+14	5	web/views/cards.ejs
+5	5	web/views/collections.ejs
+
+commit 6526c48b3bbb43a53eb8a5c086b1c1e717df5962
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-20T00:40:51+01:00
+
+    add commenting feature
+
+20	9	api/controllers/api_collectionController.js
+58	0	api/controllers/api_commentController.js
+0	1	api/controllers/api_ratingController.js
+40	0	api/models/collectionModel.js
+11	1	api/models/modelAssosiations.js
+12	0	api/routes/api_collectionRoutes.js
+12	6	web/controllers/app_cardController.js
+48	0	web/controllers/app_collectionController.js
+15	2	web/routes/app_collectionRoutes.js
+44	12	web/views/cards.ejs
+1	1	web/views/collections.ejs
+
+commit 5e4f3c5fce5618d52863d894ff7e7602cc1e2071
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-19T15:51:52+01:00
+
+    add rating other members collections feature
+
+3	0	api.js
+7	8	api/controllers/api_collectionController.js
+86	0	api/controllers/api_ratingController.js
+81	0	api/models/collectionModel.js
+6	1	api/models/modelAssosiations.js
+19	0	api/routes/api_collectionRoutes.js
+1	1	app.js
+13	0	package-lock.json
+1	0	package.json
+29	8	web/controllers/app_cardController.js
+23	0	web/controllers/app_collectionController.js
+84	0	web/public/scripts/rating.js
+6	0	web/routes/app_collectionRoutes.js
+107	20	web/views/cards.ejs
+
+commit c2ea098147fbc00bc6da8b042bf808b06c9e302c
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-17T17:23:11+01:00
+
+    add browse and view cards of other members collections
+
+1	1	api/controllers/api_authController.js
+19	1	api/controllers/api_collectionController.js
+0	1	api/routes/api_collectionRoutes.js
+38	28	web/controllers/app_collectionController.js
+4	2	web/routes/app_collectionRoutes.js
+14	0	web/views/{userCollections.ejs => collections.ejs}
+
+commit 2ec0dc2f5425e58578cffcc3653af91202c55eca
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-16T22:28:14+01:00
+
+    add creation of wishlist on user sign up
+
+6	4	api/controllers/api_authController.js
+0	18	api/controllers/api_wishlistController.js
+2	0	web/routes/app_wishlistRoutes.js
+
+commit e2c5c2d9d482d1b8d0525c9baaa415be02bd4605
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-16T21:08:51+01:00
+
+    add wishlist functionality, add/remove cards
+
+2	0	api.js
+2	0	api/controllers/api_cardController.js
+2	2	api/controllers/api_collectionController.js
+85	0	api/controllers/api_wishlistController.js
+16	0	api/models/modelAssosiations.js
+63	0	api/models/wishlistModel.js
+3	1	api/routes/api_collectionRoutes.js
+21	0	api/routes/api_wishlistRoutes.js
+2	1	app.js
+44	13	web/controllers/app_cardController.js
+2	2	web/controllers/app_collectionController.js
+68	0	web/controllers/app_wishlistController.js
+2	5	web/routes/app_cardRoutes.js
+11	5	web/routes/app_collectionRoutes.js
+27	0	web/routes/app_wishlistRoutes.js
+19	1	web/views/card.ejs
+25	0	web/views/cards.ejs
+3	3	web/views/dashboard.ejs
+
+commit c5b82b09d4fcc785167174acc5aeafc3e278d0e4
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-15T21:00:56+01:00
+
+    separate navbar into its own ejs component; include where needed
+
+0	1	api/controllers/api_collectionController.js
+1	61	web/views/card.ejs
+1	62	web/views/cards.ejs
+60	0	web/views/components/navbar.ejs
+49	111	web/views/dashboard.ejs
+47	109	web/views/userCollections.ejs
+
+commit e00288cda9b60a2e15014589a627d53973fa6261
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-15T17:25:46+01:00
+
+    fix bug preventing deletion of collection that contains cards
+
+7	0	api/controllers/api_collectionController.js
+12	11	web/views/userCollections.ejs
+
+commit 90cbf218404da65ce7b57cdaf955b57814bfc70c
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-15T17:01:17+01:00
+
+    add collection functionality, create/delete, add/remove cards
+
+1	0	.gitignore
+5	1	api.js
+9	8	api/controllers/api_authController.js
+15	10	api/controllers/api_cardController.js
+159	0	api/controllers/api_collectionController.js
+787	782	api/models/cardModel.js
+85	0	api/models/collectionModel.js
+26	0	api/models/modelAssosiations.js
+65	67	api/models/userModel.js
+20	0	api/routes/api_collectionRoutes.js
+16	4	app.js
+16	0	middleware/middleware.js
+863	8	package-lock.json
+2	0	package.json
+0	3	utility/generateKey.js
+0	850	utility/populateDBcards.js
+0	77	utility/populateDBsets.js
+39	13	web/controllers/app_cardController.js
+148	0	web/controllers/app_collectionController.js
+4	16	web/controllers/app_loginController.js
+137	222	web/public/index.html
+-	-	web/public/media/man.png
+13	1	web/routes/app_cardRoutes.js
+40	0	web/routes/app_collectionRoutes.js
+5	0	web/routes/app_userRoutes.js
+38	3	web/views/card.ejs
+11	2	web/views/cards.ejs
+117	182	web/views/dashboard.ejs
+57	79	web/views/login.ejs
+71	142	web/views/signup.ejs
+178	0	web/views/userCollections.ejs
+
+commit 16ea893f3e94a283cb8ac1355a74736f30234197
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-04-06T05:43:08+01:00
+
+    add browse all / view selected card functionality
+
+15	0	api.js
+95	0	api/controllers/api_authController.js
+50	0	api/controllers/api_cardController.js
+815	0	api/models/cardModel.js
+81	0	api/models/userModel.js
+9	0	api/routes/api_authRoutes.js
+9	0	api/routes/api_cardRoutes.js
+11	11	app.js
+26	0	config/db.js
+0	16	db.js
+746	1	package-lock.json
+11	2	package.json
+0	19	routes/dashboard.js
+0	61	routes/login.js
+0	67	routes/signup.js
+0	56	utility.js
+0	0	generateKey.js => utility/generateKey.js
+850	0	utility/populateDBcards.js
+77	0	utility/populateDBsets.js
+67	0	web/controllers/app_cardController.js
+43	0	web/controllers/app_loginController.js
+40	0	web/controllers/app_signupController.js
+0	0	{public => web/public}/css/custom.css
+0	0	{public => web/public}/css/custom.css.map
+3	3	{public => web/public}/index.html
+-	-	web/public/media/energy-Colorless.png
+-	-	web/public/media/energy-Darkness.png
+-	-	web/public/media/energy-Dragon.png
+-	-	web/public/media/energy-Fairy.png
+-	-	web/public/media/energy-Fighting.png
+-	-	web/public/media/energy-Fire.png
+-	-	web/public/media/energy-Grass.png
+-	-	web/public/media/energy-Lightning.png
+-	-	web/public/media/energy-Metal.png
+-	-	web/public/media/energy-Psychic.png
+-	-	web/public/media/energy-Water.png
+0	0	{public => web/public}/media/flat-mountains.svg
+0	0	{public => web/public}/media/large-triangles.svg
+-	-	{public => web/public}/media/logo.png
+-	-	{public => web/public}/media/logowhite.png
+-	-	{public => web/public}/media/man.png
+-	-	{public => web/public}/media/pokemoncomputer.jpg
+-	-	{public => web/public}/media/pokemonfriends.jpg
+-	-	{public => web/public}/media/pokemonsearch.jpg
+0	0	{scss => web/public/scss}/custom.scss
+7	0	web/routes/app_cardRoutes.js
+12	0	web/routes/app_userRoutes.js
+279	0	web/views/card.ejs
+144	0	web/views/cards.ejs
+0	0	{views => web/views}/dashboard.ejs
+0	6	{views => web/views}/login.ejs
+1	1	{views => web/views}/signup.ejs
+
+commit ade447e78687cbd7c52d467844ba328968116ee6
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-03-26T01:13:29+00:00
+
+    add dashboard template and login functionality
+
+9	5	app.js
+1	1	public/index.html
+-	-	public/media/man.png
+19	0	routes/dashboard.js
+54	1	routes/login.js
+28	22	routes/signup.js
+36	4	utility.js
+206	0	views/dashboard.ejs
+44	30	views/login.ejs
+4	0	views/signup.ejs
+
+commit ef86e296d6a0869f6691805f0426caec49429671
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-03-22T14:18:43+00:00
+
+    add sign up functionality
+
+42	0	app.js
+16	0	db.js
+3	0	generateKey.js
+1642	1	package-lock.json
+10	1	package.json
+0	0	{css => public/css}/custom.css
+0	0	{css => public/css}/custom.css.map
+2	2	index.html => public/index.html
+0	0	{media => public/media}/flat-mountains.svg
+0	0	{media => public/media}/large-triangles.svg
+-	-	{media => public/media}/logo.png
+-	-	{media => public/media}/logowhite.png
+-	-	{media => public/media}/pokemoncomputer.jpg
+-	-	{media => public/media}/pokemonfriends.jpg
+-	-	{media => public/media}/pokemonsearch.jpg
+8	0	routes/login.js
+61	0	routes/signup.js
+0	122	signup.html
+24	0	utility.js
+7	4	login.html => views/login.ejs
+160	0	views/signup.ejs
+
+commit 311d3d8e4760ca8bbca8c0f23a6d5114f80b4e06
+Author: cwalkerr <connor.walker0@proton.me>
+Date:   2024-02-19T19:38:54+00:00
+
+    add static html with ui design for landing page, log in and sign up
+
+11859	0	css/custom.css
+1	0	css/custom.css.map
+249	0	index.html
+84	0	login.html
+1	0	media/flat-mountains.svg
+1	0	media/large-triangles.svg
+-	-	media/logo.png
+-	-	media/logowhite.png
+-	-	media/pokemoncomputer.jpg
+-	-	media/pokemonfriends.jpg
+-	-	media/pokemonsearch.jpg
+60	0	package-lock.json
+15	0	package.json
+1	0	scss/custom.scss
+122	0	signup.html
+
+commit edb11b6586617fb27811ec054053ead45f0d9306
+Author: cwalkerr <156098443+cwalkerr@users.noreply.github.com>
+Date:   2024-02-14T12:58:13+00:00
+
+    Initial commit
+
+130	0	.gitignore
+2	0	README.md
