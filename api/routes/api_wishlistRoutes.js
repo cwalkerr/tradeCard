@@ -2,14 +2,21 @@ const express = require("express");
 const router = express.Router();
 const wishlistController = require("../controllers/api_wishlistController.js");
 const { authenticateToken } = require("../../middleware/authMiddleware.js");
+const errorHandler = require("../../middleware/errorHandler.js");
 
-router.get("/wishlist", authenticateToken, wishlistController.getWishlist);
+router.get(
+  "/wishlist",
+  authenticateToken,
+  wishlistController.getWishlist,
+  errorHandler
+);
 
 router.get(
   "/wishlist/:wishlist_id",
   authenticateToken,
   wishlistController.verifyWishlistOwner,
-  wishlistController.getCardsInWishlist
+  wishlistController.getCardsInWishlist,
+  errorHandler
 );
 
 router

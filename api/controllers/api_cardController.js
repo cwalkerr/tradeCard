@@ -6,7 +6,6 @@ const { formatFilters } = require("../../utility/formatFilters.js");
  * optional where clause can be passed as query params
  * using this to fetch >20 cards in web app is not recommended, rather slow - use getCardGrid instead
  * it can be used by api users to get full details of cards..
- * note: might be a good idea to allow cardsPerPage as a query param - if an api user wants to wait to get all cards in one go
  * @param {*} req
  * @param {*} res
  * @returns json array of cards with full relevant (excluded id's where possible) details

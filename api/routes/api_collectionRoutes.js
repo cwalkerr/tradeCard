@@ -7,6 +7,7 @@ const {
   authenticateToken,
   verifyUserId,
 } = require("../../middleware/authMiddleware.js");
+const errorHandler = require("../../middleware/errorHandler.js");
 
 /**
  * GET ALL/USER COLLECTIONS
@@ -20,22 +21,34 @@ router.get("/collections", collectionController.getCollections);
 router.post(
   "/collections/create",
   authenticateToken,
-  collectionController.createCollection
+  collectionController.createCollection,
+  errorHandler
 );
 router
   .route("/collections/:id")
   .get(collectionController.getCollections)
-  .delete(authenticateToken, collectionController.deleteCollection);
+  .delete(
+    authenticateToken,
+    collectionController.deleteCollection,
+    errorHandler
+  );
 
 /**
  * GET, ADD AND REMOVE CARDS IN COLLECTION
  */
 router.get("/collections/:id/cards", collectionController.getCardsInCollection);
 router
-  // .all(authenticateToken)
   .route("/collections/:collection_id/cards/:card_id")
-  .post(authenticateToken, collectionController.addCardToCollection)
-  .delete(authenticateToken, collectionController.removeCardFromCollection);
+  .post(
+    authenticateToken,
+    collectionController.addCardToCollection,
+    errorHandler
+  )
+  .delete(
+    authenticateToken,
+    collectionController.removeCardFromCollection,
+    errorHandler
+  );
 
 /*
  * RATING OPERATIONS
@@ -43,14 +56,18 @@ router
 router
   .route("/collections/:id/ratings")
   .get(ratingController.getRatingDetails)
-  .post(authenticateToken, ratingController.addRating)
-  .put(authenticateToken, ratingController.updateRating);
+  .post(authenticateToken, ratingController.addRating, errorHandler)
+  .put(authenticateToken, ratingController.updateRating, errorHandler);
 
 router
   .route("/collections/:id/ratings/:userId")
-  // .all(authenticateToken, verifyUserId)
   .get(authenticateToken, verifyUserId, ratingController.getUserRating)
-  .delete(authenticateToken, verifyUserId, ratingController.deleteRating);
+  .delete(
+    authenticateToken,
+    verifyUserId,
+    ratingController.deleteRating,
+    errorHandler
+  );
 
 /**
  * COMMENT OPERATIONS
@@ -59,12 +76,13 @@ router
 router
   .route("/collections/:id/comments")
   .get(commentController.getAllComments)
-  .post(authenticateToken, commentController.addComment);
+  .post(authenticateToken, commentController.addComment, errorHandler);
 
 router.delete(
   "/collections/:collection_id/comments/:comment_id",
   authenticateToken,
-  commentController.deleteComment
+  commentController.deleteComment,
+  errorHandler
 );
 
 module.exports = router;

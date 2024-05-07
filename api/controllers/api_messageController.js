@@ -1,4 +1,4 @@
-const { User, Message } = require("../models/userModel.js");
+const { Message } = require("../models/userModel.js");
 
 exports.getUserMessages = async (req, res) => {
   try {

@@ -30,7 +30,6 @@
               }
               seenThreads.push(threadId);
           %>
-          <% console.log(message, userId, message.sender_id, message.receiver_id, message.sender_id); %>
           <a href="/messages/<%= message.sender_id === userId ? message.receiver_id : message.sender_id%>" class="text-decoration-none">
             <div class="card mb-3">
               <div class="card-body">

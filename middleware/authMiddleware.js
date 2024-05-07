@@ -22,8 +22,6 @@ exports.authenticateToken = (req, res, next) => {
         error: "Access denied. Invalid or expired token. Please log in again.",
       });
     }
-
-    console.log("USER IN AUTH MIDDLEWARE: ", user);
     req.user = user;
     next();
   });

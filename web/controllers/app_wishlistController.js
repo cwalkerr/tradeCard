@@ -1,5 +1,5 @@
-const api = require("../../utility/refreshToken");
-const API_URL_WISHLIST = "/api/wishlist";
+const axios = require("axios");
+const API_URL_WISHLIST = "http://localhost:4000/api/wishlist";
 const SUCCESS_STATUS_CODE = 200;
 const CREATED_STATUS_CODE = 201;
 
@@ -13,7 +13,7 @@ const CREATED_STATUS_CODE = 201;
 exports.getUserWishlist = async (req, res, next) => {
   if (req.user && req.user.id) {
     try {
-      const wishlist = await api.get(
+      const wishlist = await axios.get(
         `${API_URL_WISHLIST}?user_id=${req.user.id}`,
         {
           headers: {
@@ -26,46 +26,46 @@ exports.getUserWishlist = async (req, res, next) => {
         next();
       }
     } catch (err) {
-      console.log(err);
-      next(
-        new Error(
-          err.response.data.error || err.message || "Error getting wishlist"
-        )
-      );
-      return;
+      return res.render("dashboard", {
+        error:
+          err.response.data.error || err.message || "Error getting wishlist",
+        success: "",
+      });
     }
+  } else {
+    next();
   }
 };
 
 exports.getCardsInWishlist = async (req, res, next) => {
   const wishlist_id = req.wishlist.wishlist_id;
-  console.log(req.cookies.jwt);
 
   try {
-    const wishListCards = await api.get(`${API_URL_WISHLIST}/${wishlist_id}`, {
-      headers: {
-        Authorization: `Bearer ${req.cookies.jwt}`,
-      },
-    });
+    const wishListCards = await axios.get(
+      `${API_URL_WISHLIST}/${wishlist_id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${req.cookies.jwt}`,
+        },
+      }
+    );
     if (wishListCards.status === SUCCESS_STATUS_CODE) {
       req.cardsInWishlist = wishListCards.data;
       next();
     }
   } catch (err) {
-    next(
-      new Error(
-        err.response.data.error || err.message || "Error getting wishlist cards"
-      )
-    );
-    return;
+    return res.render("dashboard", {
+      error: err.response.data.error || err.message || "Error getting wishlist",
+      success: "",
+    });
   }
 };
 
 exports.addCardToWishlist = async (req, res, next) => {
   const { wishlist_id, card_id } = req.params;
-  console.log(req.cookies.jwt);
+
   try {
-    const addCard = await api.post(
+    const addCard = await axios.post(
       `${API_URL_WISHLIST}/${wishlist_id}/card/${card_id}`,
       {},
       {
@@ -82,15 +82,13 @@ exports.addCardToWishlist = async (req, res, next) => {
       return res.redirect(`/cards/${card_id}?${success}`);
     }
   } catch (err) {
-    console.log(err);
-    next(
-      new Error(
+    const error = new URLSearchParams({
+      error:
         err.response.data.error ||
-          err.message ||
-          "Error adding card to wishlist"
-      )
-    );
-    return;
+        err.message ||
+        "Error adding card to wishlist",
+    }).toString();
+    return res.redirect(`/cards/${card_id}?${error}`);
   }
 };
 
@@ -98,7 +96,7 @@ exports.removeCardFromWishlist = async (req, res, next) => {
   const { wishlist_id, card_id } = req.params;
 
   try {
-    const removeCard = await api.delete(
+    const removeCard = await axios.delete(
       `${API_URL_WISHLIST}/${wishlist_id}/card/${card_id}`,
       {
         headers: {
@@ -111,14 +109,12 @@ exports.removeCardFromWishlist = async (req, res, next) => {
       return res.redirect(`/wishlist`);
     }
   } catch (err) {
-    console.log(err);
-    next(
-      new Error(
+    const error = new URLSearchParams({
+      error:
         err.response.data.error ||
-          err.message ||
-          "Error removing card from wishlist"
-      )
-    );
-    return;
+        err.message ||
+        "Error removing card from wishlist",
+    }).toString();
+    return res.redirect(`/wishlist?${error}`);
   }
 };

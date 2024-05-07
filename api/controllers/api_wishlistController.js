@@ -4,34 +4,39 @@ const {
   Card,
 } = require("../models/modelAssosiations.js");
 
-exports.verifyWishlistOwner = async (req, res, next) => {
+const apiError = require("../../utility/customError.js");
+const { tryCatch } = require("../../utility/tryCatch.js");
+
+exports.verifyWishlistOwner = tryCatch(async (req, res, next) => {
   const wishlist = await Wishlist.findByPk(req.params.wishlist_id);
 
   if (!wishlist) {
-    return res.status(404).json({ error: "Wishlist not found" });
+    throw new apiError("Wishlist not found", 404);
   }
 
   if (wishlist.user_id !== req.user.id) {
-    return res.status(403).json({ error: "Access denied" });
+    throw new apiError("Not authorised to access this wishlist", 403);
   }
 
   next();
-};
+});
 
-exports.getWishlist = async (req, res) => {
+exports.getWishlist = tryCatch(async (req, res) => {
   const user_id = req.query.user_id;
 
-  try {
-    const wishlist = await Wishlist.findOne({
-      where: {
-        user_id: user_id,
-      },
-    });
-    return res.status(200).json(wishlist);
-  } catch (err) {
-    return res.status(500).json({ error: "Error getting wishlist" });
+  if (!user_id) {
+    throw new apiError("Missing user_id in query", 400);
   }
-};
+  if (Number(user_id) !== req.user.id) {
+    throw new apiError("Not authorised to access this wishlist", 403);
+  }
+  const wishlist = await Wishlist.findOne({
+    where: {
+      user_id: user_id,
+    },
+  });
+  return res.status(200).json(wishlist);
+});
 
 exports.getCardsInWishlist = async (req, res) => {
   const page = Number(req.query.page) || 1;

@@ -1,12 +1,12 @@
-const api = require("../../utility/refreshToken");
-const API_URL_COLLECTIONS = "/api/collections";
+const axios = require("axios");
+const API_URL_COLLECTIONS = "http://localhost:4000/api/collections";
 const SUCCESS_STATUS_CODE = 200;
 const CREATED_STATUS_CODE = 201;
 
 exports.getCollectionComments = async (req, res, next) => {
   const collection_id = req.params.collection_id;
   try {
-    const collectionComments = await api.get(
+    const collectionComments = await axios.get(
       `${API_URL_COLLECTIONS}/${collection_id}/comments`
     );
 
@@ -15,14 +15,13 @@ exports.getCollectionComments = async (req, res, next) => {
       next();
     }
   } catch (err) {
-    next(
-      new Error(
+    return res.render("dashboard", {
+      error:
         err.response.data.error ||
-          err.message ||
-          "Error getting collection comments"
-      )
-    );
-    return;
+        err.message ||
+        "Error getting collection comments",
+      success: "",
+    });
   }
 };
 
@@ -32,7 +31,7 @@ exports.addCommentToCollection = async (req, res, next) => {
   const user_id = req.user.id;
 
   try {
-    const addComment = await api.post(
+    const addComment = await axios.post(
       `${API_URL_COLLECTIONS}/${collection_id}/comments`,
       {
         comment: comment,
@@ -49,10 +48,10 @@ exports.addCommentToCollection = async (req, res, next) => {
       return res.redirect(`/collections/${collection_id}/cards`);
     }
   } catch (err) {
-    next(
-      new Error(err.response.data.error || err.message || "An error occurred")
-    );
-    return;
+    const error = new URLSearchParams({
+      error: err.response.data.error || err.message || "Error adding comment",
+    }).toString();
+    return res.redirect(`/collections/${collection_id}/cards?${error}`);
   }
 };
 
@@ -60,7 +59,7 @@ exports.deleteCommentFromCollection = async (req, res, next) => {
   const { comment_id, collection_id } = req.params;
 
   try {
-    const deleteComment = await api.delete(
+    const deleteComment = await axios.delete(
       `${API_URL_COLLECTIONS}/${collection_id}/comments/${comment_id}`,
       {
         headers: {
@@ -73,9 +72,9 @@ exports.deleteCommentFromCollection = async (req, res, next) => {
       return res.redirect(`/collections/${collection_id}/cards`);
     }
   } catch (err) {
-    next(
-      new Error(err.response.data.error || err.message || "An error occurred")
-    );
-    return;
+    const error = new URLSearchParams({
+      error: err.response.data.error || err.message || "Error deleting comment",
+    }).toString();
+    return res.redirect(`/collections/${collection_id}/cards?${error}`);
   }
 };

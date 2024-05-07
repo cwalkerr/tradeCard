@@ -35,7 +35,7 @@ exports.getSetsInSeries = async (req, res) => {
 exports.getEnergyTypes = async (req, res) => {
   try {
     let energyTypes = await EnergyType.findAll();
-    if (Object.keys(energyTypes).length === 0) {
+    if (!energyTypes) {
       return res.status(404).json({ error: "No energy types found" });
     }
     return res

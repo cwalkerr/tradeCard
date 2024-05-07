@@ -1,14 +1,19 @@
 const axios = require("axios");
+const API_ENDPOINT = "http://localhost:4000/auth/login";
 
 exports.renderLoginPage = (req, res) => {
-  res.render("login", { error: "" });
+  res.render("login", { error: "", success: "" });
 };
 
 exports.loginController = async (req, res) => {
-  // deal with login request
   const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.render("login", { error: "Please enter all fields" });
+  }
+
   try {
-    const apiResponse = await axios.post("http://localhost:4000/auth/login", {
+    const apiResponse = await axios.post(API_ENDPOINT, {
       email,
       password,
     });
@@ -23,13 +28,12 @@ exports.loginController = async (req, res) => {
         httpOnly: true,
         maxAge: 86400000,
       });
-      return res.render("dashboard", { success: apiResponse.data.success });
+      return res.render("dashboard");
     }
   } catch (err) {
-    if (err.response.status === 400) {
-      return res.render("login", { error: err.response.data.error });
-    }
-
-    res.render("login", { error: "An error occurred, please try again" });
+    return res.render("login", {
+      error: err.response.data.error || "An error occurred",
+      success: "",
+    });
   }
 };
