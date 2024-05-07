@@ -4,6 +4,8 @@ const {
   CollectionCard,
   User,
 } = require("../models/modelAssosiations.js");
+
+const { Comment, Rating } = require("../models/collectionModel.js");
 const { tryCatch } = require("../../utility/tryCatch.js");
 const apiError = require("../../utility/customError.js");
 
@@ -118,6 +120,18 @@ exports.deleteCollection = tryCatch(async (req, res) => {
 
   // delete all cards in the collection first to avoid foreign key constraint
   await CollectionCard.destroy({
+    where: {
+      collection_id: collectionID,
+    },
+  });
+
+  await Comment.destroy({
+    where: {
+      collection_id: collectionID,
+    },
+  });
+
+  await Rating.destroy({
     where: {
       collection_id: collectionID,
     },
